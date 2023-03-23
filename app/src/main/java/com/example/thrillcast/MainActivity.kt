@@ -24,6 +24,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     ThrillCastApp()
+                    // Dette er en kommentar. Hvor er killa
                 }
             }
         }
