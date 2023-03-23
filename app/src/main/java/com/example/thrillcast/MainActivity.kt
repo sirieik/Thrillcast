@@ -24,6 +24,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     ThrillCastApp()
+                    Text(text = "Lets start this shit")
                 }
             }
         }
