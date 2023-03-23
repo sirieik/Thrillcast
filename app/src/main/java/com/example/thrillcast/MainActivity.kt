@@ -24,7 +24,11 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     ThrillCastApp()
+<<<<<<< HEAD
+                    // Dette er en kommentar. Hvor er killa
+=======
                     Text(text = "Lets start this shit!")
+>>>>>>> b01dc16b349124f2baa771fdd4bb42f4d648ffa8
                 }
             }
         }
