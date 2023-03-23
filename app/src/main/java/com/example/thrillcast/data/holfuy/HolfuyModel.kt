@@ -6,13 +6,12 @@ import io.ktor.serialization.gson.*
 
 class HolfuyModel() {
 
-    val apiKey = "zFIU9XHEarYLxHN"
+    private val apiKey = "zFIU9XHEarYLxHN"
 
-    val path = "http://api.holfuy.com/live/"
+    private val path = "http://api.holfuy.com/live/"
 
-    var station = "101"
+    private val endOfPath = "&pw=$apiKey&m=JSON&tu=C&su=m/s"
 
-    val fullPath = "http://api.holfuy.com/live/?s=" + station + "&pw=" + apiKey + "&m=JSON&tu=C&su=m/s"
 
     private val client = HttpClient() {
         install(ContentNegotiation) {
@@ -20,16 +19,9 @@ class HolfuyModel() {
         }
     }
 
-    //NB - might want to directly put parameter s into the query in the method, instead of changing the
-    //local variable "station" for each time
-
     //Retrieve information about one single weather station given by parameter "s"
-    suspend fun fetchHolfuyObject(s: String) : HolfuyObject {
-        station = s
-        val holfuyObject: HolfuyObject = client.get(fullPath).body()
-        return holfuyObject
+    suspend fun fetchHolfuyObject(station: String): HolfuyObject {
+        return client.get(path + station + endOfPath).body()
     }
-
-
 
 }
