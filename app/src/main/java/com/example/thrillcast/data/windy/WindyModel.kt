@@ -8,10 +8,13 @@ import io.ktor.serialization.gson.*
 
 class WindyModel() {
 
-    val apiKey = "ZNn24b3G6rq28A1xMOmRFHJ6YYmzv45C"
+    //Windy API key
+    private val apiKey = "ZNn24b3G6rq28A1xMOmRFHJ6YYmzv45C"
 
-    val path = "https://api.windy.com/api/point-forecast/v2"
+    //Windy API
+    private val path = "https://api.windy.com/api/point-forecast/v2"
 
+    //Set up HTTP client
     private val client = HttpClient() {
         install(ContentNegotiation) {
             gson()
