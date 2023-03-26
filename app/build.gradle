@@ -1,6 +1,10 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+
+    //Maps
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
+
 }
 
 android {
@@ -69,5 +73,9 @@ dependencies {
 
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1"
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
+
+    //Google Maps
+    implementation 'com.google.maps.android:maps-compose:2.11.2'
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
 
 }
