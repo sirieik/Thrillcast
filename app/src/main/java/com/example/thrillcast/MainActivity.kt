@@ -1,6 +1,7 @@
 package com.example.thrillcast
 
 import MapScreen
+import NavBar
 import ThrillCastApp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -30,6 +31,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     MapScreen()
+                    //NavBar()
                 }
             }
         }
