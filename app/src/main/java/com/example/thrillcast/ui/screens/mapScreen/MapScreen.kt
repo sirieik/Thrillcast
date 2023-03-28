@@ -13,20 +13,26 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.maps.android.compose.*
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MapScreen() {
+fun MapScreen(viewModel: MapViewModel = viewModel()) {
+
     val norway = LatLng(62.0, 10.0)
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(norway, 5.5f)
     }
+
+    val uiState = viewModel.uiState.collectAsState()
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {  },
@@ -40,10 +46,12 @@ fun MapScreen() {
                     modifier = Modifier.fillMaxSize(),
                     cameraPositionState = cameraPositionState
                 ) {
-                    Marker(
-                        state = MarkerState(LatLng(60.05388889, 10.32250000)),
-                        title = "Sundvollen",
+                    uiState.value.takeoffs.forEach{
+                        Marker(
+                            state = MarkerState(it.value),
+                            title = it.key,
                         )
+                    }
                 }
             }
         },
