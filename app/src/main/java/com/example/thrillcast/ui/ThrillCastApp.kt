@@ -58,7 +58,7 @@ fun ThrillCastNavHost(
 
 @Composable
 fun NavBar() {
-    var selectedItem by remember { mutableStateOf(0) }
+    var selectedItem by remember { mutableStateOf(1) }
     NavigationBar(
 
     ) {
