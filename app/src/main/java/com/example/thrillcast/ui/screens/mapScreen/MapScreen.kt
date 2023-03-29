@@ -68,7 +68,7 @@ fun SearchBarDemo() {
     ) {
         IconButton(
             onClick = {
-            /*TODO - legge til nav bar der man går tilbake til start skjerm*/
+            /*TODO - legge til NAV bar der man går tilbake til start skjerm*/
             }
         ) {
             Icon(
