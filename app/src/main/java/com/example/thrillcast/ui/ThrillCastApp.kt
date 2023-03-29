@@ -1,84 +1,77 @@
+import android.annotation.SuppressLint
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.thrillcast.ui.NavItem
 
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ThrillCastApp(){
     val navController = rememberNavController()
-
-}
-/*
-@Composable
-fun ThrillCastNavHost(
-    modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController(),
-    startDestination: String = "map"
-) {
-    NavHost(
-        modifier = modifier,
-        navController = navController,
-        startDestination = startDestination
+    Scaffold(
+        bottomBar = { NavBar(navController = navController) }
     ) {
-        composable("map") {
-            MapScreen(
-                onNavigateToFavorites = { navController.navigate("favorites") },
-                onNavigateToSettings = { navController.navigate("settings") }
-            )
-        }
-        composable("settings") {
-            SettingsScreen(
-                onNavigateToFavorites = { navController.navigate("favorites") },
-                onNavigateToMap = { navController.navigate("map") }
-            )
-        }
-        composable("favorites") {
-            FavoritesScreen(
-                onNavigateToMap = {navController.navigate("map")},
-                onNavigateToSettings = {navController.navigate("settings")}
-            )
-        }
+        NavigationGraph(navController = navController)
     }
 }
-*/
-
-
 
 @Composable
-fun NavBar() {
+fun NavigationGraph( navController: NavHostController ){
+    NavHost(navController, startDestination = NavItem.map.route) {
+        composable(NavItem.settings.route) { SettingsScreen() }
+        composable(NavItem.map.route) { MapScreen() }
+        composable(NavItem.favorites.route) { FavoritesScreen() }
+    }
+}
+
+@Composable
+fun NavBar(navController: NavHostController) {
+
     var selectedItem by remember { mutableStateOf(1) }
-    NavigationBar(
 
-    ) {
-        NavigationBarItem(
-            icon = { Icon(Icons.Filled.Settings, contentDescription = "Settings") },
-            label = { Text("Settings") },
-            selected = selectedItem == 0,
-            onClick = { selectedItem = 0 }
-        )
-        NavigationBarItem(
-            icon = { Icon(Icons.Filled.Home, contentDescription = "Map") },
-            label = { Text("Map") },
-            selected = selectedItem == 1,
-            onClick = { selectedItem = 1 }
-        )
-        NavigationBarItem(
-            icon = { Icon(Icons.Filled.Favorite, contentDescription = "Favorites") },
-            label = { Text("Favorites") },
-            selected = selectedItem == 2,
-            onClick = { selectedItem = 2 }
-        )
-    }
+    val navItems = listOf(
+        NavItem.favorites,
+        NavItem.map,
+        NavItem.settings
+    )
+
+    NavigationBar(
+        content = {
+            navItems.forEachIndexed{ index, item ->
+                NavigationBarItem(
+                    icon = { Icon(item.icon, contentDescription = item.name) },
+                    label = { Text(item.name) },
+                    selected = selectedItem == index,
+                    onClick = {
+                        selectedItem = index
+
+                        navController.navigate(item.route) {
+
+                            navController.graph.startDestinationRoute?.let { route ->
+                                popUpTo(route) {
+                                    saveState = true
+                                }
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    }
+                )
+            }
+        }
+
+    )
+
+
 }
