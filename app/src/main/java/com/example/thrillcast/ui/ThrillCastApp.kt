@@ -41,9 +41,9 @@ fun NavBar(navController: NavHostController) {
     var selectedItem by remember { mutableStateOf(1) }
 
     val navItems = listOf(
-        NavItem.favorites,
+        NavItem.settings,
         NavItem.map,
-        NavItem.settings
+        NavItem.favorites,
     )
 
     NavigationBar(
