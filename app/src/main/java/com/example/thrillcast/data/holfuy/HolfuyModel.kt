@@ -22,7 +22,7 @@ class HolfuyModel() {
         }
     }
 
-    //Retrieve information about one single weather station given by parameter "station"
+    //Retrieve information about one single weather station given by parameter "s"
     suspend fun fetchHolfuyObject(station: String): HolfuyObject {
         return client.get(path + station + endOfPath).body()
     }
