@@ -1,5 +1,6 @@
 package com.example.thrillcast
 
+import InfoCard
 import MapScreen
 import NavBar
 import ThrillCastApp
