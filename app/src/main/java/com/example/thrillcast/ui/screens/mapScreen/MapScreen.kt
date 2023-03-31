@@ -1,16 +1,16 @@
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.thrillcast.R
@@ -28,6 +28,9 @@ fun MapScreen(viewModel: MapViewModel = viewModel(),) {
 
     val uiState = viewModel.uiState.collectAsState()
 
+    //Bruke denne til å legge inn lasteskjerm dersom kartet bruker tid
+    var isMapLoaded by remember {mutableStateOf(false)}
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = { SearchBarDemo() },
@@ -37,15 +40,43 @@ fun MapScreen(viewModel: MapViewModel = viewModel(),) {
                     .fillMaxSize()
                     .padding(paddingValues)
             ) {
+
                 GoogleMap(
                     modifier = Modifier.fillMaxSize(),
-                    cameraPositionState = cameraPositionState
+                    cameraPositionState = cameraPositionState,
+                    onMapLoaded = {
+                        //Her oppdaterer vi verdien til true dersom kartet er ferdig lastet inn
+                        isMapLoaded = true
+
+                    }
                 ) {
                     uiState.value.takeoffs.forEach{
                         Marker(
                             state = MarkerState(it.value),
                             title = it.key,
-                            icon = BitmapDescriptorFactory.fromResource(R.drawable.parachuting)
+                            icon = BitmapDescriptorFactory.fromResource(R.drawable.parachuting),
+                            onInfoWindowClick = {
+                                //Få inn hva som skjer når man trykker på infovindu m tekst
+                                //Tenker at det er mer praktisk å få opp infoskjerm etter å trykke på
+                                //"labelen" til markøren etter å trykke på den, i tilfelle man trykker på feil
+                                //markør. I og med at det kommer til å være en del markører
+                            }
+                        )
+                    }
+                }
+
+                //Lasteskjerm om kartet ikke lastes inn
+                if (!isMapLoaded) {
+                    androidx.compose.animation.AnimatedVisibility(
+                        modifier = Modifier,
+                        visible = !isMapLoaded,
+                        enter = EnterTransition.None,
+                        exit = fadeOut()
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                //.background(MaterialTheme.colors.background)
+                                .wrapContentSize()
                         )
                     }
                 }
@@ -54,18 +85,49 @@ fun MapScreen(viewModel: MapViewModel = viewModel(),) {
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun SearchBarDemo() {
-    val searchTerm = remember { mutableStateOf("") }
+    var searchInput by remember { mutableStateOf("") }
+    val hideKeyboard = LocalFocusManager.current
+    //Prover aa faa den exit knappen til å kun dukke opp dersom textfielden er trykket paa, men funker faen ikke
+    //var textFieldClicked by remember { mutableStateOf(false) }
 
-    Row {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        IconButton(
+            onClick = {
+            /*TODO - legge til NAV bar der man går tilbake til start skjerm*/
+            }
+        ) {
+            Icon(
+                imageVector = Icons.Filled.ArrowBack,
+                contentDescription = "Go back"
+            )
+        }
         OutlinedTextField(
-            value = searchTerm.value,
-            onValueChange = { searchTerm.value = it },
+            value = searchInput,
+            onValueChange = { searchInput = it },
+            //onFocusEvent = {textFieldClicked = textFieldClicked.isFocused},
             label = { Text("Find takeoff locations") },
             modifier = Modifier.weight(1f)
         )
+        //if(textFieldClicked) {
+            IconButton(
+                onClick = {
+                    searchInput = ""
+                    hideKeyboard.clearFocus()
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Close,
+                    contentDescription = "Exit search"
+                )
+            }
+        //}
     }
 }
 

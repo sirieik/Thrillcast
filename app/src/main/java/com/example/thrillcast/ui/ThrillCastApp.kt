@@ -1,4 +1,6 @@
 import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
@@ -14,7 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.thrillcast.ui.NavItem
 
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ThrillCastApp(){
@@ -22,7 +24,10 @@ fun ThrillCastApp(){
     Scaffold(
         bottomBar = { NavBar(navController = navController) }
     ) {
-        NavigationGraph(navController = navController)
+            innerPadding ->
+        Box(modifier = Modifier.padding(innerPadding)) {
+            NavigationGraph(navController = navController)
+        }
     }
 }
 
@@ -41,9 +46,9 @@ fun NavBar(navController: NavHostController) {
     var selectedItem by remember { mutableStateOf(1) }
 
     val navItems = listOf(
-        NavItem.favorites,
+        NavItem.settings,
         NavItem.map,
-        NavItem.settings
+        NavItem.favorites,
     )
 
     NavigationBar(
@@ -70,8 +75,5 @@ fun NavBar(navController: NavHostController) {
                 )
             }
         }
-
     )
-
-
 }
