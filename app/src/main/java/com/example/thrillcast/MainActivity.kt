@@ -1,5 +1,6 @@
 package com.example.thrillcast
 
+import InfoCard
 import MapScreen
 import NavBar
 import ThrillCastApp
@@ -29,6 +30,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    //InfoCard()
                     ThrillCastApp()
                 }
             }
