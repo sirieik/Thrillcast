@@ -42,6 +42,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 
 
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -63,90 +64,3 @@ class MainActivity : ComponentActivity() {
         return Uri.parse(videoUri)
     }
 }
-
-/**
-private fun Context.buildExoPlayer(uri: Uri) =
-    ExoPlayer.Builder(this).build().apply {
-        setMediaItem(MediaItem.fromUri(uri))
-        repeatMode = Player.REPEAT_MODE_ALL
-        playWhenReady = true
-        prepare()
-    }
-
-private fun Context.buildPlayerView(exoPlayer: ExoPlayer) =
-    StyledPlayerView(this).apply {
-        player = exoPlayer
-        layoutParams = FrameLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT
-        )
-        useController = false
-        resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
-    }
-
-
-@Composable
-fun IntroScreen(videoUri: Uri) {
-    val context = LocalContext.current
-    //val passwordFocusRequester = FocusRequester()
-    //val focusManager = LocalFocusManager.current
-    val exoPlayer = remember { context.buildExoPlayer(videoUri) }
-
-    DisposableEffect(
-        AndroidView(
-            factory = { it.buildPlayerView(exoPlayer) },
-            modifier = Modifier.fillMaxSize()
-        )
-    ) {
-        onDispose {
-            exoPlayer.release()
-        }
-    }
-
-    ProvideWindowInsets {
-
-        Column(
-            Modifier
-                .fillMaxSize()
-                .padding(24.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.Top),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.paragliding),
-                null,
-                Modifier.size(80.dp),
-                tint = Color.Black
-            )
-            Text("ThrillCast")
-        }
-        Column(
-            Modifier
-                .navigationBarsWithImePadding()
-                .padding(24.dp)
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.Bottom),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-
-
-
-            Button(
-                onClick = {},
-                modifier = Modifier.fillMaxWidth(),
-                //leadingIcon = {Icon(imageVector = Icons.Default.Person, null)}
-            )
-            {
-                Text("Paragliding", Modifier.padding(vertical = 8.dp))
-            }
-            Button(onClick = {}, modifier = Modifier.fillMaxWidth()) {
-                Text("Skydiving", Modifier.padding(vertical = 8.dp))
-            }
-            Button(onClick = {}, modifier = Modifier.fillMaxWidth()) {
-                Text("Hanggliding", Modifier.padding(vertical = 8.dp))
-            }
-        }
-    }
-}
-
-**/
