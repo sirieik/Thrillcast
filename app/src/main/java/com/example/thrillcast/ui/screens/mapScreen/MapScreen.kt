@@ -1,3 +1,4 @@
+
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.*
@@ -87,8 +88,10 @@ fun MapScreen(viewModel: MapViewModel = viewModel(),) {
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun SearchBarDemo() {
-    val searchInput = remember { mutableStateOf("") }
+    var searchInput by remember { mutableStateOf("") }
     val hideKeyboard = LocalFocusManager.current
+    //Prover aa faa den exit knappen til å kun dukke opp dersom textfielden er trykket paa, men funker faen ikke
+    //var textFieldClicked by remember { mutableStateOf(false) }
 
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -106,22 +109,25 @@ fun SearchBarDemo() {
             )
         }
         OutlinedTextField(
-            value = searchInput.value,
-            onValueChange = { searchInput.value = it },
+            value = searchInput,
+            onValueChange = { searchInput = it },
+            //onFocusEvent = {textFieldClicked = textFieldClicked.isFocused},
             label = { Text("Find takeoff locations") },
             modifier = Modifier.weight(1f)
         )
-        IconButton(
-            onClick = {
-                searchInput.value = ""
-                hideKeyboard.clearFocus()
+        //if(textFieldClicked) {
+            IconButton(
+                onClick = {
+                    searchInput = ""
+                    hideKeyboard.clearFocus()
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Close,
+                    contentDescription = "Exit search"
+                )
             }
-        ) {
-            Icon(
-                imageVector = Icons.Filled.Close,
-                contentDescription = "Exit search"
-            )
-        }
+        //}
     }
 }
 
