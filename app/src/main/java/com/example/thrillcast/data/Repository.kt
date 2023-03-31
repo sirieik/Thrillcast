@@ -68,20 +68,20 @@ class Repository {
 
     // Function to get data in NotesDatabase
     suspend fun getTakeOffSpots() : List<TakeOffSpot> {
-        return databaseClass.getSpots()
+    return databaseClass.getSpots()
     }
 
     // Function to manipulate data in the database (add data)
     suspend fun addSpots(spot: TakeOffSpot): List<TakeOffSpot> {
-        databaseClass.addSpots(spot)
-        return getSpots()
+    databaseClass.addSpots(spot)
+    return getSpots()
     }
 
     // Function to manipulate data in database (deletes all entries of spots)
     suspend fun deleteAll(): List<TakeOffSpot> {
-        databaseClass.deleteAll()
-        return getSpots()
+    databaseClass.deleteAll()
+    return getSpots()
     }
-    */
+     */
 
 }
