@@ -10,8 +10,14 @@ plugins {
 
     //Google Maps
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin' version '2.0.1' apply false
+
+
 }
 
+//Den her ser mad sketchy ut?
+/*
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+ */
