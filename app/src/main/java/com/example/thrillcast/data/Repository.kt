@@ -6,6 +6,7 @@ import MapModel
 import MetModel
 import WindyModel
 import WindyObject
+import com.google.android.gms.maps.model.LatLng
 
 /**
  * The main responsibility in our repository class is to fetch and manipulate data. The objects are created in their respective
@@ -83,5 +84,28 @@ class Repository {
     return getSpots()
     }
      */
+
+
+    //Funksjon for å sette steder på kart uten database
+    suspend fun fetchStationLatLngAndNames(): HashMap<String, LatLng> {
+        var stations = holfuyModel.fetchHolfuyStations()
+        var stationsInNor = stations.filter { it.location?.countryCode == "NO" }
+        var namesAndLatLng: HashMap<String, LatLng> = hashMapOf()
+
+        stationsInNor.forEach {
+            val name = it.name
+            val latLng = it.location?.latitude?.let { it1 -> it.location?.longitude?.let { it2 ->
+                LatLng(it1,
+                    it2
+                )
+            } }
+            if (name != null && latLng != null) {
+                namesAndLatLng.put(name, latLng)
+            }
+
+        }
+
+        return namesAndLatLng
+    }
 
 }

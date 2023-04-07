@@ -1,3 +1,5 @@
+import com.example.thrillcast.data.holfuy.stations.HolfuyStationsList
+import com.example.thrillcast.data.holfuy.stations.StationList
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.contentnegotiation.*
@@ -25,6 +27,12 @@ class HolfuyModel() {
     //Retrieve information about one single weather station given by parameter "s"
     suspend fun fetchHolfuyObject(station: String): HolfuyObject {
         return client.get(path + station + endOfPath).body()
+    }
+
+    //Retrieve list over stations
+    suspend fun fetchHolfuyStations(): List<HolfuyStationsList> {
+        val stations: StationList = client.get("https://api.holfuy.com/stations/stations.json").body()
+        return stations.holfuyStationsList
     }
 
 }

@@ -1,10 +1,15 @@
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.thrillcast.data.Repository
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 class MapViewModel : ViewModel() {
+
+    val repo = Repository()
 
     //MVP hashMap
     private val takeoffsLocations = hashMapOf(
@@ -13,8 +18,6 @@ class MapViewModel : ViewModel() {
         "VossHPK Hangur Øst" to LatLng(60.645556, 6.407778)
     )
 
-
-
     private val _uiState = MutableStateFlow(MapUiState(takeoffs = takeoffsLocations))
 
     val uiState: StateFlow<MapUiState> = _uiState.asStateFlow()
@@ -22,6 +25,15 @@ class MapViewModel : ViewModel() {
     private val HolfuyClient = HolfuyModel()
 
     init {
+        retrieveStations()
+    }
 
+    //Hente steder rett fra API uten database
+    fun retrieveStations() {
+        viewModelScope.launch {
+            val takeoffs = repo.fetchStationLatLngAndNames()
+
+            _uiState.value = MapUiState(takeoffs)
+        }
     }
 }
