@@ -69,8 +69,5 @@ fun NavBar(navController: NavHostController) {
                 )
             }
         }
-
     )
-
-
 }

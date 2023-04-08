@@ -18,6 +18,7 @@ class MapViewModel : ViewModel() {
     )
 
 
+
     private val _uiState = MutableStateFlow(MapUiState(takeoffs = takeoffsLocations))
 
     val uiState: StateFlow<MapUiState> = _uiState.asStateFlow()

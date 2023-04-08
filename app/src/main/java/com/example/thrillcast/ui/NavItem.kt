@@ -1,9 +1,7 @@
 package com.example.thrillcast.ui
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.*
 import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class NavItem (
@@ -15,7 +13,7 @@ sealed class NavItem (
     ) {
 
     object settings: NavItem("Settings", "settings", Icons.Filled.Settings)
-    object map: NavItem("Map", "map", Icons.Filled.Home)
+    object map: NavItem("Map", "map", Icons.Filled.Place)
     object favorites: NavItem("Favorites", "favorites", Icons.Filled.Favorite)
 
 }

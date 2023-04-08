@@ -50,6 +50,7 @@ fun MapScreen(viewModel: MapViewModel = viewModel()) {
                     onMapLoaded = {
                         //Her oppdaterer vi verdien til true dersom kartet er ferdig lastet inn
                         isMapLoaded = true
+
                     }
                 ) {
                     uiState.value.takeoffs.forEach{ it ->
