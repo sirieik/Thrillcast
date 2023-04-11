@@ -12,12 +12,22 @@ import androidx.compose.ui.unit.dp
 import kotlin.math.cos
 import kotlin.math.sin
 
+/*
+TO-DO:
+Add the yellow zones as well, but i think it might be difficult to do
+ */
+
 @Composable
-fun WindDirectionWheel(greenStart: Int, greenStop: Int, windDirection: Int) {
+fun WindDirectionWheel(
+    greenStart: Int, greenStop: Int,
+    yellowStart: Int, yellowStop: Int,
+    windDirection: Int) {
 
     //Since 0 represents 3 o' clock, we have to withdraw 90 degrees
     val greenStartAngle = (greenStart - 90).toFloat()
     val greenStopAngle = (greenStop - 90).toFloat()
+    val yellowStartAngle = (yellowStart - 90).toFloat()
+    val yellowStopAngle = (yellowStop - 90).toFloat()
 
     //CHAD
     // Convert wind direction to radians
@@ -48,12 +58,33 @@ fun WindDirectionWheel(greenStart: Int, greenStop: Int, windDirection: Int) {
 
             drawCircle(Color.Green)
             drawArc(
-                color = Color.White,
+                color = Color.Yellow,
                 startAngle = greenStartAngle,
                 //We have to do the area that isnt flyable to display, because otherwise it doesn't work
                 sweepAngle = greenStopAngle - greenStartAngle,
                 useCenter = true
             )
+
+            //Sirkelen i bunn er grønn og skal representere "bra-sonen"
+            //over legger jeg en gul sirkel over de områdene som ikke er bra
+            //jeg prøver under å legge en hvit sirkel over stedene som er no-go
+            //Det funker ikke
+
+            //Don't understand why this doesn't work:
+
+/*
+            drawCircle(Color.com.example.thrillcast.data.holfuy.stations.Green)
+            drawArc(
+                color = Color.White,
+                startAngle = yellowStartAngle,
+                //We have to do the area that isnt flyable to display, because otherwise it doesn't work
+                sweepAngle = yellowStopAngle - yellowStartAngle,
+                useCenter = true
+            )
+
+ */
+
+
 
             //CHAD
             // Draw line for wind direction
@@ -71,5 +102,5 @@ fun WindDirectionWheel(greenStart: Int, greenStop: Int, windDirection: Int) {
 @Preview
 @Composable
 fun WheelPreview() {
-    WindDirectionWheel(240, 0, 90)
+    WindDirectionWheel(240, 0, 220, 20, 90)
 }
