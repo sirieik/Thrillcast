@@ -53,12 +53,8 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
 
-                    
-
                     ThrillCastApp()
 
-
-                    //IntroScreen(getVideoUri())
                 }
             }
         }
