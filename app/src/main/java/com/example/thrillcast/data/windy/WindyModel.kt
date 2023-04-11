@@ -23,7 +23,7 @@ class WindyModel() {
 
     //NB: litt rart m de skråstrekene i bodyen, kanskje vi oppdager at det er feil
     //også litt usikker på om den blir parset til windyObject nå, men det oppdager vi fort når vi tester
-    suspend fun fetchWindyObject(lat : String, lon : String)  {
+    suspend fun fetchWindyObject(lat : String, lon : String): WindyObject {
         val windyObject: WindyObject = client.post(path) {
             setBody("{\n" +
                     "    \"lat\": $lat,\n" +
@@ -34,6 +34,6 @@ class WindyModel() {
                     "    \"key\": \"ZNn24b3G6rq28A1xMOmRFHJ6YYmzv45C\"\n" +
                     "}")
         }.body()
+        return windyObject
     }
-
 }

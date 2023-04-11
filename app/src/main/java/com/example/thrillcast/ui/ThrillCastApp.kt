@@ -16,7 +16,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.thrillcast.ui.NavItem
 
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ThrillCastApp(){
