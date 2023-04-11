@@ -27,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.thrillcast.ui.screens.introScreen.IntroScreen
+import com.example.thrillcast.ui.screens.introScreen2.IntroScreen2
 import com.example.thrillcast.ui.theme.ThrillCastTheme
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.navigationBarsWithImePadding
@@ -51,7 +52,11 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+
+                    
+
                     ThrillCastApp()
+
 
                     //IntroScreen(getVideoUri())
                 }
