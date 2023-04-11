@@ -15,14 +15,7 @@ class MapViewModel : ViewModel() {
 
     val repo = Repository()
 
-    //MVP hashMap
-    private val takeoffsLocations = hashMapOf(
-        "Sundvollen" to LatLng(60.05388889, 10.32250000),
-        "Loen Skylift" to LatLng(61.884722, 6.835000),
-        "VossHPK Hangur Øst" to LatLng(60.645556, 6.407778)
-    )
-
-    private val _uiState = MutableStateFlow(MapUiState(takeoffs = takeoffsLocations))
+    private val _uiState = MutableStateFlow(MapUiState(hashMapOf()))
 
     val uiState: StateFlow<MapUiState> = _uiState.asStateFlow()
 
