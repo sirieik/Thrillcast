@@ -1,17 +1,28 @@
 package com.example.thrillcast.ui.screens.mapScreen
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.interaction.DragInteraction
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ContentAlpha
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.core.graphics.createBitmap
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.thrillcast.R
@@ -33,6 +44,9 @@ fun MapScreen(viewModel: MapViewModel = viewModel()) {
     var isMapLoaded by remember {mutableStateOf(false)}
     var bottomSheetVisible by remember { mutableStateOf(false)}
     var selectedMarker by remember { mutableStateOf<Marker?>(null) }
+
+    var searchInput by remember { mutableStateOf("") }
+    val hideKeyboard = LocalFocusManager.current
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -110,9 +124,12 @@ fun SearchBarDemo() {
     //var textFieldClicked by remember { mutableStateOf(false) }
 
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color(0xFF95B5F9)),
         horizontalArrangement = Arrangement.Start,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+
     ) {
         IconButton(
             onClick = {
@@ -121,16 +138,62 @@ fun SearchBarDemo() {
         ) {
             Icon(
                 imageVector = Icons.Filled.ArrowBack,
-                contentDescription = "Go back"
+                contentDescription = "Go back",
+                tint = Color.Black
             )
         }
         OutlinedTextField(
+
+            modifier = Modifier
+                .border(2.dp, Color.LightGray, CircleShape)
+                .width(320.dp)
+                .height(60.dp)
+                .clip(shape = CircleShape)
+                .background(color = Color(0xFFF3EDF7)),
             value = searchInput,
-            onValueChange = { searchInput = it },
+            onValueChange = {
+                searchInput = it},
             //onFocusEvent = {textFieldClicked = textFieldClicked.isFocused},
-            label = { Text("Find takeoff locations") },
-            modifier = Modifier.weight(1f)
+            placeholder = { Text("Find takeoff locations") },
+            singleLine = true,
+            maxLines = 1,
+            shape = CircleShape,
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "search",
+                    tint = Color.Black
+                )
+            },
+            trailingIcon = {
+                IconButton(
+                    onClick = {
+                        searchInput = ""
+                        hideKeyboard.clearFocus()
+                    }
+                ) {
+
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "close",
+                        tint = Color.Black
+                    )
+                }
+            }
         )
+
+        /*IconButton(
+            onClick = {
+                /*TODO - legge til NAV bar der man går tilbake til start skjerm*/
+            }
+        ) {
+            Icon(
+                imageVector = Icons.Filled.ArrowBack,
+                contentDescription = "Go back",
+                tint = Color.White
+            )
+        }*/
+        /*
         //if(textFieldClicked) {
             IconButton(
                 onClick = {
@@ -144,6 +207,8 @@ fun SearchBarDemo() {
                 )
             }
         //}
+
+         */
     }
 }
 

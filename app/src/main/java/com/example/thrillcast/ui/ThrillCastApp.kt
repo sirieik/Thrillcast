@@ -1,5 +1,6 @@
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
@@ -8,6 +9,7 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.NavHostController
@@ -54,11 +56,11 @@ fun NavBar(navController: NavHostController) {
     )
 
     NavigationBar(
+        modifier = Modifier.height(60.dp),
         content = {
             navItems.forEachIndexed{ index, item ->
                 NavigationBarItem(
                     icon = { Icon(item.icon, contentDescription = item.name) },
-                    label = { Text(item.name) },
                     selected = selectedItem == index,
                     onClick = {
                         selectedItem = index
