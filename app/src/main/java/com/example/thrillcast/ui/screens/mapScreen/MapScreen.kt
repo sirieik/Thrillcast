@@ -1,4 +1,4 @@
-
+package com.example.thrillcast.ui.screens.mapScreen
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.*
@@ -12,6 +12,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.graphics.createBitmap
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.thrillcast.R
 import com.google.android.gms.maps.model.*
@@ -19,7 +20,7 @@ import com.google.maps.android.compose.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MapScreen(viewModel: MapViewModel = viewModel(),) {
+fun MapScreen(viewModel: MapViewModel = viewModel()) {
 
     val norway = LatLng(62.0, 10.0)
     val cameraPositionState = rememberCameraPositionState {
@@ -30,6 +31,8 @@ fun MapScreen(viewModel: MapViewModel = viewModel(),) {
 
     //Bruke denne til å legge inn lasteskjerm dersom kartet bruker tid
     var isMapLoaded by remember {mutableStateOf(false)}
+    var bottomSheetVisible by remember { mutableStateOf(false)}
+    var selectedMarker by remember { mutableStateOf<Marker?>(null) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -50,7 +53,7 @@ fun MapScreen(viewModel: MapViewModel = viewModel(),) {
 
                     }
                 ) {
-                    uiState.value.takeoffs.forEach{
+                    uiState.value.takeoffs.forEach{ it ->
                         Marker(
                             state = MarkerState(it.value),
                             title = it.key,
@@ -60,9 +63,22 @@ fun MapScreen(viewModel: MapViewModel = viewModel(),) {
                                 //Tenker at det er mer praktisk å få opp infoskjerm etter å trykke på
                                 //"labelen" til markøren etter å trykke på den, i tilfelle man trykker på feil
                                 //markør. I og med at det kommer til å være en del markører
+                                selectedMarker = it
+                                bottomSheetVisible = true
                             }
                         )
                     }
+                }
+
+                // Show the bottom sheet if a marker was selected
+                selectedMarker?.let { marker ->
+                    MapBottomInfoSheet(
+                        selectedMarker = marker,
+                        bottomSheetVisible = bottomSheetVisible,
+                        onCloseSheet = {
+                            selectedMarker = null
+                        }
+                    )
                 }
 
                 //Lasteskjerm om kartet ikke lastes inn
@@ -134,6 +150,6 @@ fun SearchBarDemo() {
 @Preview
 @Composable
 fun MapScreenPreview() {
-    //MapScreen()
+    MapScreen()
 }
 

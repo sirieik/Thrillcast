@@ -1,3 +1,7 @@
+package com.example.thrillcast.ui.screens.mapScreen
+
+import HolfuyModel
+import MapUiState
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.flow.MutableStateFlow

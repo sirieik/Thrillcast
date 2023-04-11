@@ -1,6 +1,6 @@
 package com.example.thrillcast
 
-import InfoCard
+import MapBottomInfoSheet
 import MapScreen
 import NavBar
 import ThrillCastApp
@@ -42,7 +42,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 
-
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,9 +52,12 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    //InfoCard()
-                    //ThrillCastApp()
-                    IntroScreen2()
+
+                    
+
+                    ThrillCastApp()
+
+
                     //IntroScreen(getVideoUri())
                 }
             }
