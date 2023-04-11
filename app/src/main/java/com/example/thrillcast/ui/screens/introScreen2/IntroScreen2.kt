@@ -1,5 +1,6 @@
 package com.example.thrillcast.ui.screens.introScreen2
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun IntroScreen2() {
+fun IntroScreen2(onNavigate: () -> Unit) {
 
     Column(
         Modifier
@@ -64,9 +65,7 @@ fun IntroScreen2() {
             Spacer(modifier = Modifier.padding(1.dp))
 
             Button(
-                onClick = {
-                    //ThrillCastApp()
-                },
+                onClick = onNavigate,
                 colors = ButtonDefaults.buttonColors(Color.White),
                 modifier = Modifier.width(200.dp),
                 shape = RoundedCornerShape(30)

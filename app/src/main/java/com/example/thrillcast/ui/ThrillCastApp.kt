@@ -14,6 +14,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.thrillcast.ui.NavItem
+import com.example.thrillcast.ui.screens.introScreen2.IntroScreen2
+import com.example.thrillcast.ui.screens.mapScreen.MapScreen
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,10 +34,11 @@ fun ThrillCastApp(){
 
 @Composable
 fun NavigationGraph( navController: NavHostController ){
-    NavHost(navController, startDestination = NavItem.map.route) {
+    NavHost(navController, startDestination = "introscreen") {
         composable(NavItem.settings.route) { SettingsScreen() }
         composable(NavItem.map.route) { MapScreen() }
         composable(NavItem.favorites.route) { FavoritesScreen() }
+        composable("introscreen") { IntroScreen2(onNavigate = { navController.navigate(NavItem.map.route) })}
     }
 }
 
