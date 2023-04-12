@@ -1,24 +1,18 @@
-import android.annotation.SuppressLint
+
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.compose.NavHost
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.thrillcast.ui.NavItem
 import com.example.thrillcast.ui.screens.introScreen2.IntroScreen2
-import com.example.thrillcast.ui.screens.mapScreen.MapScreen
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -40,9 +34,9 @@ fun ThrillCastApp(){
 fun NavigationGraph( navController: NavHostController ){
     NavHost(navController, startDestination = "introscreen") {
         composable(NavItem.settings.route) { SettingsScreen() }
-        composable(NavItem.map.route) { MapModBotSheet() }
+        composable(NavItem.map.route) { MapModBotSheet(onNavigate = { navController.navigate("introscreen")})}
         composable(NavItem.favorites.route) { FavoritesScreen() }
-        composable("introscreen") { IntroScreen2(onNavigate = { navController.navigate(NavItem.map.route) })}
+        composable("introscreen") { IntroScreen2(onNavigate = { navController.navigate(NavItem.map.route)})}
     }
 }
 
