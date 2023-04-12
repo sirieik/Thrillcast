@@ -4,6 +4,7 @@ import HolfuyModel
 import HolfuyObject
 import MapModel
 import MetModel
+import Takeoff
 import Wind
 import WindyModel
 import WindyObject
@@ -109,6 +110,37 @@ class Repository {
         return namesAndLatLng
     }
 
+    suspend fun fetchTakeoffs(): List<Takeoff> {
+        var stations = holfuyModel.fetchHolfuyStations()
+        var stationsInNor = stations.filter { it.location?.countryCode == "NO" }
+        var takeoffs: MutableList<Takeoff> = mutableListOf()
+
+        stationsInNor.forEach {
+            val name = it.name
+            val latLng = it.location?.latitude?.let { it1 -> it.location?.longitude?.let { it2 ->
+                LatLng(it1,
+                    it2
+                )
+            } }
+            val id = it.id
+            val greenStart = it.directionZones?.green?.start
+            val greenStop = it.directionZones?.green?.stop
+            if (name != null && latLng != null && id != null && greenStart != null && greenStop != null) {
+                takeoffs.add(
+                    Takeoff(
+                        id = id,
+                        name = name,
+                        coordinates = latLng,
+                        greenStart = greenStart,
+                        greenStop = greenStop
+                    )
+                )
+            }
+
+        }
+
+        return takeoffs
+    }
     suspend fun fetchHolfuyStationWeather(id: Int): Wind? {
         val holfObject = holfuyModel.fetchHolfuyObject("$id")
         return holfObject.wind

@@ -1,4 +1,5 @@
 package com.example.thrillcast.ui.screens.mapScreen
+import HolfuyWeatherViewModel
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
@@ -35,14 +36,20 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
-fun MapScreen(coroutineScope: CoroutineScope, modalSheetState : ModalBottomSheetState, viewModel: MapViewModel, onNavigate: () -> Unit) {
+fun MapScreen(
+    coroutineScope: CoroutineScope,
+    modalSheetState : ModalBottomSheetState,
+    mapViewModel: MapViewModel,
+    holfuyWeatherViewModel: HolfuyWeatherViewModel,
+    onNavigate: () -> Unit
+) {
 
     val norway = LatLng(62.0, 10.0)
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(norway, 5.5f)
     }
 
-    val uiState = viewModel.uiState.collectAsState()
+    val uiState = mapViewModel.uiState.collectAsState()
 
     //Bruke denne til å legge inn lasteskjerm dersom kartet bruker tid
     var isMapLoaded by remember {mutableStateOf(false)}
@@ -71,10 +78,10 @@ fun MapScreen(coroutineScope: CoroutineScope, modalSheetState : ModalBottomSheet
 
                     }
                 ) {
-                    uiState.value.takeoffs.forEach{ it ->
+                    uiState.value.takeoffs.forEach{ takeoff ->
                         Marker(
-                            state = MarkerState(it.value),
-                            title = it.key,
+                            state = MarkerState(takeoff.coordinates),
+                            title = takeoff.name,
                             icon = BitmapDescriptorFactory.fromResource(R.drawable.parachuting),
                             onInfoWindowClick = {
                                 //Få inn hva som skjer når man trykker på infovindu m tekst
@@ -87,10 +94,13 @@ fun MapScreen(coroutineScope: CoroutineScope, modalSheetState : ModalBottomSheet
 
                                  */
                                 coroutineScope.launch {
-                                    if (modalSheetState.isVisible)
+                                    if (modalSheetState.isVisible) {
                                         modalSheetState.hide()
-                                    else
+                                    }
+                                    else {
+                                        holfuyWeatherViewModel.retrieveStationWeather(takeoff)
                                         modalSheetState.animateTo(ModalBottomSheetValue.Expanded)
+                                    }
                                 }
                             }
                         )

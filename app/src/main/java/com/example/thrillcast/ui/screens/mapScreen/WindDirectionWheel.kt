@@ -20,14 +20,16 @@ Add the yellow zones as well, but i think it might be difficult to do
 @Composable
 fun WindDirectionWheel(
     greenStart: Int, greenStop: Int,
-    yellowStart: Int, yellowStop: Int,
-    windDirection: Int) {
+    //yellowStart: Int, yellowStop: Int,
+    windDirection: Int,
+    modifier: Modifier = Modifier
+) {
 
     //Since 0 represents 3 o' clock, we have to withdraw 90 degrees
     val greenStartAngle = (greenStart - 90).toFloat()
     val greenStopAngle = (greenStop - 90).toFloat()
-    val yellowStartAngle = (yellowStart - 90).toFloat()
-    val yellowStopAngle = (yellowStop - 90).toFloat()
+    //val yellowStartAngle = (yellowStart - 90).toFloat()
+    //val yellowStopAngle = (yellowStop - 90).toFloat()
 
     //CHAD
     // Convert wind direction to radians
@@ -37,7 +39,7 @@ fun WindDirectionWheel(
 
     Canvas(
         modifier = Modifier
-            .size(200.dp)
+            .size(100.dp)
             .aspectRatio(1f)
             .padding(16.dp),
         onDraw = {
@@ -58,7 +60,7 @@ fun WindDirectionWheel(
 
             drawCircle(Color.Green)
             drawArc(
-                color = Color.Yellow,
+                color = Color.LightGray,
                 startAngle = greenStartAngle,
                 //We have to do the area that isnt flyable to display, because otherwise it doesn't work
                 sweepAngle = greenStopAngle - greenStartAngle,
@@ -102,5 +104,5 @@ fun WindDirectionWheel(
 @Preview
 @Composable
 fun WheelPreview() {
-    WindDirectionWheel(240, 0, 220, 20, 90)
+    WindDirectionWheel(240, 0, 90)
 }
