@@ -1,6 +1,7 @@
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
@@ -32,11 +33,12 @@ fun ThrillCastApp(){
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun NavigationGraph( navController: NavHostController ){
     NavHost(navController, startDestination = "introscreen") {
         composable(NavItem.settings.route) { SettingsScreen() }
-        composable(NavItem.map.route) { MapScreen() }
+        composable(NavItem.map.route) { MapModBotSheet() }
         composable(NavItem.favorites.route) { FavoritesScreen() }
         composable("introscreen") { IntroScreen2(onNavigate = { navController.navigate(NavItem.map.route) })}
     }

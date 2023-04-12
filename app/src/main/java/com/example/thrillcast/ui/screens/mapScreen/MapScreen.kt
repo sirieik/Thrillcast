@@ -2,6 +2,9 @@ package com.example.thrillcast.ui.screens.mapScreen
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetState
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
@@ -17,10 +20,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.thrillcast.R
 import com.google.android.gms.maps.model.*
 import com.google.maps.android.compose.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
-fun MapScreen(viewModel: MapViewModel = viewModel()) {
+fun MapScreen(coroutineScope: CoroutineScope, modalSheetState : ModalBottomSheetState, viewModel: MapViewModel) {
 
     val norway = LatLng(62.0, 10.0)
     val cameraPositionState = rememberCameraPositionState {
@@ -63,8 +68,17 @@ fun MapScreen(viewModel: MapViewModel = viewModel()) {
                                 //Tenker at det er mer praktisk å få opp infoskjerm etter å trykke på
                                 //"labelen" til markøren etter å trykke på den, i tilfelle man trykker på feil
                                 //markør. I og med at det kommer til å være en del markører
+                                /*
                                 selectedMarker = it
                                 bottomSheetVisible = true
+
+                                 */
+                                coroutineScope.launch {
+                                    if (modalSheetState.isVisible)
+                                        modalSheetState.hide()
+                                    else
+                                        modalSheetState.animateTo(ModalBottomSheetValue.Expanded)
+                                }
                             }
                         )
                     }
@@ -147,9 +161,5 @@ fun SearchBarDemo() {
     }
 }
 
-@Preview
-@Composable
-fun MapScreenPreview() {
-    MapScreen()
-}
+
 

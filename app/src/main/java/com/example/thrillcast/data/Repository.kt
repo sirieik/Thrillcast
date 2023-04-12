@@ -4,6 +4,7 @@ import HolfuyModel
 import HolfuyObject
 import MapModel
 import MetModel
+import Wind
 import WindyModel
 import WindyObject
 import com.google.android.gms.maps.model.LatLng
@@ -106,6 +107,11 @@ class Repository {
         }
 
         return namesAndLatLng
+    }
+
+    suspend fun fetchHolfuyStationWeather(id: Int): Wind? {
+        val holfObject = holfuyModel.fetchHolfuyObject("$id")
+        return holfObject.wind
     }
 
 }
