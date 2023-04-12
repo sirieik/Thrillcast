@@ -1,8 +1,8 @@
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -14,7 +14,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun MapModBotSheet(
     mapViewModel: MapViewModel = viewModel(),
-    holfuyWeatherViewModel: HolfuyWeatherViewModel = viewModel()
+    holfuyWeatherViewModel: HolfuyWeatherViewModel = viewModel(),
+    navigateBack: () -> Unit
 ) {
 
     val coroutineScope = rememberCoroutineScope()
@@ -41,6 +42,6 @@ fun MapModBotSheet(
             }
         }
     ) {
-        MapScreen(coroutineScope = coroutineScope, modalSheetState, viewModel = mapViewModel)
+        MapScreen(coroutineScope = coroutineScope, modalSheetState, viewModel = mapViewModel, navigateBack)
     }
 }

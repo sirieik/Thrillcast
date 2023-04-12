@@ -3,11 +3,8 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.interaction.DragInteraction
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ContentAlpha
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
@@ -20,23 +17,25 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.graphics.createBitmap
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.thrillcast.R
-import com.google.android.gms.maps.model.*
-import com.google.maps.android.compose.*
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.rememberCameraPositionState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
-fun MapScreen(coroutineScope: CoroutineScope, modalSheetState : ModalBottomSheetState, viewModel: MapViewModel) {
+fun MapScreen(coroutineScope: CoroutineScope, modalSheetState : ModalBottomSheetState, viewModel: MapViewModel, onNavigate: () -> Unit) {
 
     val norway = LatLng(62.0, 10.0)
     val cameraPositionState = rememberCameraPositionState {
@@ -55,7 +54,7 @@ fun MapScreen(coroutineScope: CoroutineScope, modalSheetState : ModalBottomSheet
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { SearchBarDemo() },
+        topBar = { SearchBarDemo(onNavigate) },
         content = { paddingValues ->
             Column(
                 modifier = Modifier
@@ -131,7 +130,7 @@ fun MapScreen(coroutineScope: CoroutineScope, modalSheetState : ModalBottomSheet
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun SearchBarDemo() {
+fun SearchBarDemo(onNavigate: () -> Unit) {
     var searchInput by remember { mutableStateOf("") }
     val hideKeyboard = LocalFocusManager.current
     //Prover aa faa den exit knappen til å kun dukke opp dersom textfielden er trykket paa, men funker faen ikke
@@ -146,9 +145,7 @@ fun SearchBarDemo() {
 
     ) {
         IconButton(
-            onClick = {
-            /*TODO - legge til NAV bar der man går tilbake til start skjerm*/
-            }
+            onClick = onNavigate
         ) {
             Icon(
                 imageVector = Icons.Filled.ArrowBack,
