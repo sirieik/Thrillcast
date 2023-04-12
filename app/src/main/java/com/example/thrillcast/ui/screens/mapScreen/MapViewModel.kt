@@ -15,7 +15,7 @@ class MapViewModel : ViewModel() {
 
     val repo = Repository()
 
-    private val _uiState = MutableStateFlow(MapUiState(hashMapOf()))
+    private val _uiState = MutableStateFlow(MapUiState(listOf()))
 
     val uiState: StateFlow<MapUiState> = _uiState.asStateFlow()
 
@@ -28,7 +28,7 @@ class MapViewModel : ViewModel() {
     //Hente steder rett fra API uten database
     fun retrieveStations() {
         viewModelScope.launch {
-            val takeoffs = repo.fetchStationLatLngAndNames()
+            val takeoffs = repo.fetchTakeoffs()
 
             _uiState.value = MapUiState(takeoffs)
         }
