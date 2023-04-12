@@ -8,3 +8,4 @@ data class HolfuyObject (
     var temperature : Double? = null
 
 )
+
