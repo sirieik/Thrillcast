@@ -34,7 +34,7 @@ fun ThrillCastApp(){
 fun NavigationGraph( navController: NavHostController ){
     NavHost(navController, startDestination = "introscreen") {
         composable(NavItem.settings.route) { SettingsScreen() }
-        composable(NavItem.map.route) { MapModBotSheet(onNavigate = { navController.navigate("introscreen")})}
+        composable(NavItem.map.route) { MapModBotSheet(navigateBack = { navController.navigate("introscreen")})}
         composable(NavItem.favorites.route) { FavoritesScreen() }
         composable("introscreen") { IntroScreen2(onNavigate = { navController.navigate(NavItem.map.route)})}
     }
