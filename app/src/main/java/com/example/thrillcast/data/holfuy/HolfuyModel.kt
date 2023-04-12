@@ -12,7 +12,7 @@ class HolfuyModel() {
     private val apiKey = "zFIU9XHEarYLxHN"
 
     //Holfuy API
-    private val path = "http://api.holfuy.com/live/"
+    private val path = "http://api.holfuy.com/live/?s="
 
     //End of API path - we can make calls to the different stations from the parameter
     private val endOfPath = "&pw=$apiKey&m=JSON&tu=C&su=m/s"
