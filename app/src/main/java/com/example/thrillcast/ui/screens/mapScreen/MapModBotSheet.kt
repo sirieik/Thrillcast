@@ -7,13 +7,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.thrillcast.ui.screens.mapScreen.MapScreen
 import com.example.thrillcast.ui.screens.mapScreen.MapViewModel
-import com.google.android.gms.maps.model.LatLng
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -110,26 +107,40 @@ fun ChangePageButton(
 
 @Composable
 fun NowPage(holfuyWeatherViewModel: HolfuyWeatherViewModel) {
-    val HFUiState = holfuyWeatherViewModel.uiState.collectAsState()
-    HFUiState.value.wind.direction?.let {
-        WindDirectionWheel(
-            greenStart = HFUiState.value.takeoff.greenStart,
-            greenStop = HFUiState.value.takeoff.greenStop,
-            windDirection = it,
-        )
+    Box(
+        modifier = Modifier.fillMaxWidth(),
+        contentAlignment = Alignment.CenterEnd
+    ) {
+        Column() {
+            val HFUiState = holfuyWeatherViewModel.uiState.collectAsState()
+            HFUiState.value.wind.direction?.let {
+                WindDirectionWheel(
+                    greenStart = HFUiState.value.takeoff.greenStart,
+                    greenStop = HFUiState.value.takeoff.greenStop,
+                    windDirection = it,
+                )
+            }
+            val unit = HFUiState.value.wind.unit
+            val speed = HFUiState.value.wind.speed
+            val gust = HFUiState.value.wind.gust
+
+            HFUiState.value.wind.unit?.let {
+                Text(text = "$speed($gust) $unit")
+            }
+        }
     }
-    HFUiState.value.wind.unit?.let { Text(text = it) }
 }
 
 @Composable
 fun InfoPage(holfuyWeatherViewModel: HolfuyWeatherViewModel) {
+
     val HFUiState = holfuyWeatherViewModel.uiState.collectAsState()
     HFUiState.value.takeoff.coordinates?.let{
-        Text(text = "Coordinate: " + it)
+        Text(text = "Coordinate: ${it.latitude}, ${it.longitude}")
 
     }
     HFUiState.value.takeoff.moh?.let{
-        Text(text = "MOH: " + it)
+        Text(text = "MOH: $it")
     }
 
     //Text(text = "INFO")
