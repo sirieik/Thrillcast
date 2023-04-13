@@ -125,6 +125,7 @@ class Repository {
             val id = it.id
             val greenStart = it.directionZones?.green?.start
             val greenStop = it.directionZones?.green?.stop
+            val moh = it.location?.altitude
             if (name != null && latLng != null && id != null && greenStart != null && greenStop != null) {
                 takeoffs.add(
                     Takeoff(
@@ -132,7 +133,8 @@ class Repository {
                         name = name,
                         coordinates = latLng,
                         greenStart = greenStart,
-                        greenStop = greenStop
+                        greenStop = greenStop,
+                        moh = moh!!
                     )
                 )
             }
