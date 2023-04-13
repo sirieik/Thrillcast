@@ -12,6 +12,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.thrillcast.ui.screens.mapScreen.MapScreen
 import com.example.thrillcast.ui.screens.mapScreen.MapViewModel
+import com.google.android.gms.maps.model.LatLng
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -70,7 +72,7 @@ fun MapModBotSheet(
                 }
 
                 when(currentSheet) {
-                    is SheetPage.Info -> InfoPage()
+                    is SheetPage.Info -> InfoPage(holfuyWeatherViewModel = holfuyWeatherViewModel)
                     is SheetPage.Now -> NowPage(holfuyWeatherViewModel = holfuyWeatherViewModel)
                     else -> FuturePage()
                 }
@@ -120,8 +122,17 @@ fun NowPage(holfuyWeatherViewModel: HolfuyWeatherViewModel) {
 }
 
 @Composable
-fun InfoPage() {
-    Text(text = "INFO")
+fun InfoPage(holfuyWeatherViewModel: HolfuyWeatherViewModel) {
+    val HFUiState = holfuyWeatherViewModel.uiState.collectAsState()
+    HFUiState.value.takeoff.coordinates?.let{
+        Text(text = "Coordinate: " + it)
+
+    }
+    HFUiState.value.takeoff.moh?.let{
+        Text(text = "MOH: " + it)
+    }
+
+    //Text(text = "INFO")
 }
 @Composable
 fun FuturePage() {

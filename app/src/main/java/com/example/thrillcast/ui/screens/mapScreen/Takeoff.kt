@@ -6,4 +6,7 @@ data class Takeoff(
     val name: String,
     val greenStart: Int,
     val greenStop: Int,
+    //ADD Altitude(MOH)
+    val moh : Int
+
 )

@@ -13,7 +13,7 @@ class HolfuyWeatherViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(
         HolfuyWeatherUiState(
-            Takeoff(0, LatLng(0.0,0.0), "", 0, 0),
+            Takeoff(0, LatLng(0.0,0.0), "", 0, 0,0),
             Wind(0.0,0.0,0.0,"",0)
         )
     )
