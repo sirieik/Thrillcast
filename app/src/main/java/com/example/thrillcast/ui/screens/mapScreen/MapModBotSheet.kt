@@ -125,11 +125,11 @@ fun NowPage(holfuyWeatherViewModel: HolfuyWeatherViewModel) {
 fun InfoPage(holfuyWeatherViewModel: HolfuyWeatherViewModel) {
     val HFUiState = holfuyWeatherViewModel.uiState.collectAsState()
     HFUiState.value.takeoff.coordinates?.let{
-        Text(text = "Coordinate: " + it)
+        Text(text = "Coordinate: ${it.latitude}, ${it.longitude}")
 
     }
     HFUiState.value.takeoff.moh?.let{
-        Text(text = "MOH: " + it)
+        Text(text = "MOH: $it")
     }
 
     //Text(text = "INFO")
