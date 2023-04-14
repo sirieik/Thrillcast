@@ -3,9 +3,9 @@ import HolfuyWeatherViewModel
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
@@ -18,10 +18,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.thrillcast.R
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
@@ -61,7 +61,7 @@ fun MapScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { SearchBarDemo(onNavigate) },
+        topBar = { SearchBarDemo(onNavigate, mapViewModel) },
         content = { paddingValues ->
             Column(
                 modifier = Modifier
@@ -140,11 +140,23 @@ fun MapScreen(
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun SearchBarDemo(onNavigate: () -> Unit) {
+fun SearchBarDemo(onNavigate: () -> Unit, mapViewModel: MapViewModel) {
+
     var searchInput by remember { mutableStateOf("") }
     val hideKeyboard = LocalFocusManager.current
-    //Prover aa faa den exit knappen til å kun dukke opp dersom textfielden er trykket paa, men funker faen ikke
-    //var textFieldClicked by remember { mutableStateOf(false) }
+
+    val uiState = mapViewModel.uiState.collectAsState()
+    //List of the location name list that you search for
+    val nameList = if(searchInput.isNotEmpty()) {
+        uiState.value.takeoffs.filter {
+            it.name.contains(searchInput, ignoreCase = true)
+        }.map {
+            it.name
+        }
+    }
+    else {
+        emptyList()
+    }
 
     Row(
         modifier = Modifier
@@ -153,85 +165,62 @@ fun SearchBarDemo(onNavigate: () -> Unit) {
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically,
 
-    ) {
-        IconButton(
-            onClick = onNavigate
         ) {
-            Icon(
-                imageVector = Icons.Filled.ArrowBack,
-                contentDescription = "Go back",
-                tint = Color.Black
-            )
-        }
-        OutlinedTextField(
+        Column() {
 
-            modifier = Modifier
-                .border(2.dp, Color.LightGray, CircleShape)
-                .width(320.dp)
-                .height(60.dp)
-                .clip(shape = CircleShape)
-                .background(color = Color(0xFFF3EDF7)),
-            value = searchInput,
-            onValueChange = {
-                searchInput = it},
-            //onFocusEvent = {textFieldClicked = textFieldClicked.isFocused},
-            placeholder = { Text("Find takeoff locations") },
-            singleLine = true,
-            maxLines = 1,
-            shape = CircleShape,
-            leadingIcon = {
+            IconButton(
+                onClick = onNavigate
+            ) {
                 Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = "search",
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = "Go back",
                     tint = Color.Black
                 )
-            },
-            trailingIcon = {
-                IconButton(
-                    onClick = {
-                        searchInput = ""
-                        hideKeyboard.clearFocus()
-                    }
-                ) {
-
+            }
+            TextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                value = searchInput,
+                onValueChange = { searchInput = it },
+                placeholder = { Text("Find takeoff locations") },
+                singleLine = true,
+                maxLines = 1,
+                leadingIcon = {
                     Icon(
-                        imageVector = Icons.Default.Close,
-                        contentDescription = "close",
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "search",
                         tint = Color.Black
+                    )
+                },
+                trailingIcon = {
+                    IconButton(
+                        onClick = {
+                            searchInput = ""
+                            hideKeyboard.clearFocus()
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = "close",
+                            tint = Color.Black
+                        )
+                    }
+                }
+            )
+            LazyColumn() {
+                items(nameList) { takeoff ->
+                    Text(
+                        text = takeoff,
+                        modifier = Modifier.padding(16.dp),
+                        fontSize = 20.sp
                     )
                 }
             }
-        )
-
-        /*IconButton(
-            onClick = {
-                /*TODO - legge til NAV bar der man går tilbake til start skjerm*/
-            }
-        ) {
-            Icon(
-                imageVector = Icons.Filled.ArrowBack,
-                contentDescription = "Go back",
-                tint = Color.White
-            )
-        }*/
-        /*
-        //if(textFieldClicked) {
-            IconButton(
-                onClick = {
-                    searchInput = ""
-                    hideKeyboard.clearFocus()
-                }
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Close,
-                    contentDescription = "Exit search"
-                )
-            }
-        //}
-
-         */
+        }
     }
 }
+
 
 
 
