@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
@@ -16,7 +17,6 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
@@ -138,7 +138,7 @@ fun MapScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBarDemo(onNavigate: () -> Unit, mapViewModel: MapViewModel) {
 
@@ -153,8 +153,7 @@ fun SearchBarDemo(onNavigate: () -> Unit, mapViewModel: MapViewModel) {
         }.map {
             it.name
         }
-    }
-    else {
+    } else {
         emptyList()
     }
 
@@ -208,7 +207,11 @@ fun SearchBarDemo(onNavigate: () -> Unit, mapViewModel: MapViewModel) {
                     }
                 }
             )
-            LazyColumn() {
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                state = rememberLazyListState()
+            ) {
                 items(nameList) { takeoff ->
                     Text(
                         text = takeoff,
