@@ -107,6 +107,7 @@ class Repository {
 
         }
 
+
         return namesAndLatLng
     }
 
