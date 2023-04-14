@@ -1,5 +1,6 @@
 package com.example.thrillcast.ui.screens.mapScreen
 import HolfuyWeatherViewModel
+import Takeoff
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
@@ -20,6 +22,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thrillcast.R
@@ -56,12 +60,27 @@ fun MapScreen(
     var bottomSheetVisible by remember { mutableStateOf(false)}
     var selectedMarker by remember { mutableStateOf<Marker?>(null) }
 
-    var searchInput by remember { mutableStateOf("") }
-    val hideKeyboard = LocalFocusManager.current
+    var selectedSearchItem by remember { mutableStateOf<Takeoff?>(null) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { SearchBarDemo(onNavigate, mapViewModel) },
+        topBar = {
+            SearchBarDemo(
+                onNavigate,
+                mapViewModel,
+                onTakeoffSelected = { takeoff ->
+                    selectedSearchItem = takeoff
+                    coroutineScope.launch {
+                        if (modalSheetState.isVisible) {
+                            modalSheetState.hide()
+                        }
+                        else {
+                            holfuyWeatherViewModel.retrieveStationWeather(selectedSearchItem!!)
+                            modalSheetState.animateTo(ModalBottomSheetValue.Expanded)
+                        }
+                    }
+                }
+            ) },
         content = { paddingValues ->
             Column(
                 modifier = Modifier
@@ -75,7 +94,6 @@ fun MapScreen(
                     onMapLoaded = {
                         //Her oppdaterer vi verdien til true dersom kartet er ferdig lastet inn
                         isMapLoaded = true
-
                     }
                 ) {
                     uiState.value.takeoffs.forEach{ takeoff ->
@@ -91,7 +109,6 @@ fun MapScreen(
                                 /*
                                 selectedMarker = it
                                 bottomSheetVisible = true
-
                                  */
                                 coroutineScope.launch {
                                     if (modalSheetState.isVisible) {
@@ -140,22 +157,11 @@ fun MapScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchBarDemo(onNavigate: () -> Unit, mapViewModel: MapViewModel) {
-
+fun SearchBarDemo(onNavigate: () -> Unit, mapViewModel: MapViewModel, onTakeoffSelected: (Takeoff) -> Unit) {
     var searchInput by remember { mutableStateOf("") }
     val hideKeyboard = LocalFocusManager.current
 
     val uiState = mapViewModel.uiState.collectAsState()
-    //List of the location name list that you search for
-    val nameList = if(searchInput.isNotEmpty()) {
-        uiState.value.takeoffs.filter {
-            it.name.contains(searchInput, ignoreCase = true)
-        }.map {
-            it.name
-        }
-    } else {
-        emptyList()
-    }
 
     Row(
         modifier = Modifier
@@ -207,17 +213,26 @@ fun SearchBarDemo(onNavigate: () -> Unit, mapViewModel: MapViewModel) {
                     }
                 }
             )
-            LazyColumn(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                state = rememberLazyListState()
-            ) {
-                items(nameList) { takeoff ->
-                    Text(
-                        text = takeoff,
-                        modifier = Modifier.padding(16.dp),
-                        fontSize = 20.sp
-                    )
+            if (searchInput.isNotEmpty()) {
+                LazyColumn(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    state = rememberLazyListState()
+                ) {
+                    items(uiState.value.takeoffs.filter {
+                        it.name.contains(searchInput, ignoreCase = true)
+                    }) { takeoff ->
+                        ClickableText(
+                            text = AnnotatedString(takeoff.name),
+                            onClick = {
+                                searchInput = ""
+                                hideKeyboard.clearFocus()
+                                onTakeoffSelected(takeoff)
+                            },
+                            modifier = Modifier.padding(16.dp),
+                            style = TextStyle(fontSize = 20.sp)
+                        )
+                    }
                 }
             }
         }
