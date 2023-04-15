@@ -1,10 +1,14 @@
+import android.util.Log
+import com.example.thrillcast.data.windy.Units
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
+import io.ktor.content.*
 import io.ktor.http.*
 import io.ktor.serialization.gson.*
+import org.json.JSONObject
 
 class WindyModel() {
 
@@ -21,19 +25,26 @@ class WindyModel() {
         }
     }
 
-    //NB: litt rart m de skråstrekene i bodyen, kanskje vi oppdager at det er feil
-    //også litt usikker på om den blir parset til windyObject nå, men det oppdager vi fort når vi tester
     suspend fun fetchWindyObject(lat : String, lon : String): WindyObject {
-        val windyObject: WindyObject = client.post(path) {
-            setBody("{\n" +
-                    "    \"lat\": $lat,\n" +
-                    "    \"lon\": $lon,\n" +
-                    "    \"model\": \"iconEu\",\n" +
-                    "    \"parameters\": [\"wind\"],\n" +
-                    "    \"levels\": [\"950h\", \"900h\", \"850h\", \"800h\"],\n" +
-                    "    \"key\": \"ZNn24b3G6rq28A1xMOmRFHJ6YYmzv45C\"\n" +
-                    "}")
+
+        val stringBody =
+            """
+            {
+                "lat": 60.053889,
+                "lon": 10.322500,
+                "model": "iconEu",
+                "parameters": ["wind"],
+                "levels": ["950h", "900h", "850h", "800h"],
+                "key": "ZNn24b3G6rq28A1xMOmRFHJ6YYmzv45C"
+            }
+            """
+
+        val body = TextContent(stringBody, ContentType.Application.Json)
+
+        val response: WindyObject = client.post(path) {
+            setBody(body)
         }.body()
-        return windyObject
+
+        return response
     }
 }

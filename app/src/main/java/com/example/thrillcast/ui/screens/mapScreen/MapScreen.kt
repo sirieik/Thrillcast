@@ -116,6 +116,7 @@ fun MapScreen(
                                     }
                                     else {
                                         holfuyWeatherViewModel.retrieveStationWeather(takeoff)
+                                        holfuyWeatherViewModel.retrieveWindyWeather(takeoff)
                                         modalSheetState.animateTo(ModalBottomSheetValue.Expanded)
                                     }
                                 }
