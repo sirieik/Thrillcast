@@ -8,7 +8,11 @@ import Takeoff
 import Wind
 import WindyModel
 import WindyObject
+import androidx.compose.ui.layout.LayoutCoordinates
+import com.example.thrillcast.data.met.MetObject
+import com.example.thrillcast.data.met.weatherforecast.WeatherForecast
 import com.google.android.gms.maps.model.LatLng
+import java.time.LocalDate
 
 /**
  * The main responsibility in our repository class is to fetch and manipulate data. The objects are created in their respective
@@ -146,6 +150,12 @@ class Repository {
     suspend fun fetchHolfuyStationWeather(id: Int): Wind? {
         val holfObject = holfuyModel.fetchHolfuyObject("$id")
         return holfObject.wind
+    }
+
+    suspend fun fetchMetWeatherForecast(lat:Double, lon:Double): List<WeatherForecast> {
+        val metObject = metModel.fetchMetObject(lat, lon)
+        val tomorrowsDate = LocalDate.now().plusDays(1)
+        return metObject.properties.timeseries.filter { it.time.toLocalDate() == tomorrowsDate }
     }
 
 }
