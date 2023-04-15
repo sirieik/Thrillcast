@@ -3,7 +3,7 @@ import com.google.gson.annotations.SerializedName
 
 data class WindyObject (
 
-    @SerializedName("ts"          ) var ts         : ArrayList<Int>    = arrayListOf(),
+    @SerializedName("ts"          ) var ts         : ArrayList<Long>    = arrayListOf(),
     @SerializedName("units"       ) var units      : Units?            = Units(),
     @SerializedName("wind_u-950h" ) var windU950h : ArrayList<Double> = arrayListOf(),
     @SerializedName("wind_u-900h" ) var windU900h : ArrayList<Double> = arrayListOf(),

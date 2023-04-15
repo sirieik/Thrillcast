@@ -7,6 +7,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.thrillcast.ui.screens.mapScreen.MapScreen
@@ -111,7 +112,9 @@ fun NowPage(holfuyWeatherViewModel: HolfuyWeatherViewModel) {
         modifier = Modifier.fillMaxWidth(),
         contentAlignment = Alignment.CenterEnd
     ) {
-        Column() {
+        Column(
+
+        ) {
             val HFUiState = holfuyWeatherViewModel.uiState.collectAsState()
             HFUiState.value.wind.direction?.let {
                 WindDirectionWheel(
@@ -123,10 +126,12 @@ fun NowPage(holfuyWeatherViewModel: HolfuyWeatherViewModel) {
             val unit = HFUiState.value.wind.unit
             val speed = HFUiState.value.wind.speed
             val gust = HFUiState.value.wind.gust
+            val windyspeed = HFUiState.value.windSpeed
 
             HFUiState.value.wind.unit?.let {
-                Text(text = "$speed($gust) $unit")
+                Text(text = "$speed($gust) $unit  - $windyspeed")
             }
+
         }
     }
 }
@@ -150,3 +155,8 @@ fun FuturePage() {
     Text(text = "FUTURE")
 }
 
+@Preview
+@Composable
+fun prevPage() {
+    NowPage(holfuyWeatherViewModel = viewModel())
+}

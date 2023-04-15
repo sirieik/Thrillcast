@@ -14,7 +14,8 @@ class HolfuyWeatherViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(
         HolfuyWeatherUiState(
             Takeoff(0, LatLng(0.0,0.0), "", 0, 0,0),
-            Wind(0.0,0.0,0.0,"",0)
+            Wind(0.0,0.0,0.0,"",0),
+            0.0
         )
     )
 
@@ -24,7 +25,19 @@ class HolfuyWeatherViewModel : ViewModel() {
         viewModelScope.launch {
             val weather: Wind? = repo.fetchHolfuyStationWeather(takeoff.id)
 
-            _uiState.value = weather?.let { HolfuyWeatherUiState(takeoff = takeoff, wind = it) }!!
+            val wind = repo.fetch800hWind("$takeoff.coordinates.latitude", "$takeoff.coordinates.longitude")
+            val windNow = wind.get(0)
+            val windSpeedNow = windNow.second.first
+
+            _uiState.value = weather?.let { HolfuyWeatherUiState(takeoff = takeoff, wind = it, windSpeedNow) }!!
+        }
+    }
+
+    fun retrieveWindyWeather(takeoff: Takeoff) {
+        viewModelScope.launch {
+            val wind = repo.fetch800hWind("$takeoff.coordinates.latitude", "$takeoff.coordinates.longitude")
+            val windNow = wind.get(0)
+            val windSpeedNow = windNow.second.first
         }
     }
 }

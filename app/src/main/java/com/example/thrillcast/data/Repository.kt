@@ -9,6 +9,10 @@ import Wind
 import WindyModel
 import WindyObject
 import com.google.android.gms.maps.model.LatLng
+import kotlin.math.PI
+import kotlin.math.atan2
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 /**
  * The main responsibility in our repository class is to fetch and manipulate data. The objects are created in their respective
@@ -148,4 +152,55 @@ class Repository {
         return holfObject.wind
     }
 
+    suspend fun fetchWindyObject(lat: String, lng: String): WindyObject {
+        val windyObject = windyModel.fetchWindyObject(lat, lng)
+
+        val timestamps = windyObject.ts
+        val windU950h  = windyObject.windU950h
+        val windU900h  = windyObject.windU900h
+        val windU850h  = windyObject.windU850h
+        val windU800h  = windyObject.windU800h
+        val windV950h  = windyObject.windV950h
+        val windV900h  = windyObject.windV900h
+        val windV850h  = windyObject.windV850h
+        val windV800h  = windyObject.windV800h
+
+        val windUV800h = windU800h.zip(windV800h)
+        val wind800hSpeedAndDir: MutableList<Pair<Double, Double>> = mutableListOf()
+
+        windUV800h.forEach {
+            wind800hSpeedAndDir.add(calculateWindSpeedAndDirection(it.first, it.second))
+        }
+
+        val tsSpeedDir = timestamps.zip(wind800hSpeedAndDir)
+
+        return windyObject
+    }
+
+    suspend fun fetch800hWind(lat: String, lng: String): List<Pair<Long, Pair<Double, Double>>> {
+        val windyObject = windyModel.fetchWindyObject(lat, lng)
+
+        val timestamps = windyObject.ts
+        val windU800h  = windyObject.windU800h
+        val windV800h  = windyObject.windV800h
+
+        val windUV800h = windU800h.zip(windV800h)
+        val wind800hSpeedAndDir: MutableList<Pair<Double, Double>> = mutableListOf()
+
+        windUV800h.forEach {
+            wind800hSpeedAndDir.add(calculateWindSpeedAndDirection(it.first, it.second))
+        }
+
+        val tsSpeedDir = timestamps.zip(wind800hSpeedAndDir)
+
+        return timestamps.zip(wind800hSpeedAndDir)
+    }
+
+
+
+    private fun calculateWindSpeedAndDirection(u: Double, v: Double): Pair<Double, Double> {
+        val windSpeed = sqrt(u.pow(2) + v.pow(2))
+        val windDirection = atan2(v, u) * 180 / PI
+        return Pair(windSpeed, windDirection)
+    }
 }
