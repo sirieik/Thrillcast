@@ -15,6 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.thrillcast.ui.screens.mapScreen.MapScreen
@@ -119,7 +120,9 @@ fun NowPage(holfuyWeatherViewModel: HolfuyWeatherViewModel) {
         modifier = Modifier.fillMaxWidth(),
         contentAlignment = Alignment.CenterEnd
     ) {
-        Column() {
+        Column(
+
+        ) {
             val HFUiState = holfuyWeatherViewModel.uiState.collectAsState()
             HFUiState.value.wind.direction?.let {
                 WindDirectionWheel(
@@ -131,10 +134,12 @@ fun NowPage(holfuyWeatherViewModel: HolfuyWeatherViewModel) {
             val unit = HFUiState.value.wind.unit
             val speed = HFUiState.value.wind.speed
             val gust = HFUiState.value.wind.gust
+            val windyspeed = HFUiState.value.windSpeed
 
             HFUiState.value.wind.unit?.let {
-                Text(text = "$speed($gust) $unit")
+                Text(text = "$speed($gust) $unit  - $windyspeed")
             }
+
         }
     }
 }
@@ -177,44 +182,9 @@ fun FuturePage(holfuyWeatherViewModel: HolfuyWeatherViewModel) {
 
 }
 
-/*
+@Preview
 @Composable
-fun AlpacaCard(alpacaParty: AlpacaParty){
-
-    ElevatedCard(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(15.dp)
-    )  {
-        Column(modifier = Modifier
-            .fillMaxWidth(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally){
-            Spacer(modifier = Modifier
-                .height(20.dp)
-                .fillMaxWidth()
-                .background(color= Color(alpacaParty.color.toColorInt()))
-            )
-
-            Text(text = alpacaParty.name)
-            //image
-            AsyncImage(
-                model = alpacaParty.img,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(200.dp)
-                    .clip(CircleShape)
-            )
-
-            androidx.compose.material3.Text(text = "Leader: "+alpacaParty.leader)
-            androidx.compose.material3.Text(text = "Votes:"+ alpacaParty.votes +"  - "+alpacaParty.percentage + "%")
-        }
-
-    }
-
+fun prevPage() {
+    NowPage(holfuyWeatherViewModel = viewModel())
 }
-
-*/
-
 

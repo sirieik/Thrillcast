@@ -1,11 +1,14 @@
 package com.example.thrillcast.ui.screens.mapScreen
 import HolfuyWeatherViewModel
+import Takeoff
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
@@ -16,12 +19,13 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.thrillcast.R
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
@@ -56,12 +60,27 @@ fun MapScreen(
     var bottomSheetVisible by remember { mutableStateOf(false)}
     var selectedMarker by remember { mutableStateOf<Marker?>(null) }
 
-    var searchInput by remember { mutableStateOf("") }
-    val hideKeyboard = LocalFocusManager.current
+    var selectedSearchItem by remember { mutableStateOf<Takeoff?>(null) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { SearchBarDemo(onNavigate) },
+        topBar = {
+            SearchBarDemo(
+                onNavigate,
+                mapViewModel,
+                onTakeoffSelected = { takeoff ->
+                    selectedSearchItem = takeoff
+                    coroutineScope.launch {
+                        if (modalSheetState.isVisible) {
+                            modalSheetState.hide()
+                        }
+                        else {
+                            holfuyWeatherViewModel.retrieveStationWeather(selectedSearchItem!!)
+                            modalSheetState.animateTo(ModalBottomSheetValue.Expanded)
+                        }
+                    }
+                }
+            ) },
         content = { paddingValues ->
             Column(
                 modifier = Modifier
@@ -75,7 +94,6 @@ fun MapScreen(
                     onMapLoaded = {
                         //Her oppdaterer vi verdien til true dersom kartet er ferdig lastet inn
                         isMapLoaded = true
-
                     }
                 ) {
                     uiState.value.takeoffs.forEach{ takeoff ->
@@ -91,7 +109,6 @@ fun MapScreen(
                                 /*
                                 selectedMarker = it
                                 bottomSheetVisible = true
-
                                  */
                                 coroutineScope.launch {
                                     if (modalSheetState.isVisible) {
@@ -99,6 +116,7 @@ fun MapScreen(
                                     }
                                     else {
                                         holfuyWeatherViewModel.retrieveStationWeather(takeoff)
+                                        holfuyWeatherViewModel.retrieveWindyWeather(takeoff)
                                         modalSheetState.animateTo(ModalBottomSheetValue.Expanded)
                                     }
                                 }
@@ -138,13 +156,13 @@ fun MapScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchBarDemo(onNavigate: () -> Unit) {
+fun SearchBarDemo(onNavigate: () -> Unit, mapViewModel: MapViewModel, onTakeoffSelected: (Takeoff) -> Unit) {
     var searchInput by remember { mutableStateOf("") }
     val hideKeyboard = LocalFocusManager.current
-    //Prover aa faa den exit knappen til å kun dukke opp dersom textfielden er trykket paa, men funker faen ikke
-    //var textFieldClicked by remember { mutableStateOf(false) }
+
+    val uiState = mapViewModel.uiState.collectAsState()
 
     Row(
         modifier = Modifier
@@ -153,85 +171,75 @@ fun SearchBarDemo(onNavigate: () -> Unit) {
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically,
 
-    ) {
-        IconButton(
-            onClick = onNavigate
         ) {
-            Icon(
-                imageVector = Icons.Filled.ArrowBack,
-                contentDescription = "Go back",
-                tint = Color.Black
-            )
-        }
-        OutlinedTextField(
+        Column() {
 
-            modifier = Modifier
-                .border(2.dp, Color.LightGray, CircleShape)
-                .width(320.dp)
-                .height(60.dp)
-                .clip(shape = CircleShape)
-                .background(color = Color(0xFFF3EDF7)),
-            value = searchInput,
-            onValueChange = {
-                searchInput = it},
-            //onFocusEvent = {textFieldClicked = textFieldClicked.isFocused},
-            placeholder = { Text("Find takeoff locations") },
-            singleLine = true,
-            maxLines = 1,
-            shape = CircleShape,
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = "search",
-                    tint = Color.Black
-                )
-            },
-            trailingIcon = {
-                IconButton(
-                    onClick = {
-                        searchInput = ""
-                        hideKeyboard.clearFocus()
-                    }
-                ) {
-
-                    Icon(
-                        imageVector = Icons.Default.Close,
-                        contentDescription = "close",
-                        tint = Color.Black
-                    )
-                }
-            }
-        )
-
-        /*IconButton(
-            onClick = {
-                /*TODO - legge til NAV bar der man går tilbake til start skjerm*/
-            }
-        ) {
-            Icon(
-                imageVector = Icons.Filled.ArrowBack,
-                contentDescription = "Go back",
-                tint = Color.White
-            )
-        }*/
-        /*
-        //if(textFieldClicked) {
             IconButton(
-                onClick = {
-                    searchInput = ""
-                    hideKeyboard.clearFocus()
-                }
+                onClick = onNavigate
             ) {
                 Icon(
-                    imageVector = Icons.Filled.Close,
-                    contentDescription = "Exit search"
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = "Go back",
+                    tint = Color.Black
                 )
             }
-        //}
-
-         */
+            TextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                value = searchInput,
+                onValueChange = { searchInput = it },
+                placeholder = { Text("Find takeoff locations") },
+                singleLine = true,
+                maxLines = 1,
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "search",
+                        tint = Color.Black
+                    )
+                },
+                trailingIcon = {
+                    IconButton(
+                        onClick = {
+                            searchInput = ""
+                            hideKeyboard.clearFocus()
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = "close",
+                            tint = Color.Black
+                        )
+                    }
+                }
+            )
+            if (searchInput.isNotEmpty()) {
+                LazyColumn(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    state = rememberLazyListState()
+                ) {
+                    items(uiState.value.takeoffs.filter {
+                        it.name.contains(searchInput, ignoreCase = true)
+                    }) { takeoff ->
+                        ClickableText(
+                            text = AnnotatedString(takeoff.name),
+                            onClick = {
+                                searchInput = ""
+                                hideKeyboard.clearFocus()
+                                onTakeoffSelected(takeoff)
+                            },
+                            modifier = Modifier.padding(16.dp),
+                            style = TextStyle(fontSize = 20.sp)
+                        )
+                    }
+                }
+            }
+        }
     }
 }
+
 
 
 
