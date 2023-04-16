@@ -158,7 +158,7 @@ fun InfoPage(holfuyWeatherViewModel: HolfuyWeatherViewModel) {
 //Maybe we can change to "Tomorrow" instead of "future"? for the buttoom-name??
 fun FuturePage(holfuyWeatherViewModel: HolfuyWeatherViewModel) {
     val HFUiState = holfuyWeatherViewModel.uiState.collectAsState()
-
+    Text(text = "FUTURE")
     //HFUiState.value.weatherForecast.next_1_hour.summary.symbol_code
     /**
      * import androidx.compose.foundation.lazy.items
@@ -167,10 +167,13 @@ fun FuturePage(holfuyWeatherViewModel: HolfuyWeatherViewModel) {
         items(HFUiState.value.weatherForecast) { weatherForecast ->
             val time = weatherForecast.time.toLocalTime()
             val text = weatherForecast.data?.next_1_hours?.summary?.symbol_code ?: ""
-            Text(text = "${time}  : ${text}")
+            val air_temp = weatherForecast.data?.instant?.details?.air_temperature?:0.0
+            val wind_speed =weatherForecast.data?.instant?.details?.wind_speed?:0.0
+
+            Text(text = "${time}       ${air_temp}C         ${wind_speed}m/s        ${text}")
         }
     }
-    Text(text = "FUTURE")
+
 
 }
 
