@@ -1,6 +1,7 @@
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.thrillcast.data.Repository
+import com.example.thrillcast.data.met.weatherforecast.WeatherForecast
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,7 +16,9 @@ class HolfuyWeatherViewModel : ViewModel() {
         HolfuyWeatherUiState(
             Takeoff(0, LatLng(0.0,0.0), "", 0, 0,0),
             Wind(0.0,0.0,0.0,"",0),
+            emptyList(),
             0.0
+
         )
     )
 
@@ -24,12 +27,14 @@ class HolfuyWeatherViewModel : ViewModel() {
     fun retrieveStationWeather(takeoff: Takeoff) {
         viewModelScope.launch {
             val weather: Wind? = repo.fetchHolfuyStationWeather(takeoff.id)
+            val weatherForecast: List<WeatherForecast> = repo.fetchMetWeatherForecast(takeoff.coordinates.latitude, takeoff.coordinates.longitude)
+
 
             val wind = repo.fetch800hWind("$takeoff.coordinates.latitude", "$takeoff.coordinates.longitude")
             val windNow = wind.get(0)
             val windSpeedNow = windNow.second.first
 
-            _uiState.value = weather?.let { HolfuyWeatherUiState(takeoff = takeoff, wind = it, windSpeedNow) }!!
+            _uiState.value = weather?.let { HolfuyWeatherUiState(takeoff = takeoff, wind = it, weatherForecast, windSpeedNow) }!!
         }
     }
 
