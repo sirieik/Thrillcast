@@ -18,7 +18,6 @@ class HolfuyWeatherViewModel : ViewModel() {
             Wind(0.0,0.0,0.0,"",0),
             emptyList(),
             0.0
-
         )
     )
 
@@ -35,6 +34,7 @@ class HolfuyWeatherViewModel : ViewModel() {
             val windSpeedNow = windNow.second.first
 
             _uiState.value = weather?.let { HolfuyWeatherUiState(takeoff = takeoff, wind = it, weatherForecast, windSpeedNow) }!!
+
         }
     }
 

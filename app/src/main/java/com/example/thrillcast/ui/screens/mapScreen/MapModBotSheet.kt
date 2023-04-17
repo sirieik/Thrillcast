@@ -1,4 +1,22 @@
 
+
+import android.util.Log
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CornerBasedShape
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.res.painterResource
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,10 +32,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.thrillcast.R
 import com.example.thrillcast.ui.screens.mapScreen.MapScreen
 import com.example.thrillcast.ui.screens.mapScreen.MapViewModel
 import kotlinx.coroutines.launch
@@ -116,11 +136,24 @@ fun ChangePageButton(
 
 @Composable
 fun NowPage(holfuyWeatherViewModel: HolfuyWeatherViewModel) {
-    Box(
-        modifier = Modifier.fillMaxWidth(),
-        contentAlignment = Alignment.CenterEnd
+
+    var currentHeightWindSpeed by remember {
+        mutableStateOf("3(2)")
+    }
+    var currentHeightWindDirection by remember {
+        mutableStateOf(Icons.Filled.ArrowBack)
+    }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(200.dp)
     ) {
         Column(
+
+            modifier = Modifier
+                .weight(0.3f, true),
+            horizontalAlignment = Alignment.CenterHorizontally
 
         ) {
             val HFUiState = holfuyWeatherViewModel.uiState.collectAsState()
@@ -137,8 +170,95 @@ fun NowPage(holfuyWeatherViewModel: HolfuyWeatherViewModel) {
             val windyspeed = HFUiState.value.windSpeed
 
             HFUiState.value.wind.unit?.let {
-                Text(text = "$speed($gust) $unit  - $windyspeed")
+
+                Text(text = "$speed $unit")
             }
+
+        }
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .weight(0.4f, true)
+        ) {
+            Icon(
+                painter = painterResource(id = com.example.thrillcast.R.drawable.rainy),
+                "rainy",
+                modifier = Modifier.size(50.dp)
+                )
+            Text(text = "Rainy 5°C")
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(text = "Wind: " + currentHeightWindSpeed +" m/s")
+            Icon(currentHeightWindDirection, "arrow")
+
+        }
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .weight(0.3f, true)
+                .padding(6.dp)
+        ) {
+            var sliderValue by remember {
+                mutableStateOf(0f)
+            }
+            var windHeight by remember { mutableStateOf("Surface") }
+            //Spacer(modifier = Modifier.height(100.dp))
+            Slider(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .width(width = 130.dp)
+                    .rotate(degrees = -90f)
+                    .padding(6.dp),
+                value = sliderValue,
+                onValueChange = { sliderValue_ ->
+                    sliderValue = sliderValue_
+                },
+                onValueChangeFinished = {
+
+                    /*
+                    TO DO
+                    hent data for valgt høyde
+                    950h = 600 moh
+                    900h = 900 moh
+                    850h = 1500 moh
+                    800h = 2000 moh
+                     */
+                    when(sliderValue) {
+                        0f -> {
+                            windHeight = "Surface"
+                            currentHeightWindSpeed = "4(5)"
+                            currentHeightWindDirection = Icons.Filled.ArrowBack
+                        }
+                        1f -> {
+                            windHeight = "600 moh"
+                            currentHeightWindSpeed = "8(2)"
+                            currentHeightWindDirection = Icons.Filled.ArrowForward
+                        }
+                        2f -> {
+                            windHeight = "900 moh"
+                            currentHeightWindSpeed = "4(2)"
+                            currentHeightWindDirection = Icons.Filled.ArrowDropDown
+                        }
+                        3f -> {
+                            windHeight = "1500 moh"
+                            currentHeightWindSpeed = "1(2)"
+                            currentHeightWindDirection = Icons.Filled.ArrowForward
+                        }
+                        else -> {
+                            windHeight = "2000 moh"
+                            currentHeightWindSpeed = "2(2)"
+                            currentHeightWindDirection = Icons.Filled.ArrowBack
+                        }
+                    }
+
+
+                    // this is called when the user completed selecting the value
+                    Log.d("MainActivity", "sliderValue = $sliderValue")
+                },
+                valueRange = 0f..4f,
+                steps = 3
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(text = windHeight)
 
         }
     }
@@ -188,3 +308,8 @@ fun prevPage() {
     NowPage(holfuyWeatherViewModel = viewModel())
 }
 
+@Preview
+@Composable
+fun prevPage() {
+    NowPage(holfuyWeatherViewModel = viewModel())
+}
