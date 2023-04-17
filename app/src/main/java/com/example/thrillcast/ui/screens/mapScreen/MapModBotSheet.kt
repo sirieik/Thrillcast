@@ -7,12 +7,13 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -118,9 +119,13 @@ fun ChangePageButton(
 @Composable
 fun NowPage(holfuyWeatherViewModel: HolfuyWeatherViewModel) {
 
-    var sliderValue by remember {
-        mutableStateOf(800f)
+    var currentHeightWindSpeed by remember {
+        mutableStateOf("3(2)")
     }
+    var currentHeightWindDirection by remember {
+        mutableStateOf(Icons.Filled.ArrowBack)
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -145,7 +150,7 @@ fun NowPage(holfuyWeatherViewModel: HolfuyWeatherViewModel) {
             val windyspeed = HFUiState.value.windSpeed
 
             HFUiState.value.wind.unit?.let {
-                Text(text = "$speed ($gust) $unit")
+                Text(text = "$speed $unit")
             }
 
         }
@@ -154,20 +159,34 @@ fun NowPage(holfuyWeatherViewModel: HolfuyWeatherViewModel) {
             modifier = Modifier
                 .weight(0.4f, true)
         ) {
+            Icon(
+                painter = painterResource(id = com.example.thrillcast.R.drawable.rainy),
+                "rainy",
+                modifier = Modifier.size(50.dp)
+                )
             Text(text = "Rainy 5°C")
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(text = "Wind: " + currentHeightWindSpeed +" m/s")
+            Icon(currentHeightWindDirection, "arrow")
 
         }
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .weight(0.3f, true)
+                .padding(6.dp)
         ) {
+            var sliderValue by remember {
+                mutableStateOf(0f)
+            }
+            var windHeight by remember { mutableStateOf("Surface") }
             //Spacer(modifier = Modifier.height(100.dp))
             Slider(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .width(width = 130.dp)
-                    .rotate(degrees = -90f),
+                    .rotate(degrees = -90f)
+                    .padding(6.dp),
                 value = sliderValue,
                 onValueChange = { sliderValue_ ->
                     sliderValue = sliderValue_
@@ -177,16 +196,48 @@ fun NowPage(holfuyWeatherViewModel: HolfuyWeatherViewModel) {
                     /*
                     TO DO
                     hent data for valgt høyde
+                    950h = 600 moh
+                    900h = 900 moh
+                    850h = 1500 moh
+                    800h = 2000 moh
                      */
+                    when(sliderValue) {
+                        0f -> {
+                            windHeight = "Surface"
+                            currentHeightWindSpeed = "4(5)"
+                            currentHeightWindDirection = Icons.Filled.ArrowBack
+                        }
+                        1f -> {
+                            windHeight = "600 moh"
+                            currentHeightWindSpeed = "8(2)"
+                            currentHeightWindDirection = Icons.Filled.ArrowForward
+                        }
+                        2f -> {
+                            windHeight = "900 moh"
+                            currentHeightWindSpeed = "4(2)"
+                            currentHeightWindDirection = Icons.Filled.ArrowDropDown
+                        }
+                        3f -> {
+                            windHeight = "1500 moh"
+                            currentHeightWindSpeed = "1(2)"
+                            currentHeightWindDirection = Icons.Filled.ArrowForward
+                        }
+                        else -> {
+                            windHeight = "2000 moh"
+                            currentHeightWindSpeed = "2(2)"
+                            currentHeightWindDirection = Icons.Filled.ArrowBack
+                        }
+                    }
 
 
                     // this is called when the user completed selecting the value
                     Log.d("MainActivity", "sliderValue = $sliderValue")
                 },
-                valueRange = 800f..950f,
-                steps = 2
+                valueRange = 0f..4f,
+                steps = 3
             )
-            Text(text = sliderValue.toInt().toString() + " moh")
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(text = windHeight)
         }
     }
 }
@@ -214,28 +265,4 @@ fun FuturePage() {
 @Composable
 fun prevPage() {
     NowPage(holfuyWeatherViewModel = viewModel())
-}
-
-@Composable
-private fun HeightSlider() {
-
-    var sliderValue by remember {
-        mutableStateOf(0f)
-    }
-
-    Slider(
-        modifier = Modifier
-            .width(width = 130.dp)
-            .rotate(degrees = -90f),
-        value = sliderValue,
-        onValueChange = { sliderValue_ ->
-            sliderValue = sliderValue_
-        },
-        onValueChangeFinished = {
-            // this is called when the user completed selecting the value
-            Log.d("MainActivity", "sliderValue = $sliderValue")
-        },
-        valueRange = 800f..950f,
-        steps = 4
-    )
 }
