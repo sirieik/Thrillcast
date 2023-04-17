@@ -1,15 +1,24 @@
 
+import android.util.Log
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CornerBasedShape
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.thrillcast.R
 import com.example.thrillcast.ui.screens.mapScreen.MapScreen
 import com.example.thrillcast.ui.screens.mapScreen.MapViewModel
 import kotlinx.coroutines.launch
@@ -108,12 +117,19 @@ fun ChangePageButton(
 
 @Composable
 fun NowPage(holfuyWeatherViewModel: HolfuyWeatherViewModel) {
-    Box(
-        modifier = Modifier.fillMaxWidth(),
-        contentAlignment = Alignment.CenterEnd
+
+    var sliderValue by remember {
+        mutableStateOf(800f)
+    }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(200.dp)
     ) {
         Column(
-
+            modifier = Modifier
+                .weight(0.3f, true),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             val HFUiState = holfuyWeatherViewModel.uiState.collectAsState()
             HFUiState.value.wind.direction?.let {
@@ -129,9 +145,48 @@ fun NowPage(holfuyWeatherViewModel: HolfuyWeatherViewModel) {
             val windyspeed = HFUiState.value.windSpeed
 
             HFUiState.value.wind.unit?.let {
-                Text(text = "$speed($gust) $unit  - $windyspeed")
+                Text(text = "$speed ($gust) $unit")
             }
 
+        }
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .weight(0.4f, true)
+        ) {
+            Text(text = "Rainy 5°C")
+
+        }
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .weight(0.3f, true)
+        ) {
+            //Spacer(modifier = Modifier.height(100.dp))
+            Slider(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .width(width = 130.dp)
+                    .rotate(degrees = -90f),
+                value = sliderValue,
+                onValueChange = { sliderValue_ ->
+                    sliderValue = sliderValue_
+                },
+                onValueChangeFinished = {
+
+                    /*
+                    TO DO
+                    hent data for valgt høyde
+                     */
+
+
+                    // this is called when the user completed selecting the value
+                    Log.d("MainActivity", "sliderValue = $sliderValue")
+                },
+                valueRange = 800f..950f,
+                steps = 2
+            )
+            Text(text = sliderValue.toInt().toString() + " moh")
         }
     }
 }
@@ -159,4 +214,28 @@ fun FuturePage() {
 @Composable
 fun prevPage() {
     NowPage(holfuyWeatherViewModel = viewModel())
+}
+
+@Composable
+private fun HeightSlider() {
+
+    var sliderValue by remember {
+        mutableStateOf(0f)
+    }
+
+    Slider(
+        modifier = Modifier
+            .width(width = 130.dp)
+            .rotate(degrees = -90f),
+        value = sliderValue,
+        onValueChange = { sliderValue_ ->
+            sliderValue = sliderValue_
+        },
+        onValueChangeFinished = {
+            // this is called when the user completed selecting the value
+            Log.d("MainActivity", "sliderValue = $sliderValue")
+        },
+        valueRange = 800f..950f,
+        steps = 4
+    )
 }
