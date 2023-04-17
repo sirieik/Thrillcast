@@ -8,7 +8,11 @@ import Takeoff
 import Wind
 import WindyModel
 import WindyObject
+import androidx.compose.ui.layout.LayoutCoordinates
+import com.example.thrillcast.data.met.MetObject
+import com.example.thrillcast.data.met.weatherforecast.WeatherForecast
 import com.google.android.gms.maps.model.LatLng
+import java.time.LocalDate
 import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.pow
@@ -152,6 +156,14 @@ class Repository {
         val holfObject = holfuyModel.fetchHolfuyObject("$id")
         return holfObject.wind
     }
+
+
+    suspend fun fetchMetWeatherForecast(lat:Double, lon:Double): List<WeatherForecast> {
+        val metObject = metModel.fetchMetObject(lat, lon)
+        val tomorrowsDate = LocalDate.now().plusDays(1)
+        return metObject.properties.timeseries.filter { it.time.toLocalDate() == tomorrowsDate }
+    }
+
 
     suspend fun fetchWindyObject(lat: String, lng: String): WindyObject {
         val windyObject = windyModel.fetchWindyObject(lat, lng)
