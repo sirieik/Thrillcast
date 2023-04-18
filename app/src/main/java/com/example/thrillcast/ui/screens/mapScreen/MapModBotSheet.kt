@@ -1,11 +1,15 @@
 
 
+//import androidx.compose.material.icons.Icons
+//import androidx.compose.ui.Alignment
+//import androidx.compose.ui.Modifier
+//import androidx.compose.ui.graphics.Color
+
+import android.annotation.SuppressLint
 import android.util.Log
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CornerBasedShape
-import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -14,34 +18,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
-
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.ElevatedCard
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.thrillcast.R
 import com.example.thrillcast.ui.screens.mapScreen.MapScreen
 import com.example.thrillcast.ui.screens.mapScreen.MapViewModel
 import kotlinx.coroutines.launch
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MapModBotSheet(
@@ -56,15 +43,33 @@ fun MapModBotSheet(
         confirmStateChange = { it != ModalBottomSheetValue.HalfExpanded },
         skipHalfExpanded = true
     )
-    val HFUiState = holfuyWeatherViewModel.uiState.collectAsState()
     var currentSheet by remember { mutableStateOf<SheetPage>(SheetPage.Info) }
 
     ModalBottomSheetLayout(
         sheetState = modalSheetState,
         sheetContent = {
+
             Column(
                 modifier = Modifier.fillMaxWidth()
             ) {
+                Text(
+                    text = holfuyWeatherViewModel.uiState.value.takeoff.name,
+                    style = MaterialTheme.typography.subtitle1.copy(fontWeight = FontWeight.W900),
+                    fontSize = 18.sp,
+                    modifier = Modifier
+                        .padding(top = 8.dp)
+                        .padding(start = 20.dp),
+                    color = Color.Black
+                )
+                IconButton(
+                    onClick = { coroutineScope.launch { modalSheetState.hide() } },
+                    modifier = Modifier.align(Alignment.End).padding(10.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Close,
+                        contentDescription = "Close info sheet"
+                    )
+                }
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -84,25 +89,17 @@ fun MapModBotSheet(
                     ChangePageButton(
                         text = "Future",
                         isSelected = currentSheet == SheetPage.Future,
-                        onClick = {currentSheet = SheetPage.Future}
+                        onClick = { currentSheet = SheetPage.Future }
                     )
-                    IconButton(
-                        onClick = { coroutineScope.launch { modalSheetState.hide() } },
-                        //modifier = Modifier.align(Alignment.End)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Close,
-                            contentDescription = "Close info sheet"
-                        )
-                    }
                 }
 
-                when(currentSheet) {
+                when (currentSheet) {
                     is SheetPage.Info -> InfoPage(holfuyWeatherViewModel = holfuyWeatherViewModel)
                     is SheetPage.Now -> NowPage(holfuyWeatherViewModel = holfuyWeatherViewModel)
                     else -> FuturePage(holfuyWeatherViewModel = holfuyWeatherViewModel)// it may need changes
                 }
             }
+
         }
     ) {
         MapScreen(
@@ -264,6 +261,7 @@ fun NowPage(holfuyWeatherViewModel: HolfuyWeatherViewModel) {
     }
 }
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun InfoPage(holfuyWeatherViewModel: HolfuyWeatherViewModel) {
 
@@ -308,8 +306,3 @@ fun prevPage() {
     NowPage(holfuyWeatherViewModel = viewModel())
 }
 
-@Preview
-@Composable
-fun prevPage() {
-    NowPage(holfuyWeatherViewModel = viewModel())
-}
