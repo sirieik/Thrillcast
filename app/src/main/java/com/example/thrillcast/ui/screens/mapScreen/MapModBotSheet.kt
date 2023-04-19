@@ -36,7 +36,7 @@ fun MapModBotSheet(
     holfuyWeatherViewModel: HolfuyWeatherViewModel = viewModel(),
     navigateBack: () -> Unit
 ) {
-
+    val HFUiState = holfuyWeatherViewModel.uiState.collectAsState()
     val coroutineScope = rememberCoroutineScope()
     val modalSheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
@@ -53,7 +53,7 @@ fun MapModBotSheet(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = holfuyWeatherViewModel.uiState.value.takeoff.name,
+                    text = HFUiState.value.takeoff.name,
                     style = MaterialTheme.typography.subtitle1.copy(fontWeight = FontWeight.W900),
                     fontSize = 18.sp,
                     modifier = Modifier
