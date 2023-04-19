@@ -7,6 +7,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -32,6 +33,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.room.util.appendPlaceholders
@@ -46,6 +48,8 @@ import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import java.util.*
+import kotlin.collections.ArrayList
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
@@ -262,107 +266,67 @@ fun SearchBar(
 
     val uiState = mapViewModel.uiState.collectAsState()
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color(0xFF001A40)),
-            //.border(1.dp, color = Color(0xFFD7E2FF), RoundedCornerShape(2)),
-        //horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-
-    ) {
-
-
-        /*IconButton(
-            onClick = onNavigate
-        ) {
-            Icon(
-                imageVector = Icons.Filled.ArrowBack,
-                contentDescription = "Go back",
-                tint = Color(0xFFD7E2FF)
-            )
-        }*/
-        OutlinedTextField(
+    Column() {
+        Row(
             modifier = Modifier
-                //.width(320.dp)
                 .fillMaxWidth()
-                .height(60.dp)
-                .clip(shape = RoundedCornerShape(15))
-                .background(Color.Transparent),
-            value = searchInput,
-            onValueChange = { searchInput = it },
-            placeholder = { Text("Find takeoff locations",color = Color(0xFFD7E2FF) )},
-            singleLine = true,
-            maxLines = 1,
-            shape = RoundedCornerShape(15),
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Filled.Search,
-                    contentDescription = "Search Icon",
-                    tint = Color(0xFFD7E2FF)
-                )
-            },
-            trailingIcon = {
-                IconButton(
-                    onClick = {
-                        if (searchInput.isNotEmpty()) {
-                            searchInput = ""
-                        } else {
-                            onCloseIconClick()
-                        }
-                    }
-                ) {
+                .background(Color(0xFF001A40)),
+            //.border(1.dp, color = Color(0xFFD7E2FF), RoundedCornerShape(2)),
+            //horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+
+            ) {
+
+            OutlinedTextField(
+                modifier = Modifier
+                    //.width(320.dp)
+                    .fillMaxWidth()
+                    .height(60.dp)
+                    .clip(shape = RoundedCornerShape(15))
+                    .background(Color.Transparent),
+                value = searchInput,
+                onValueChange = { searchInput = it },
+                placeholder = { Text("Find takeoff locations", color = Color(0xFFD7E2FF)) },
+                singleLine = true,
+                maxLines = 1,
+                shape = RoundedCornerShape(15),
+                leadingIcon = {
                     Icon(
-                        imageVector = Icons.Filled.Close,
-                        contentDescription = "Close Icon",
+                        imageVector = Icons.Filled.Search,
+                        contentDescription = "Search Icon",
                         tint = Color(0xFFD7E2FF)
                     )
-                }
-            },
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                textColor = Color(0xFFD7E2FF),
-                //unfocusedBorderColor = Color.Transparent,
-                focusedBorderColor = Color(0xFFD7E2FF),
-                cursorColor = Color(0xFFD7E2FF),
-                unfocusedTrailingIconColor = Color.White,
-                focusedTrailingIconColor = Color.Black
+                },
+                trailingIcon = {
+                    IconButton(
+                        onClick = {
+                            if (searchInput.isNotEmpty()) {
+                                searchInput = ""
+                            } else {
+                                onCloseIconClick()
+                            }
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Close,
+                            contentDescription = "Close Icon",
+                            tint = Color(0xFFD7E2FF)
+                        )
+                    }
+                },
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    textColor = Color(0xFFD7E2FF),
+                    //unfocusedBorderColor = Color.Transparent,
+                    focusedBorderColor = Color(0xFFD7E2FF),
+                    cursorColor = Color(0xFFD7E2FF),
+                    unfocusedTrailingIconColor = Color.White,
+                    focusedTrailingIconColor = Color.Black
+                )
             )
-        )
-        
-        Spacer(modifier = Modifier.weight(1f))
+        }
 
-
-
-        /*IconButton(
-            onClick = onCloseIconClick/*{
-                        searchInput = ""
-                        hideKeyboard.clearFocus()
-
-                    }*/
-        ) {
-            Icon(
-                imageVector = Icons.Filled.Close,
-                contentDescription = "Close Icon",
-                tint = Color(0xFFD7E2FF)
-            )
-        }*/
-/*
-        if (searchInput.isNotEmpty()) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                state = rememberLazyListState()
-            ) {
-                items(uiState.value.takeoffs) { item ->
-                    SingleTakeoffCard(takeoffName = item.name, searchInput)
-                    Spacer(modifier = Modifier.height(15.dp))
-                }
-            }
-        }*/
-
-        /*if (searchInput.isNotEmpty()) {
-            LazyColumn {
+        LazyColumn(modifier = Modifier.fillMaxWidth()) {
+            if (searchInput.isNotEmpty()) {
                 items(uiState.value.takeoffs.filter {
                     it.name.contains(searchInput, ignoreCase = true)
                 }) { takeoff ->
@@ -376,24 +340,13 @@ fun SearchBar(
                             },
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .background(Color(0xFF001A40))
                                 .padding(vertical = 16.dp),
-                            style = TextStyle(fontSize = 20.sp)
+                            style = TextStyle(fontSize = 20.sp, color = Color(0xFFD7E2FF))
                         )
                     }
                 }
             }
-        }*/
+        }
     }
 }
-
-@Composable
-fun TakeoffListItem(
-    takeoffName: String,
-    searchInput: String
-) {
-
-}
-
-
-
-

@@ -273,11 +273,10 @@ fun FuturePage(holfuyWeatherViewModel: HolfuyWeatherViewModel) {
         items(HFUiState.value.weatherForecast) { weatherForecast ->
             val time = weatherForecast.time.toLocalTime()
             val text = weatherForecast.data?.next_1_hours?.summary?.symbol_code ?: ""
-            val air_temp = weatherForecast.data?.instant?.details?.air_temperature?:0.0
-            val wind_speed =weatherForecast.data?.instant?.details?.wind_speed?:0.0
+            val air_temp = weatherForecast.data?.instant?.details?.air_temperature ?: 0.0
+            val wind_speed = weatherForecast.data?.instant?.details?.wind_speed ?: 0.0
 
             Text(text = "${time}       ${air_temp}C         ${wind_speed}m/s        ${text}")
         }
     }
 }
-
