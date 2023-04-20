@@ -26,8 +26,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
+
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
@@ -142,7 +144,7 @@ fun MapScreen(
                     }
                 ) {
                     uiState.value.takeoffs.forEach{ takeoff ->
-                        Marker(
+                         Marker(
                             state = MarkerState(takeoff.coordinates),
                             title = takeoff.name,
                             icon = BitmapDescriptorFactory.fromResource(R.drawable.parachuting),
@@ -151,10 +153,11 @@ fun MapScreen(
                                 //Tenker at det er mer praktisk å få opp infoskjerm etter å trykke på
                                 //"labelen" til markøren etter å trykke på den, i tilfelle man trykker på feil
                                 //markør. I og med at det kommer til å være en del markører
-                                /*
-                                selectedMarker = it
-                                bottomSheetVisible = true
-                                 */
+                                cameraPositionState.position = CameraPosition.Builder()
+                                    .target(takeoff.coordinates)
+                                    .zoom(9f)
+                                    .build()
+                                //selectedMarker = it
                                 coroutineScope.launch {
                                     if (modalSheetState.isVisible) {
                                         modalSheetState.hide()
@@ -168,17 +171,6 @@ fun MapScreen(
                             }
                         )
                     }
-                }
-
-                // Show the bottom sheet if a marker was selected
-                selectedMarker?.let { marker ->
-                    MapBottomInfoSheet(
-                        selectedMarker = marker,
-                        bottomSheetVisible = bottomSheetVisible,
-                        onCloseSheet = {
-                            selectedMarker = null
-                        }
-                    )
                 }
 
                 //Lasteskjerm om kartet ikke lastes inn
