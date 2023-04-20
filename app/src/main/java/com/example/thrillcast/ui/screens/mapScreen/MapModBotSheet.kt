@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.thrillcast.ui.screens.mapScreen.MapScreen
 import com.example.thrillcast.ui.screens.mapScreen.MapViewModel
+import com.example.thrillcast.ui.screens.mapScreen.SearchBarViewModel
 import kotlinx.coroutines.launch
 
 @SuppressLint("StateFlowValueCalledInComposition")
@@ -34,6 +35,7 @@ import kotlinx.coroutines.launch
 fun MapModBotSheet(
     mapViewModel: MapViewModel = viewModel(),
     holfuyWeatherViewModel: HolfuyWeatherViewModel = viewModel(),
+    searchBarViewModel: SearchBarViewModel = viewModel(),
     navigateBack: () -> Unit
 ) {
     val HFUiState = holfuyWeatherViewModel.uiState.collectAsState()
@@ -107,6 +109,7 @@ fun MapModBotSheet(
             modalSheetState,
             mapViewModel = mapViewModel,
             holfuyWeatherViewModel = holfuyWeatherViewModel,
+            searchBarViewModel = searchBarViewModel,
             navigateBack
         )
     }
@@ -290,19 +293,10 @@ fun FuturePage(holfuyWeatherViewModel: HolfuyWeatherViewModel) {
         items(HFUiState.value.weatherForecast) { weatherForecast ->
             val time = weatherForecast.time.toLocalTime()
             val text = weatherForecast.data?.next_1_hours?.summary?.symbol_code ?: ""
-            val air_temp = weatherForecast.data?.instant?.details?.air_temperature?:0.0
-            val wind_speed =weatherForecast.data?.instant?.details?.wind_speed?:0.0
+            val air_temp = weatherForecast.data?.instant?.details?.air_temperature ?: 0.0
+            val wind_speed = weatherForecast.data?.instant?.details?.wind_speed ?: 0.0
 
             Text(text = "${time}       ${air_temp}C         ${wind_speed}m/s        ${text}")
         }
     }
-
-
 }
-
-@Preview
-@Composable
-fun prevPage() {
-    NowPage(holfuyWeatherViewModel = viewModel())
-}
-
