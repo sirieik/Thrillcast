@@ -1,8 +1,10 @@
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -41,7 +43,8 @@ fun WindDirectionWheel(
         modifier = Modifier
             .size(100.dp)
             .aspectRatio(1f)
-            .padding(16.dp),
+            .padding(20.dp)
+            .border(1.dp, Color.Black, CircleShape),
         onDraw = {
 
             //CHAD
