@@ -13,13 +13,15 @@ class MetModel() {
 
     //Met API key
     //val apiKey = "4cb78578-f2d3-4f28-a810-7b8f7582a1fb"
-
     //Met API
     //val path = "https://gw-uio.intark.uh-it.no/in2000/weatherapi/"
-
     //Met API med eksempel lat og lon
-    val path2 = "https://api.met.no/weatherapi/locationforecast/2.0/compact"
+    //val path2 = "https://api.met.no/weatherapi/locationforecast/2.0/compact"
     //"https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=60.10&lon=9.58"
+
+    //NEW with Proxy
+    //https://gw-uio.intark.uh-it.no/in2000/weatherapi/locationforecast/2.0/compact?lat=60.10&lon=9.58
+    val path2 = "https://gw-uio.intark.uh-it.no/in2000/weatherapi/locationforecast/2.0/compact"
 
     //Set up HTTP client
     private val client = HttpClient() {
@@ -32,7 +34,11 @@ class MetModel() {
         }
     }
     suspend fun fetchMetObject(lat:Double, lon:Double): MetObject{
-        return client.get("${path2}?lat=${lat}&lon=${lon}").body()
+        return client.get("${path2}?lat=${lat}&lon=${lon}") {
+            headers {
+                append("X-Gravitee-API-Key","4cb78578-f2d3-4f28-a810-7b8f7582a1fb" )
+            }
+        }.body()
     }
 
 

@@ -161,6 +161,7 @@ class Repository {
     suspend fun fetchMetWeatherForecast(lat:Double, lon:Double): List<WeatherForecast> {
         val metObject = metModel.fetchMetObject(lat, lon)
         val tomorrowsDate = LocalDate.now().plusDays(1)
+
         return metObject.properties.timeseries.filter { it.time.toLocalDate() == tomorrowsDate }
     }
 
