@@ -1,4 +1,5 @@
 package com.example.thrillcast.ui.screens.mapScreen
+
 import HolfuyWeatherViewModel
 import Takeoff
 import androidx.compose.animation.Crossfade
@@ -7,12 +8,9 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.ExperimentalMaterialApi
@@ -26,19 +24,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.onFocusChanged
-
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.room.util.appendPlaceholders
 import com.example.thrillcast.R
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
@@ -51,7 +43,6 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.*
-import kotlin.collections.ArrayList
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
@@ -97,6 +88,10 @@ fun MapScreen(
                         mapViewModel,
                         onTakeoffSelected = { takeoff ->
                             selectedSearchItem = takeoff
+                            cameraPositionState.position = CameraPosition.Builder()
+                                .target(selectedSearchItem!!.coordinates)
+                                .zoom(9f)
+                                .build()
                             coroutineScope.launch {
                                 if (modalSheetState.isVisible) {
                                     modalSheetState.hide()
@@ -313,7 +308,12 @@ fun SearchBar(
                     cursorColor = Color(0xFFD7E2FF),
                     unfocusedTrailingIconColor = Color.White,
                     focusedTrailingIconColor = Color.Black
-                )
+                ),
+                /*keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = androidx.compose.ui.text.input.ImeAction.Done,
+                    locale = Locale("no", "NO")
+                )*/
             )
         }
 
