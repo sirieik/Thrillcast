@@ -7,12 +7,18 @@
 
 import android.annotation.SuppressLint
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,10 +26,12 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.thrillcast.R
 import com.example.thrillcast.ui.screens.mapScreen.MapScreen
 import com.example.thrillcast.ui.screens.mapScreen.MapViewModel
 import com.example.thrillcast.ui.screens.mapScreen.SearchBarViewModel
@@ -45,60 +53,66 @@ fun MapModBotSheet(
         confirmStateChange = { it != ModalBottomSheetValue.HalfExpanded },
         skipHalfExpanded = true
     )
-    var currentSheet by remember { mutableStateOf<SheetPage>(SheetPage.Info) }
+
+    val tabList = listOf("Info", "Today", "Future")
+
+    var tabState by remember {
+        mutableStateOf(0)
+    }
 
     ModalBottomSheetLayout(
         sheetState = modalSheetState,
         sheetContent = {
 
             Column(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(400.dp)
             ) {
-                Text(
-                    text = HFUiState.value.takeoff.name,
-                    style = MaterialTheme.typography.subtitle1.copy(fontWeight = FontWeight.W900),
-                    fontSize = 18.sp,
-                    modifier = Modifier
-                        .padding(top = 8.dp)
-                        .padding(start = 20.dp),
-                    color = Color.Black
-                )
-                IconButton(
-                    onClick = { coroutineScope.launch { modalSheetState.hide() } },
-                    modifier = Modifier.align(Alignment.End).padding(10.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Close,
-                        contentDescription = "Close info sheet"
-                    )
-                }
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                        .weight(0.1f, true)
                 ) {
-                    ChangePageButton(
-                        text = "Info",
-                        isSelected = currentSheet == SheetPage.Info,
-                        onClick = { currentSheet = SheetPage.Info }
+                    Text(
+                        text = HFUiState.value.takeoff.name,
+                        style = MaterialTheme.typography.subtitle1.copy(fontWeight = FontWeight.W900),
+                        fontSize = 18.sp,
+                        modifier = Modifier
+                            .padding(top = 8.dp)
+                            .padding(start = 20.dp)
+                            .weight(0.8f, true),
+                        color = Color.Black
                     )
-                    ChangePageButton(
-                        text = "Now",
-                        isSelected = currentSheet == SheetPage.Now,
-                        onClick = { currentSheet = SheetPage.Now }
-                    )
-                    ChangePageButton(
-                        text = "Future",
-                        isSelected = currentSheet == SheetPage.Future,
-                        onClick = { currentSheet = SheetPage.Future }
-                    )
+                    IconButton(
+                        onClick = { coroutineScope.launch { modalSheetState.hide() } },
+                        modifier = Modifier
+                            .weight(0.2f, true)
+                            .padding(10.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Close,
+                            contentDescription = "Close info sheet"
+                        )
+                    }
                 }
-
-                when (currentSheet) {
-                    is SheetPage.Info -> InfoPage(holfuyWeatherViewModel = holfuyWeatherViewModel)
-                    is SheetPage.Now -> NowPage(holfuyWeatherViewModel = holfuyWeatherViewModel)
-                    else -> FuturePage(holfuyWeatherViewModel = holfuyWeatherViewModel)// it may need changes
+                TabRow(selectedTabIndex = tabState) {
+                    tabList.forEachIndexed { index, title ->
+                        Tab(
+                            selected = tabState == index,
+                            onClick = { tabState = index },
+                            text = { Text(text = title, maxLines = 1, overflow = TextOverflow.Ellipsis) }
+                        )
+                    }
+                }
+                Column(
+                    modifier = Modifier.weight(0.7f)
+                ) {
+                    when (tabState) {
+                        0 -> InfoPage(holfuyWeatherViewModel = holfuyWeatherViewModel)
+                        1 -> NowPage(holfuyWeatherViewModel = holfuyWeatherViewModel)
+                        else -> FuturePage(holfuyWeatherViewModel = holfuyWeatherViewModel)// it may need changes
+                    }
                 }
             }
 
@@ -144,123 +158,329 @@ fun NowPage(holfuyWeatherViewModel: HolfuyWeatherViewModel) {
         mutableStateOf(Icons.Filled.ArrowBack)
     }
 
-    Row(
+    var weatherTimeList = emptyList<NowCastObject>()
+
+    LazyRow( ) {
+        itemsIndexed(weatherTimeList) { index, weatherData ->
+            if (index == 0) {
+                NowWeatherCard(viewModel = holfuyWeatherViewModel)
+            }
+            else {
+
+            }
+        }
+    }
+
+    LazyColumn(
         modifier = Modifier
-            .fillMaxWidth()
-            .height(200.dp)
+            .fillMaxSize()
+            .height(200.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        item {
+            NowWeatherCard(viewModel = holfuyWeatherViewModel)
+
+            HeightWindCard()
+        }
+    }
+
+}
+
+@Composable
+fun HeightWindCard(){
+
+    val buttonTimes = listOf(
+        "02:00", "05:00", "08:00", "11:00",
+        "14:00", "17:00", "20:00", "23:00"
+    )
+
+    val heights = listOf("600 m", "900m", "1500m", "2000m")
+
+    var currentHeightWindSpeed by remember {
+        mutableStateOf("3(2)")
+    }
+    var currentHeightWindDirection by remember {
+        mutableStateOf(Icons.Filled.ArrowBack)
+    }
+
+    var selectedHeightIndex by remember {
+        mutableStateOf(0)
+    }
+
+    var windDirection = 0
+    var windSpeed = 100
+
+    var selectedButtonIndex by remember { mutableStateOf(0) }
+
+    ElevatedCard(
+        modifier = Modifier
+            .aspectRatio(1f)
+            .fillMaxSize()
+            .padding(6.dp),
+        shape = RoundedCornerShape(6.dp)
     ) {
         Column(
-
-            modifier = Modifier
-                .weight(0.3f, true),
+            modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
-
         ) {
-            val HFUiState = holfuyWeatherViewModel.uiState.collectAsState()
-            HFUiState.value.wind.direction?.let {
-                WindDirectionWheel(
-                    greenStart = HFUiState.value.takeoff.greenStart,
-                    greenStop = HFUiState.value.takeoff.greenStop,
-                    windDirection = it,
-                )
-            }
-            val unit = HFUiState.value.wind.unit
-            val speed = HFUiState.value.wind.speed
-            val gust = HFUiState.value.wind.gust
-            val windyspeed = HFUiState.value.windSpeed
-
-            HFUiState.value.wind.unit?.let {
-
-                Text(text = "$speed $unit")
-            }
-
-        }
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .weight(0.4f, true)
-        ) {
-            Icon(
-                painter = painterResource(id = com.example.thrillcast.R.drawable.rainy),
-                "rainy",
-                modifier = Modifier.size(50.dp)
-                )
-            Text(text = "Rainy 5°C")
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(text = "Wind: " + currentHeightWindSpeed +" m/s")
-            Icon(currentHeightWindDirection, "arrow")
-
-        }
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .weight(0.3f, true)
-                .padding(6.dp)
-        ) {
-            var sliderValue by remember {
-                mutableStateOf(0f)
-            }
-            var windHeight by remember { mutableStateOf("Surface") }
-            //Spacer(modifier = Modifier.height(100.dp))
-            Slider(
+            Text(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
-                    .width(width = 130.dp)
-                    .rotate(degrees = -90f)
+                    .weight(0.2f, true)
                     .padding(6.dp),
-                value = sliderValue,
-                onValueChange = { sliderValue_ ->
-                    sliderValue = sliderValue_
-                },
-                onValueChangeFinished = {
-
-                    /*
-                    TO DO
-                    hent data for valgt høyde
-                    950h = 600 moh
-                    900h = 900 moh
-                    850h = 1500 moh
-                    800h = 2000 moh
-                     */
-                    when(sliderValue) {
-                        0f -> {
-                            windHeight = "Surface"
-                            currentHeightWindSpeed = "4(5)"
-                            currentHeightWindDirection = Icons.Filled.ArrowBack
-                        }
-                        1f -> {
-                            windHeight = "600 moh"
-                            currentHeightWindSpeed = "8(2)"
-                            currentHeightWindDirection = Icons.Filled.ArrowForward
-                        }
-                        2f -> {
-                            windHeight = "900 moh"
-                            currentHeightWindSpeed = "4(2)"
-                            currentHeightWindDirection = Icons.Filled.ArrowDropDown
-                        }
-                        3f -> {
-                            windHeight = "1500 moh"
-                            currentHeightWindSpeed = "1(2)"
-                            currentHeightWindDirection = Icons.Filled.ArrowForward
-                        }
-                        else -> {
-                            windHeight = "2000 moh"
-                            currentHeightWindSpeed = "2(2)"
-                            currentHeightWindDirection = Icons.Filled.ArrowBack
-                        }
-                    }
-
-
-                    // this is called when the user completed selecting the value
-                    Log.d("MainActivity", "sliderValue = $sliderValue")
-                },
-                valueRange = 0f..4f,
-                steps = 3
+                text = "Height wind",
+                fontSize = 20.sp
             )
-            Spacer(modifier = Modifier.height(12.dp))
-            Text(text = windHeight)
+            LazyRow(
+                modifier = Modifier
+                    .weight(0.2f, true)
+                    .padding(4.dp),
+                contentPadding = PaddingValues(6.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.Top
+            ) {
+                itemsIndexed(buttonTimes) { index, time ->
+                    val isSelected = index == selectedButtonIndex
+                    ElevatedButton(
+                        onClick = {
+                            selectedButtonIndex = index
+                        }
+                    ) {
+                        Text(
+                            text = time,
+                            style = MaterialTheme.typography.body1.copy(
+                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                            )
+                        )
+                    }
+                }
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(0.6f)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .weight(0.3f, true)
+                        .fillMaxHeight(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    var sliderValue by remember {
+                        mutableStateOf(0f)
+                    }
+                    //Spacer(modifier = Modifier.height(100.dp))
+                    Text(text = "Height:")
+                    Slider(
 
+                        modifier = Modifier
+                            /*
+                            .align(Alignment.CenterHorizontally)
+                            .width(width = 130.dp)
+
+                                 */
+                            .rotate(degrees = -90f)
+                            .padding(20.dp),
+
+                        value = selectedHeightIndex.toFloat(),
+                        onValueChange = { sliderValue ->
+                            selectedHeightIndex = sliderValue.toInt()
+                        },
+                        onValueChangeFinished = {
+                            when (sliderValue) {
+                                0f -> {
+                                    //windHeight = "600 moh"
+                                    currentHeightWindSpeed = "4(5)"
+                                    currentHeightWindDirection = Icons.Filled.ArrowBack
+                                }
+                                1f -> {
+                                    //windHeight = "900 moh"
+                                    currentHeightWindSpeed = "8(2)"
+                                    currentHeightWindDirection = Icons.Filled.ArrowForward
+                                }
+                                2f -> {
+                                    //windHeight = "1500 moh"
+                                    currentHeightWindSpeed = "4(2)"
+                                    currentHeightWindDirection = Icons.Filled.ArrowDropDown
+                                }
+                                else -> {
+                                    //windHeight = "2000 moh"
+                                    currentHeightWindSpeed = "1(2)"
+                                    currentHeightWindDirection = Icons.Filled.ArrowForward
+                                }
+                            }
+                            // this is called when the user completed selecting the value
+                            Log.d("MainActivity", "sliderValue = $sliderValue")
+                        },
+                        valueRange = 0f..(heights.size - 1).toFloat(),
+                        steps = heights.size - 2
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text(text = heights[selectedHeightIndex])
+                }
+
+                Column(
+                    modifier = Modifier
+                        .weight(0.7f, true)
+                        .fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.windarrow),
+                        contentDescription = "wind direction",
+                        modifier = Modifier
+                            .size(100.dp)
+                            .rotate(windDirection.toFloat())
+                    )
+                    Text(
+                        text = "$windSpeed m/s"
+                    )
+                }
+            }
         }
+    }
+}
+
+@Composable
+fun NowWeatherCard(viewModel: HolfuyWeatherViewModel) {
+    ElevatedCard(
+
+    ) {
+
+        val degrees = 0
+
+        Row(
+
+        ) {
+            val HFUiState = viewModel.uiState.collectAsState()
+
+            ElevatedCard(
+                modifier = Modifier
+                    .aspectRatio(1f)
+                    .weight(0.33f, true)
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    HFUiState.value.wind.direction?.let {
+                        WindDirectionWheel(
+                            greenStart = HFUiState.value.takeoff.greenStart,
+                            greenStop = HFUiState.value.takeoff.greenStop,
+                            windDirection = it,
+                        )
+                    }
+                    val unit = HFUiState.value.wind.unit
+                    val speed = HFUiState.value.wind.speed
+                    val gust = HFUiState.value.wind.gust
+
+                    HFUiState.value.wind.unit?.let {
+
+                        Text(text = "$speed($gust) $unit")
+                    }
+                }
+            }
+            Column(
+                modifier = Modifier.weight(0.33f, true),
+                horizontalAlignment = Alignment.CenterHorizontally
+
+            ) {
+                Text(
+                    text = "Now",
+                )
+                Text(
+                    text = "$degrees °C",
+                    fontSize = 40.sp
+                )
+            }
+            Image(
+                modifier = Modifier.weight(0.33f, true),
+                alignment = Alignment.Center,
+                painter = painterResource(
+                    id = R.drawable.clearsky_day), contentDescription = "weather"
+            )
+        }
+    }
+}
+
+@Composable
+fun TodayWeatherCard(viewModel: HolfuyWeatherViewModel, weatherData: NowCastObject) {
+    ElevatedCard(
+
+    ) {
+
+        val HFUiState = viewModel.uiState.collectAsState()
+
+        val windDirection = HFUiState.value.wind.direction
+
+        val greenStart = HFUiState.value.takeoff.greenStart
+        val greenStop = HFUiState.value.takeoff.greenStop
+
+        val temperature = 0
+
+        Row(
+
+        ) {
+
+            Card(
+                modifier = Modifier.aspectRatio(1f),
+                //Here we set the color as green if the winddirection falls inside the holfuywheel
+                //If not we set it as red
+                backgroundColor =
+                if (windDirection?.let { isDegreeBetween(it, greenStart, greenStop) } == true) {
+                    Color.Green
+                } else {
+                    Color.Red
+                }
+            ) {
+                Column(
+
+                ) {
+                    if (windDirection != null) {
+                        Image(
+                            painter = painterResource(id = R.drawable.windarrow),
+                            contentDescription = "wind direction",
+                            modifier = Modifier
+                                .size(32.dp)
+                                .rotate(windDirection.toFloat())
+                        )
+                    }
+                    val unit = HFUiState.value.wind.unit
+                    val speed = HFUiState.value.wind.speed
+                    val gust = HFUiState.value.wind.gust
+
+                    HFUiState.value.wind.unit?.let {
+
+                        Text(text = "$speed $unit")
+                    }
+                }
+            }
+            Text( "$temperature °C")
+            Image(
+                painter = painterResource(
+                    id = R.drawable.clearsky_day), contentDescription = "weather"
+            )
+        }
+    }
+}
+
+@Composable
+fun ChangeDayButton(
+    text: String,
+    isSelected: Boolean,
+    onClick: () -> Unit
+) {
+    ElevatedButton(
+        onClick = onClick,
+        modifier = Modifier.padding(8.dp)
+    ) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.body1.copy(
+                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+            )
+        )
     }
 }
 
@@ -280,6 +500,9 @@ fun InfoPage(holfuyWeatherViewModel: HolfuyWeatherViewModel) {
 
     //Text(text = "INFO")
 }
+
+
+
 @Composable
 //Maybe we can change to "Tomorrow" instead of "future"? for the buttoom-name??
 fun FuturePage(holfuyWeatherViewModel: HolfuyWeatherViewModel) {
@@ -298,5 +521,17 @@ fun FuturePage(holfuyWeatherViewModel: HolfuyWeatherViewModel) {
 
             Text(text = "${time}       ${air_temp}C         ${wind_speed}m/s        ${text}")
         }
+    }
+}
+
+fun isDegreeBetween(value: Int, min: Int, max: Int): Boolean {
+    val valueRadians = Math.toRadians(value.toDouble())
+    val minRadians = Math.toRadians(min.toDouble())
+    val maxRadians = Math.toRadians(max.toDouble())
+
+    return if (minRadians <= maxRadians) {
+        valueRadians in minRadians..maxRadians
+    } else {
+        valueRadians >= minRadians || valueRadians <= maxRadians
     }
 }

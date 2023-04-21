@@ -17,7 +17,6 @@ class HolfuyWeatherViewModel : ViewModel() {
             Takeoff(0, LatLng(0.0,0.0), "", 0, 0,0),
             Wind(0.0,0.0,0.0,"",0),
             emptyList(),
-            0.0
         )
     )
 
@@ -33,7 +32,7 @@ class HolfuyWeatherViewModel : ViewModel() {
             val windNow = wind.get(0)
             val windSpeedNow = windNow.second.first
 
-            _uiState.value = weather?.let { HolfuyWeatherUiState(takeoff = takeoff, wind = it, weatherForecast, windSpeedNow) }!!
+            _uiState.value = weather?.let { HolfuyWeatherUiState(takeoff = takeoff, wind = it, weatherForecast) }!!
 
         }
     }
@@ -41,7 +40,7 @@ class HolfuyWeatherViewModel : ViewModel() {
     fun retrieveWindyWeather(takeoff: Takeoff) {
         viewModelScope.launch {
             val wind = repo.fetch800hWind("$takeoff.coordinates.latitude", "$takeoff.coordinates.longitude")
-            val windNow = wind.get(0)
+            val windNow = wind[0]
             val windSpeedNow = windNow.second.first
         }
     }
