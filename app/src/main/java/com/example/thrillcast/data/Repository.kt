@@ -4,6 +4,7 @@ import HolfuyModel
 import HolfuyObject
 import MapModel
 import MetModel
+import NowCastObject
 import Takeoff
 import Wind
 import WindyModel
@@ -165,6 +166,9 @@ class Repository {
         return metObject.properties.timeseries.filter { it.time.toLocalDate() == tomorrowsDate }
     }
 
+    suspend fun fetchNowCastObject(lat: Double, lon: Double): NowCastObject {
+        return metModel.fetchNowCastObject(lat, lon)
+    }
 
     suspend fun fetchWindyObject(lat: String, lng: String): WindyObject {
         val windyObject = windyModel.fetchWindyObject(lat, lng)

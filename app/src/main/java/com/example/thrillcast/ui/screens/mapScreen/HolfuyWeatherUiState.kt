@@ -6,6 +6,5 @@ open class HolfuyWeatherUiState(
     val wind: Wind,
 
     val weatherForecast: List<WeatherForecast>,
-    val windSpeed: Double
 
 )

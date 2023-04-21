@@ -41,5 +41,8 @@ class MetModel() {
         }.body()
     }
 
+    suspend fun fetchNowCastObject(lat:Double, lon: Double): NowCastObject {
+        return client.get("nowcast/2.0/complete?lat=${lat}&lon=${lon}").body()
+    }
 
 }
