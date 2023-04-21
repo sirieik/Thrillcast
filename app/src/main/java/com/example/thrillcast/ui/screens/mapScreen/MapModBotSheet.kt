@@ -53,6 +53,7 @@ fun MapModBotSheet(
 
             Column(
                 modifier = Modifier.fillMaxWidth()
+                    .height(400.dp)
             ) {
                 Text(
                     text = HFUiState.value.takeoff.name,
