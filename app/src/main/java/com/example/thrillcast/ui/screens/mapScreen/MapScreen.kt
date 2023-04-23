@@ -1,4 +1,5 @@
 package com.example.thrillcast.ui.screens.mapScreen
+
 import Takeoff
 import WeatherViewModel
 import androidx.compose.animation.Crossfade
@@ -23,9 +24,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-
 import androidx.compose.ui.draw.clip
-
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.AnnotatedString
@@ -89,6 +88,10 @@ fun MapScreen(
                         mapViewModel,
                         onTakeoffSelected = { takeoff ->
                             selectedSearchItem = takeoff
+                            cameraPositionState.position = CameraPosition.Builder()
+                                .target(selectedSearchItem!!.coordinates)
+                                .zoom(9f)
+                                .build()
                             coroutineScope.launch {
                                 if (modalSheetState.isVisible) {
                                     modalSheetState.hide()
@@ -306,7 +309,12 @@ fun SearchBar(
                     cursorColor = Color(0xFFD7E2FF),
                     unfocusedTrailingIconColor = Color.White,
                     focusedTrailingIconColor = Color.Black
-                )
+                ),
+                /*keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = androidx.compose.ui.text.input.ImeAction.Done,
+                    locale = Locale("no", "NO")
+                )*/
             )
         }
 

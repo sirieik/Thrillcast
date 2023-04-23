@@ -594,10 +594,9 @@ fun InfoPage(weatherViewModel: WeatherViewModel) {
 
 
 @Composable
-//Maybe we can change to "Tomorrow" instead of "future"? for the buttoom-name??
 fun FuturePage(weatherViewModel: WeatherViewModel) {
     val weatherUiState = weatherViewModel.uiState.collectAsState()
-    Text(text = "FUTURE")
+    Text(text = "Future")
     //HFUiState.value.weatherForecast.next_1_hour.summary.symbol_code
     /**
      * import androidx.compose.foundation.lazy.items
