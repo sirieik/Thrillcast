@@ -1,7 +1,7 @@
 package com.example.thrillcast.ui.screens.mapScreen
 
-import HolfuyWeatherViewModel
 import Takeoff
+import WeatherViewModel
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.core.tween
@@ -50,7 +50,7 @@ fun MapScreen(
     coroutineScope: CoroutineScope,
     modalSheetState : ModalBottomSheetState,
     mapViewModel: MapViewModel,
-    holfuyWeatherViewModel: HolfuyWeatherViewModel,
+    weatherViewModel: WeatherViewModel,
     searchBarViewModel: SearchBarViewModel,
     onNavigate: () -> Unit
 ) {
@@ -60,7 +60,7 @@ fun MapScreen(
         position = CameraPosition.fromLatLngZoom(norway, 5.5f)
     }
     val state = searchBarViewModel.state
-    val uiState = mapViewModel.uiState.collectAsState()
+    val takeoffsUiState = mapViewModel.takeoffsUiState.collectAsState()
 
     //Bruke denne til å legge inn lasteskjerm dersom kartet bruker tid
     var isMapLoaded by remember {mutableStateOf(false)}
@@ -96,7 +96,7 @@ fun MapScreen(
                                 if (modalSheetState.isVisible) {
                                     modalSheetState.hide()
                                 } else {
-                                    holfuyWeatherViewModel.retrieveStationWeather(selectedSearchItem!!)
+                                    weatherViewModel.retrieveStationWeather(selectedSearchItem!!)
                                     modalSheetState.animateTo(ModalBottomSheetValue.Expanded)
                                 }
                             }
@@ -115,7 +115,8 @@ fun MapScreen(
                                 if (modalSheetState.isVisible) {
                                     modalSheetState.hide()
                                 } else {
-                                    holfuyWeatherViewModel.retrieveStationWeather(selectedSearchItem!!)
+
+                                    weatherViewModel.retrieveStationWeather(selectedSearchItem!!)
                                     modalSheetState.animateTo(ModalBottomSheetValue.Expanded)
                                 }
                             }
@@ -138,7 +139,7 @@ fun MapScreen(
                         isMapLoaded = true
                     }
                 ) {
-                    uiState.value.takeoffs.forEach{ takeoff ->
+                    takeoffsUiState.value.takeoffs.forEach{ takeoff ->
                          Marker(
                             state = MarkerState(takeoff.coordinates),
                             title = takeoff.name,
@@ -158,8 +159,8 @@ fun MapScreen(
                                         modalSheetState.hide()
                                     }
                                     else {
-                                        holfuyWeatherViewModel.retrieveStationWeather(takeoff)
-                                        holfuyWeatherViewModel.retrieveWindyWeather(takeoff)
+
+                                        weatherViewModel.retrieveStationWeather(takeoff)
                                         modalSheetState.animateTo(ModalBottomSheetValue.Expanded)
                                     }
                                 }
@@ -199,7 +200,7 @@ fun TopBar(
     var searchInput by remember { mutableStateOf("") }
     val hideKeyboard = LocalFocusManager.current
 
-    val uiState = mapViewModel.uiState.collectAsState()
+    val uiState = mapViewModel.takeoffsUiState.collectAsState()
 
     Row(
         modifier = Modifier
@@ -251,7 +252,7 @@ fun SearchBar(
     var searchInput by remember { mutableStateOf("") }
     val hideKeyboard = LocalFocusManager.current
 
-    val uiState = mapViewModel.uiState.collectAsState()
+    val uiState = mapViewModel.takeoffsUiState.collectAsState()
 
     Column() {
         Row(

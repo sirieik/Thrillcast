@@ -42,7 +42,7 @@ class MetModel() {
     }
 
     suspend fun fetchNowCastObject(lat:Double, lon: Double): NowCastObject {
-        return client.get("nowcast/2.0/complete?lat=${lat}&lon=${lon}").body()
+        return client.get("https://api.met.no/weatherapi/nowcast/2.0/complete?lat=${lat}&lon=${lon}").body()
     }
 
 }

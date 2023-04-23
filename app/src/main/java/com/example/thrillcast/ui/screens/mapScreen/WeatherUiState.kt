@@ -1,9 +1,12 @@
 import com.example.thrillcast.data.met.weatherforecast.WeatherForecast
-import com.google.android.gms.maps.model.LatLng
 
-open class HolfuyWeatherUiState(
+open class WeatherUiState(
     val takeoff: Takeoff,
     val wind: Wind,
+
+    val nowCastObject: Timeseries?,
+
+    val windyWindsList: List<WindyWinds>?,
 
     val weatherForecast: List<WeatherForecast>,
 
