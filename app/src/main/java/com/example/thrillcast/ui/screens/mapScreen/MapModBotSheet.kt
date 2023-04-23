@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -24,10 +25,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -36,17 +37,18 @@ import com.example.thrillcast.ui.screens.mapScreen.MapScreen
 import com.example.thrillcast.ui.screens.mapScreen.MapViewModel
 import com.example.thrillcast.ui.screens.mapScreen.SearchBarViewModel
 import kotlinx.coroutines.launch
+import java.util.*
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MapModBotSheet(
     mapViewModel: MapViewModel = viewModel(),
-    holfuyWeatherViewModel: HolfuyWeatherViewModel = viewModel(),
+    weatherViewModel: WeatherViewModel = viewModel(),
     searchBarViewModel: SearchBarViewModel = viewModel(),
     navigateBack: () -> Unit
 ) {
-    val HFUiState = holfuyWeatherViewModel.uiState.collectAsState()
+    val weatherUiState = weatherViewModel.uiState.collectAsState()
     val coroutineScope = rememberCoroutineScope()
     val modalSheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
@@ -75,7 +77,7 @@ fun MapModBotSheet(
                         .weight(0.1f, true)
                 ) {
                     Text(
-                        text = HFUiState.value.takeoff.name,
+                        text = weatherUiState.value.takeoff.name,
                         style = MaterialTheme.typography.subtitle1.copy(fontWeight = FontWeight.W900),
                         fontSize = 18.sp,
                         modifier = Modifier
@@ -109,9 +111,9 @@ fun MapModBotSheet(
                     modifier = Modifier.weight(0.7f)
                 ) {
                     when (tabState) {
-                        0 -> InfoPage(holfuyWeatherViewModel = holfuyWeatherViewModel)
-                        1 -> NowPage(holfuyWeatherViewModel = holfuyWeatherViewModel)
-                        else -> FuturePage(holfuyWeatherViewModel = holfuyWeatherViewModel)// it may need changes
+                        0 -> InfoPage(weatherViewModel = weatherViewModel)
+                        1 -> NowPage(weatherViewModel = weatherViewModel)
+                        else -> FuturePage(weatherViewModel = weatherViewModel)// it may need changes
                     }
                 }
             }
@@ -122,7 +124,7 @@ fun MapModBotSheet(
             coroutineScope = coroutineScope,
             modalSheetState,
             mapViewModel = mapViewModel,
-            holfuyWeatherViewModel = holfuyWeatherViewModel,
+            weatherViewModel = weatherViewModel,
             searchBarViewModel = searchBarViewModel,
             navigateBack
         )
@@ -149,7 +151,9 @@ fun ChangePageButton(
 }
 
 @Composable
-fun NowPage(holfuyWeatherViewModel: HolfuyWeatherViewModel) {
+fun NowPage(weatherViewModel: WeatherViewModel) {
+
+    val scrollState = rememberScrollState()
 
     var currentHeightWindSpeed by remember {
         mutableStateOf("3(2)")
@@ -160,57 +164,126 @@ fun NowPage(holfuyWeatherViewModel: HolfuyWeatherViewModel) {
 
     var weatherTimeList = emptyList<NowCastObject>()
 
-    LazyRow( ) {
-        itemsIndexed(weatherTimeList) { index, weatherData ->
-            if (index == 0) {
-                NowWeatherCard(viewModel = holfuyWeatherViewModel)
-            }
-            else {
-
-            }
-        }
-    }
 
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .height(200.dp),
+            .height(200.dp)
+        //    .verticalScroll(scrollState)
+        ,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
-            NowWeatherCard(viewModel = holfuyWeatherViewModel)
+            LazyRow(
+                contentPadding = PaddingValues(end = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier
+                    .padding(4.dp)
+            ) {
+                item {
+                    NowWeatherCard(viewModel = weatherViewModel)
+                }
+                items(7){
+                    TodayWeatherCard(weatherViewModel = weatherViewModel)
+                }
+            }
+        }
 
-            HeightWindCard()
+        item {
+            HeightWindCard(weatherViewModel = weatherViewModel)
         }
     }
 
 }
 
 @Composable
-fun HeightWindCard(){
+fun HeightWindCard( weatherViewModel: WeatherViewModel){
+
+    val weatherUiState = weatherViewModel.uiState.collectAsState()
 
     val buttonTimes = listOf(
-        "02:00", "05:00", "08:00", "11:00",
-        "14:00", "17:00", "20:00", "23:00"
+        //2,
+        5, 8, 11, 14, 17, 20, 23
     )
-
+    val buttonTimestamps: MutableList<Long> = mutableListOf()
     val heights = listOf("600 m", "900m", "1500m", "2000m")
 
-    var currentHeightWindSpeed by remember {
-        mutableStateOf("3(2)")
+    weatherUiState.value.windyWindsList?.forEach{
+        Log.d("Activity", "${Date(it.time)}")
     }
-    var currentHeightWindDirection by remember {
-        mutableStateOf(Icons.Filled.ArrowBack)
+
+    // Set the time to todays desired times
+    buttonTimes.forEach {
+        val time = Calendar.getInstance(TimeZone.getTimeZone("GMT+2")).apply {
+            set(Calendar.HOUR_OF_DAY, it)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }.timeInMillis
+        Log.d("Activity", "$time")
+        buttonTimestamps.add(time)
     }
+
 
     var selectedHeightIndex by remember {
         mutableStateOf(0)
     }
 
-    var windDirection = 0
-    var windSpeed = 100
-
     var selectedButtonIndex by remember { mutableStateOf(0) }
+
+    var windDirection: Double? = null
+    var windSpeed: Double? = null
+
+    try {
+        when (selectedHeightIndex) {
+            0 -> {
+                val windDirAndSpeed = weatherUiState.value.windyWindsList?.filter {
+                    it.time == buttonTimestamps[selectedButtonIndex]
+                }?.get(0)?.speedDir800h
+
+                if (windDirAndSpeed != null) {
+                    windDirection = windDirAndSpeed.second
+                    windSpeed = windDirAndSpeed.first
+                }
+            }
+            1 -> {
+                val windDirAndSpeed = weatherUiState.value.windyWindsList?.filter {
+                    it.time == buttonTimestamps[selectedButtonIndex]
+                }?.get(0)?.speedDir850h
+
+                if (windDirAndSpeed != null) {
+                    windDirection = windDirAndSpeed.second
+                    windSpeed = windDirAndSpeed.first
+                }
+            }
+            2 -> {
+                val windDirAndSpeed = weatherUiState.value.windyWindsList?.filter {
+                    it.time == buttonTimestamps[selectedButtonIndex]
+                }?.get(0)?.speedDir900h
+
+                if (windDirAndSpeed != null) {
+                    windDirection = windDirAndSpeed.second
+                    windSpeed = windDirAndSpeed.first
+                }
+            }
+            else -> {
+                val windDirAndSpeed = weatherUiState.value.windyWindsList?.filter {
+                    it.time == buttonTimestamps[selectedButtonIndex]
+                }?.get(0)?.speedDir950h
+
+                if (windDirAndSpeed != null) {
+                    windDirection = windDirAndSpeed.second
+                    windSpeed = windDirAndSpeed.first
+                }
+            }
+        }
+    } catch (e: IndexOutOfBoundsException){
+        /*
+        windDirection = "N/A"
+        windSpeed = "N/A"
+
+         */
+    }
 
     ElevatedCard(
         modifier = Modifier
@@ -247,7 +320,7 @@ fun HeightWindCard(){
                         }
                     ) {
                         Text(
-                            text = time,
+                            text = "$time:00",
                             style = MaterialTheme.typography.body1.copy(
                                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                             )
@@ -280,6 +353,7 @@ fun HeightWindCard(){
                             .width(width = 130.dp)
 
                                  */
+                            //.size(width = 32.dp, height = 240.dp)
                             .rotate(degrees = -90f)
                             .padding(20.dp),
 
@@ -288,28 +362,7 @@ fun HeightWindCard(){
                             selectedHeightIndex = sliderValue.toInt()
                         },
                         onValueChangeFinished = {
-                            when (sliderValue) {
-                                0f -> {
-                                    //windHeight = "600 moh"
-                                    currentHeightWindSpeed = "4(5)"
-                                    currentHeightWindDirection = Icons.Filled.ArrowBack
-                                }
-                                1f -> {
-                                    //windHeight = "900 moh"
-                                    currentHeightWindSpeed = "8(2)"
-                                    currentHeightWindDirection = Icons.Filled.ArrowForward
-                                }
-                                2f -> {
-                                    //windHeight = "1500 moh"
-                                    currentHeightWindSpeed = "4(2)"
-                                    currentHeightWindDirection = Icons.Filled.ArrowDropDown
-                                }
-                                else -> {
-                                    //windHeight = "2000 moh"
-                                    currentHeightWindSpeed = "1(2)"
-                                    currentHeightWindDirection = Icons.Filled.ArrowForward
-                                }
-                            }
+
                             // this is called when the user completed selecting the value
                             Log.d("MainActivity", "sliderValue = $sliderValue")
                         },
@@ -327,14 +380,17 @@ fun HeightWindCard(){
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.windarrow),
-                        contentDescription = "wind direction",
-                        modifier = Modifier
-                            .size(100.dp)
-                            .rotate(windDirection.toFloat())
-                    )
+                    if (windDirection != null) {
+                        Image(
+                            painter = painterResource(id = R.drawable.windarrow),
+                            contentDescription = "wind direction",
+                            modifier = Modifier
+                                .size(100.dp)
+                                .rotate(windDirection.toFloat())
+                        )
+                    }
                     Text(
+
                         text = "$windSpeed m/s"
                     )
                 }
@@ -344,17 +400,22 @@ fun HeightWindCard(){
 }
 
 @Composable
-fun NowWeatherCard(viewModel: HolfuyWeatherViewModel) {
+fun NowWeatherCard(viewModel: WeatherViewModel) {
+
+    val context = LocalContext.current
+    val weatherUiState = viewModel.uiState.collectAsState()
+
+    val symbolCode = weatherUiState.value.nowCastObject?.data?.next1Hours?.summary?.symbolCode
+
     ElevatedCard(
-
+        modifier = Modifier
+            .height(125.dp)
+            .width(350.dp)
     ) {
-
-        val degrees = 0
 
         Row(
 
         ) {
-            val HFUiState = viewModel.uiState.collectAsState()
 
             ElevatedCard(
                 modifier = Modifier
@@ -364,18 +425,18 @@ fun NowWeatherCard(viewModel: HolfuyWeatherViewModel) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    HFUiState.value.wind.direction?.let {
+                    weatherUiState.value.wind.direction?.let {
                         WindDirectionWheel(
-                            greenStart = HFUiState.value.takeoff.greenStart,
-                            greenStop = HFUiState.value.takeoff.greenStop,
+                            greenStart = weatherUiState.value.takeoff.greenStart,
+                            greenStop = weatherUiState.value.takeoff.greenStop,
                             windDirection = it,
                         )
                     }
-                    val unit = HFUiState.value.wind.unit
-                    val speed = HFUiState.value.wind.speed
-                    val gust = HFUiState.value.wind.gust
+                    val unit = weatherUiState.value.wind.unit
+                    val speed = weatherUiState.value.wind.speed
+                    val gust = weatherUiState.value.wind.gust
 
-                    HFUiState.value.wind.unit?.let {
+                    weatherUiState.value.wind.unit?.let {
 
                         Text(text = "$speed($gust) $unit")
                     }
@@ -390,32 +451,43 @@ fun NowWeatherCard(viewModel: HolfuyWeatherViewModel) {
                     text = "Now",
                 )
                 Text(
-                    text = "$degrees °C",
+                    text = "${weatherUiState.value.nowCastObject?.data?.instant?.details?.airTemperature} °C",
                     fontSize = 40.sp
                 )
             }
-            Image(
-                modifier = Modifier.weight(0.33f, true),
-                alignment = Alignment.Center,
-                painter = painterResource(
-                    id = R.drawable.clearsky_day), contentDescription = "weather"
-            )
+
+            if(symbolCode != null && symbolCode.isNotEmpty()) {
+                Image(
+                    modifier = Modifier.weight(0.33f, true),
+                    alignment = Alignment.Center,
+                    painter = painterResource(
+                        id = context.resources.getIdentifier(
+                            symbolCode,
+                            "drawable",
+                            context.packageName
+                        )
+                    ),
+                    contentDescription = symbolCode
+                )
+            }
         }
     }
 }
 
 @Composable
-fun TodayWeatherCard(viewModel: HolfuyWeatherViewModel, weatherData: NowCastObject) {
+fun TodayWeatherCard(weatherViewModel: WeatherViewModel) {
     ElevatedCard(
-
+        modifier = Modifier
+            .height(125.dp)
+            .width(350.dp)
     ) {
 
-        val HFUiState = viewModel.uiState.collectAsState()
+        val weatherUiState = weatherViewModel.uiState.collectAsState()
 
-        val windDirection = HFUiState.value.wind.direction
+        val windDirection = weatherUiState.value.wind.direction
 
-        val greenStart = HFUiState.value.takeoff.greenStart
-        val greenStop = HFUiState.value.takeoff.greenStop
+        val greenStart = weatherUiState.value.takeoff.greenStart
+        val greenStop = weatherUiState.value.takeoff.greenStop
 
         val temperature = 0
 
@@ -424,7 +496,10 @@ fun TodayWeatherCard(viewModel: HolfuyWeatherViewModel, weatherData: NowCastObje
         ) {
 
             Card(
-                modifier = Modifier.aspectRatio(1f),
+                modifier = Modifier
+                    .aspectRatio(1f)
+                    .weight(0.33f, true),
+
                 //Here we set the color as green if the winddirection falls inside the holfuywheel
                 //If not we set it as red
                 backgroundColor =
@@ -435,7 +510,8 @@ fun TodayWeatherCard(viewModel: HolfuyWeatherViewModel, weatherData: NowCastObje
                 }
             ) {
                 Column(
-
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     if (windDirection != null) {
                         Image(
@@ -446,18 +522,32 @@ fun TodayWeatherCard(viewModel: HolfuyWeatherViewModel, weatherData: NowCastObje
                                 .rotate(windDirection.toFloat())
                         )
                     }
-                    val unit = HFUiState.value.wind.unit
-                    val speed = HFUiState.value.wind.speed
-                    val gust = HFUiState.value.wind.gust
+                    val unit = weatherUiState.value.wind.unit
+                    val speed = weatherUiState.value.wind.speed
+                    val gust = weatherUiState.value.wind.gust
 
-                    HFUiState.value.wind.unit?.let {
+                    weatherUiState.value.wind.unit?.let {
 
                         Text(text = "$speed $unit")
                     }
                 }
             }
-            Text( "$temperature °C")
+            Column(
+                modifier = Modifier.weight(0.33f, true),
+                horizontalAlignment = Alignment.CenterHorizontally
+
+            ) {
+                Text(
+                    text = "Now",
+                )
+                Text(
+                    text = "$temperature °C",
+                    fontSize = 40.sp
+                )
+            }
             Image(
+                modifier = Modifier.weight(0.33f, true),
+                alignment = Alignment.Center,
                 painter = painterResource(
                     id = R.drawable.clearsky_day), contentDescription = "weather"
             )
@@ -486,15 +576,15 @@ fun ChangeDayButton(
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
-fun InfoPage(holfuyWeatherViewModel: HolfuyWeatherViewModel) {
+fun InfoPage(weatherViewModel: WeatherViewModel) {
 
-    val HFUiState = holfuyWeatherViewModel.uiState.collectAsState()
+    val weatherUiState = weatherViewModel.uiState.collectAsState()
         Text(text = "PP2")
-    HFUiState.value.takeoff.coordinates?.let{
+    weatherUiState.value.takeoff.coordinates?.let{
         Text(text = "Coordinate: ${it.latitude}, ${it.longitude}")
 
     }
-    HFUiState.value.takeoff.moh?.let{
+    weatherUiState.value.takeoff.moh?.let{
         Text(text = "MOH: $it")
     }
 
@@ -505,15 +595,15 @@ fun InfoPage(holfuyWeatherViewModel: HolfuyWeatherViewModel) {
 
 @Composable
 //Maybe we can change to "Tomorrow" instead of "future"? for the buttoom-name??
-fun FuturePage(holfuyWeatherViewModel: HolfuyWeatherViewModel) {
-    val HFUiState = holfuyWeatherViewModel.uiState.collectAsState()
+fun FuturePage(weatherViewModel: WeatherViewModel) {
+    val weatherUiState = weatherViewModel.uiState.collectAsState()
     Text(text = "FUTURE")
     //HFUiState.value.weatherForecast.next_1_hour.summary.symbol_code
     /**
      * import androidx.compose.foundation.lazy.items
      */
     LazyColumn {
-        items(HFUiState.value.weatherForecast) { weatherForecast ->
+        items(weatherUiState.value.weatherForecast) { weatherForecast ->
             val time = weatherForecast.time.toLocalTime()
             val text = weatherForecast.data?.next_1_hours?.summary?.symbol_code ?: ""
             val air_temp = weatherForecast.data?.instant?.details?.air_temperature ?: 0.0

@@ -1,3 +1,4 @@
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.thrillcast.data.Repository
@@ -8,40 +9,40 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class HolfuyWeatherViewModel : ViewModel() {
+class WeatherViewModel : ViewModel() {
 
     val repo = Repository()
 
     private val _uiState = MutableStateFlow(
-        HolfuyWeatherUiState(
+        WeatherUiState(
             Takeoff(0, LatLng(0.0,0.0), "", 0, 0,0),
             Wind(0.0,0.0,0.0,"",0),
+            null,
+            emptyList(),
             emptyList(),
         )
     )
 
-    val uiState: StateFlow<HolfuyWeatherUiState> = _uiState.asStateFlow()
+    val uiState: StateFlow<WeatherUiState> = _uiState.asStateFlow()
 
     fun retrieveStationWeather(takeoff: Takeoff) {
         viewModelScope.launch {
+
             val weather: Wind? = repo.fetchHolfuyStationWeather(takeoff.id)
             val weatherForecast: List<WeatherForecast> = repo.fetchMetWeatherForecast(takeoff.coordinates.latitude, takeoff.coordinates.longitude)
 
+            val windyWindsList: List<WindyWinds> = repo.fetchWindyWindsList("$takeoff.coordinates.latitude", "$takeoff.coordinates.longitude")
 
-            val wind = repo.fetch800hWind("$takeoff.coordinates.latitude", "$takeoff.coordinates.longitude")
-            val windNow = wind.get(0)
-            val windSpeedNow = windNow.second.first
+            val nowCastObject: Timeseries? = repo.fetchNowCastObject(takeoff.coordinates.latitude, takeoff.coordinates.longitude).properties?.timeseries?.get(0)
 
-            _uiState.value = weather?.let { HolfuyWeatherUiState(takeoff = takeoff, wind = it, weatherForecast) }!!
+            Log.d("Activity", "${nowCastObject==null}")
 
-        }
-    }
+            if (nowCastObject != null) {
+                Log.d("Activity", "${nowCastObject.data?.instant?.details?.airTemperature}")
+            }
 
-    fun retrieveWindyWeather(takeoff: Takeoff) {
-        viewModelScope.launch {
-            val wind = repo.fetch800hWind("$takeoff.coordinates.latitude", "$takeoff.coordinates.longitude")
-            val windNow = wind[0]
-            val windSpeedNow = windNow.second.first
+            _uiState.value = weather?.let { WeatherUiState(takeoff = takeoff, wind = it, nowCastObject = nowCastObject, windyWindsList = windyWindsList, weatherForecast = weatherForecast) }!!
+
         }
     }
 }

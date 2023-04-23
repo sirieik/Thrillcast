@@ -2,13 +2,13 @@ package com.example.thrillcast.data
 
 import HolfuyModel
 import HolfuyObject
-import MapModel
 import MetModel
 import NowCastObject
 import Takeoff
 import Wind
 import WindyModel
 import WindyObject
+import WindyWinds
 import androidx.compose.ui.layout.LayoutCoordinates
 import com.example.thrillcast.data.met.MetObject
 import com.example.thrillcast.data.met.weatherforecast.WeatherForecast
@@ -26,7 +26,6 @@ import kotlin.math.sqrt
 class Repository {
 
     private val holfuyModel: HolfuyModel = HolfuyModel()
-    private val mapModel: MapModel = MapModel()
     private val metModel: MetModel = MetModel()
     private val windyModel: WindyModel = WindyModel()
     // private val databaseClass: DatabaseModel = Databasemodel()
@@ -165,11 +164,17 @@ class Repository {
         return metObject.properties.timeseries.filter { it.time.toLocalDate() == tomorrowsDate }
     }
 
+    suspend fun fetchMetWeatherToday(lat:Double, lon:Double): List<WeatherForecast> {
+        val metObject = metModel.fetchMetObject(lat, lon)
+        val tomorrowsDate = LocalDate.now().plusDays(1)
+        return metObject.properties.timeseries.filter { it.time.toLocalDate() == tomorrowsDate }
+    }
+
     suspend fun fetchNowCastObject(lat: Double, lon: Double): NowCastObject {
         return metModel.fetchNowCastObject(lat, lon)
     }
 
-    suspend fun fetchWindyObject(lat: String, lng: String): WindyObject {
+    suspend fun fetchWindyWindsList(lat: String, lng: String): List<WindyWinds> {
         val windyObject = windyModel.fetchWindyObject(lat, lng)
 
         val timestamps = windyObject.ts
@@ -182,37 +187,22 @@ class Repository {
         val windV850h  = windyObject.windV850h
         val windV800h  = windyObject.windV800h
 
-        val windUV800h = windU800h.zip(windV800h)
-        val wind800hSpeedAndDir: MutableList<Pair<Double, Double>> = mutableListOf()
+        val windyWindsList: MutableList<WindyWinds> = mutableListOf()
 
-        windUV800h.forEach {
-            wind800hSpeedAndDir.add(calculateWindSpeedAndDirection(it.first, it.second))
+        timestamps.forEachIndexed { index, timestamp ->
+            windyWindsList.add(
+                WindyWinds(
+                    time = timestamp,
+                    speedDir800h = calculateWindSpeedAndDirection(windU800h[index], windV800h[index]),
+                    speedDir850h = calculateWindSpeedAndDirection(windU850h[index], windV850h[index]),
+                    speedDir900h = calculateWindSpeedAndDirection(windU900h[index], windV900h[index]),
+                    speedDir950h = calculateWindSpeedAndDirection(windU950h[index], windV950h[index])
+                )
+            )
         }
 
-        val tsSpeedDir = timestamps.zip(wind800hSpeedAndDir)
-
-        return windyObject
+        return windyWindsList
     }
-
-    suspend fun fetch800hWind(lat: String, lng: String): List<Pair<Long, Pair<Double, Double>>> {
-        val windyObject = windyModel.fetchWindyObject(lat, lng)
-
-        val timestamps = windyObject.ts
-        val windU800h  = windyObject.windU800h
-        val windV800h  = windyObject.windV800h
-
-        val windUV800h = windU800h.zip(windV800h)
-        val wind800hSpeedAndDir: MutableList<Pair<Double, Double>> = mutableListOf()
-
-        windUV800h.forEach {
-            wind800hSpeedAndDir.add(calculateWindSpeedAndDirection(it.first, it.second))
-        }
-
-        val tsSpeedDir = timestamps.zip(wind800hSpeedAndDir)
-
-        return timestamps.zip(wind800hSpeedAndDir)
-    }
-
 
 
     private fun calculateWindSpeedAndDirection(u: Double, v: Double): Pair<Double, Double> {
