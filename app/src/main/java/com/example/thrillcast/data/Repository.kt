@@ -3,14 +3,12 @@ package com.example.thrillcast.data
 import HolfuyModel
 import HolfuyObject
 import MetModel
-import NowCastObject
 import Takeoff
 import Wind
 import WindyModel
 import WindyObject
 import WindyWinds
-import androidx.compose.ui.layout.LayoutCoordinates
-import com.example.thrillcast.data.met.MetObject
+import com.example.thrillcast.data.met.nowcast.NowCastObject
 import com.example.thrillcast.data.met.weatherforecast.WeatherForecast
 import com.google.android.gms.maps.model.LatLng
 import java.time.LocalDate

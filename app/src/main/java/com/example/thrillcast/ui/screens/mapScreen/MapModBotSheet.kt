@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.thrillcast.R
+import com.example.thrillcast.data.met.nowcast.NowCastObject
 import com.example.thrillcast.ui.screens.mapScreen.MapScreen
 import com.example.thrillcast.ui.screens.mapScreen.MapViewModel
 import com.example.thrillcast.ui.screens.mapScreen.SearchBarViewModel
@@ -405,7 +406,7 @@ fun NowWeatherCard(viewModel: WeatherViewModel) {
     val context = LocalContext.current
     val weatherUiState = viewModel.uiState.collectAsState()
 
-    val symbolCode = weatherUiState.value.nowCastObject?.data?.next1Hours?.summary?.symbolCode
+    val symbolCode = weatherUiState.value.nowCastObject?.data?.next_1_hours?.summary?.symbol_code
 
     ElevatedCard(
         modifier = Modifier
@@ -451,7 +452,7 @@ fun NowWeatherCard(viewModel: WeatherViewModel) {
                     text = "Now",
                 )
                 Text(
-                    text = "${weatherUiState.value.nowCastObject?.data?.instant?.details?.airTemperature} °C",
+                    text = "${weatherUiState.value.nowCastObject?.data?.instant?.details?.air_temperature} °C",
                     fontSize = 40.sp
                 )
             }
