@@ -2,6 +2,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.thrillcast.data.Repository
+import com.example.thrillcast.data.met.nowcast.Timesery
 import com.example.thrillcast.data.met.weatherforecast.WeatherForecast
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,12 +34,12 @@ class WeatherViewModel : ViewModel() {
 
             val windyWindsList: List<WindyWinds> = repo.fetchWindyWindsList("$takeoff.coordinates.latitude", "$takeoff.coordinates.longitude")
 
-            val nowCastObject: Timeseries? = repo.fetchNowCastObject(takeoff.coordinates.latitude, takeoff.coordinates.longitude).properties?.timeseries?.get(0)
+            val nowCastObject: Timesery? = repo.fetchNowCastObject(takeoff.coordinates.latitude, takeoff.coordinates.longitude).properties?.timeseries?.get(0)
 
             Log.d("Activity", "${nowCastObject==null}")
 
             if (nowCastObject != null) {
-                Log.d("Activity", "${nowCastObject.data?.instant?.details?.airTemperature}")
+                Log.d("Activity", "${nowCastObject.data?.instant?.details?.air_temperature}")
             }
 
             _uiState.value = weather?.let { WeatherUiState(takeoff = takeoff, wind = it, nowCastObject = nowCastObject, windyWindsList = windyWindsList, weatherForecast = weatherForecast) }!!

@@ -1,4 +1,5 @@
 import com.example.thrillcast.data.met.MetObject
+import com.example.thrillcast.data.met.nowcast.NowCastObject
 import com.google.gson.JsonDeserializer
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -7,7 +8,6 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.gson.*
 import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
 
 class MetModel() {
 
@@ -21,7 +21,7 @@ class MetModel() {
 
     //NEW with Proxy
     //https://gw-uio.intark.uh-it.no/in2000/weatherapi/locationforecast/2.0/compact?lat=60.10&lon=9.58
-    val path2 = "https://gw-uio.intark.uh-it.no/in2000/weatherapi/locationforecast/2.0/compact"
+    val path2 = "https://gw-uio.intark.uh-it.no/in2000/weatherapi/"
 
     //Set up HTTP client
     private val client = HttpClient() {
@@ -34,7 +34,7 @@ class MetModel() {
         }
     }
     suspend fun fetchMetObject(lat:Double, lon:Double): MetObject{
-        return client.get("${path2}?lat=${lat}&lon=${lon}") {
+        return client.get("${path2}locationforecast/2.0/compact?lat=${lat}&lon=${lon}") {
             headers {
                 append("X-Gravitee-API-Key","4cb78578-f2d3-4f28-a810-7b8f7582a1fb" )
             }
@@ -42,7 +42,11 @@ class MetModel() {
     }
 
     suspend fun fetchNowCastObject(lat:Double, lon: Double): NowCastObject {
-        return client.get("https://api.met.no/weatherapi/nowcast/2.0/complete?lat=${lat}&lon=${lon}").body()
+        return client.get("${path2}nowcast/2.0/complete?lat=${lat}&lon=${lon}"){
+            headers {
+                append("X-Gravitee-API-Key","4cb78578-f2d3-4f28-a810-7b8f7582a1fb" )
+            }
+        }.body()
     }
 
 }
