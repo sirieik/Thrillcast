@@ -27,8 +27,10 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -104,7 +106,11 @@ fun MapModBotSheet(
                         Tab(
                             selected = tabState == index,
                             onClick = { tabState = index },
-                            text = { Text(text = title, maxLines = 1, overflow = TextOverflow.Ellipsis) }
+                            text = {
+                                Text(
+                                    text = title, maxLines = 1, overflow = TextOverflow.Ellipsis, fontSize = 20.sp
+                                )
+                            }
                         )
                     }
                 }
@@ -575,23 +581,50 @@ fun ChangeDayButton(
     }
 }
 
-@SuppressLint("SuspiciousIndentation")
 @Composable
 fun InfoPage(weatherViewModel: WeatherViewModel) {
 
+    val minCertificate = "PP2/SP2"
     val weatherUiState = weatherViewModel.uiState.collectAsState()
-        Text(text = "PP2")
-    weatherUiState.value.takeoff.coordinates?.let{
-        Text(text = "Coordinate: ${it.latitude}, ${it.longitude}")
-
+    ElevatedCard(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Text(
+            text = buildAnnotatedString {
+                withStyle(style = androidx.compose.ui.text.SpanStyle(fontWeight = FontWeight.Bold)) {
+                    append("Minimum certification: ")
+                }
+                append("$minCertificate")
+            },
+            fontSize = 22.sp,
+            modifier = Modifier.padding(8.dp)
+        )
+        weatherUiState.value.takeoff.coordinates?.let {
+            Text(
+                text = buildAnnotatedString {
+                    withStyle(style = androidx.compose.ui.text.SpanStyle(fontWeight = FontWeight.Bold)) {
+                        append("Coordinate: ")
+                    }
+                    append("${it.latitude}, ${it.longitude}")
+                },
+                fontSize = 22.sp,
+                modifier = Modifier.padding(8.dp)
+            )
+        }
+        weatherUiState.value.takeoff.moh?.let {
+            Text(
+                text = buildAnnotatedString {
+                    withStyle(style = androidx.compose.ui.text.SpanStyle(fontWeight = FontWeight.Bold)) {
+                        append("MOH: ")
+                    }
+                    append("$it")
+                },
+                fontSize = 22.sp,
+                modifier = Modifier.padding(8.dp)
+            )
+        }
     }
-    weatherUiState.value.takeoff.moh?.let{
-        Text(text = "MOH: $it")
-    }
-
-    //Text(text = "INFO")
 }
-
 
 
 @Composable

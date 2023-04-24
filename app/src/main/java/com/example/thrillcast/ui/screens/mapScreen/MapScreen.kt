@@ -72,7 +72,6 @@ fun MapScreen(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
 
-        
         topBar = {
 
             Crossfade(
