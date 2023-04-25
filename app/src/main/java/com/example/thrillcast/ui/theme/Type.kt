@@ -10,9 +10,15 @@ import com.example.thrillcast.R
 
 // Set of Material typography styles to start with
 
-val Exo = FontFamily(
-    Font(R.font.exo_regular, FontWeight.Bold),
-    Font(R.font.exo_semibolditalic)
+val goldman = FontFamily(
+    Font(R.font.goldman_bold, FontWeight.Bold),
+    Font(R.font.goldman_regular)
+)
+val gruppo = FontFamily(
+    Font(R.font.goldman_regular)
+)
+val montserrat = FontFamily(
+    Font(R.font.montserrat_extralight)
 )
 
 val Typography = Typography(
@@ -27,19 +33,21 @@ val Typography = Typography(
         fontSize = 20.sp
     ),*/
     // Other default text styles to override
-    titleLarge = TextStyle(
-        fontFamily = Exo,
+    headlineLarge = TextStyle(
+        fontFamily = goldman,
         fontWeight = FontWeight.Bold,
         fontSize = 20.sp,
         //lineHeight = 28.sp,
         //letterSpacing = 0.sp
     ),
-    labelSmall = TextStyle(
-        fontFamily = Exo,
+    titleSmall = TextStyle(
+        fontFamily = gruppo,
         fontWeight = FontWeight.Normal,
         fontSize = 60.sp,
-        //lineHeight = 16.sp,
-        //letterSpacing = 0.5.sp
+    ),
+    labelSmall = TextStyle(
+        fontFamily = montserrat,
+        fontWeight = FontWeight.Normal,
+        fontSize = 60.sp,
     )
-
 )

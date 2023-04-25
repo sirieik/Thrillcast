@@ -27,6 +27,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -351,7 +352,7 @@ fun HeightWindCard( weatherViewModel: WeatherViewModel){
                         mutableStateOf(0f)
                     }
                     //Spacer(modifier = Modifier.height(100.dp))
-                    Text(text = "Height:")
+                    Text(text = stringResource(id =R.string.height))
                     Slider(
 
                         modifier = Modifier
@@ -455,7 +456,7 @@ fun NowWeatherCard(viewModel: WeatherViewModel) {
 
             ) {
                 Text(
-                    text = "Now",
+                    text = stringResource(id = R.string.now),
                 )
                 Text(
                     text = "${weatherUiState.value.nowCastObject?.data?.instant?.details?.air_temperature} °C",
@@ -545,7 +546,7 @@ fun TodayWeatherCard(weatherViewModel: WeatherViewModel) {
 
             ) {
                 Text(
-                    text = "Now",
+                    text = stringResource(id = R.string.now),
                 )
                 Text(
                     text = "$temperature °C",
@@ -630,7 +631,7 @@ fun InfoPage(weatherViewModel: WeatherViewModel) {
 @Composable
 fun FuturePage(weatherViewModel: WeatherViewModel) {
     val weatherUiState = weatherViewModel.uiState.collectAsState()
-    Text(text = "Future")
+    Text(text = stringResource(id = R.string.future))
     //HFUiState.value.weatherForecast.next_1_hour.summary.symbol_code
     /**
      * import androidx.compose.foundation.lazy.items

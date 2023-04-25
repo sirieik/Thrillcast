@@ -15,6 +15,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.thrillcast.ui.NavItem
 import com.example.thrillcast.ui.screens.introScreen2.IntroScreen2
+import com.example.thrillcast.ui.theme.GreenDark
+import com.example.thrillcast.ui.theme.GreenLight
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -54,11 +56,13 @@ fun NavBar(navController: NavHostController) {
     )
 
     NavigationBar(
+        //contentColor = GreenDark,
+        containerColor = GreenLight,
         modifier = Modifier.height(60.dp),
         content = {
             navItems.forEachIndexed{ index, item ->
                 NavigationBarItem(
-                    icon = { Icon(item.icon, contentDescription = item.name) },
+                    icon = { Icon(item.icon, contentDescription = item.name, tint = GreenDark) },
                     selected = selectedItem == index,
                     onClick = {
                         selectedItem = index
