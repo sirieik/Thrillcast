@@ -1,10 +1,10 @@
 package com.example.thrillcast.ui.viemodels.weather
 
 import Takeoff
+import WeatherForecast
 import com.example.thrillcast.data.datamodels.Wind
 import com.example.thrillcast.data.repositories.WindyWinds
 import com.example.thrillcast.data.met.nowcast.Timesery
-import com.example.thrillcast.data.met.weatherforecast.WeatherForecast
 
 open class WeatherUiState(
     val takeoff: Takeoff,
