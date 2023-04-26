@@ -23,6 +23,9 @@ data class Station(
     @ColumnInfo(name = "longitude")
     val longitude: Float,
 
+    @ColumnInfo(name = "altitude")
+    val altitude: Int,
+
     @ColumnInfo(name = "greenStart")
     val greenStart: Int,
 
