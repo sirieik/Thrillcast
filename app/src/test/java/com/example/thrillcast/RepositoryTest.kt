@@ -1,6 +1,6 @@
 package com.example.thrillcast
 
-import com.example.thrillcast.data.Repository
+import com.example.thrillcast.data.repositories.Repository
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import org.junit.Assert.*
@@ -64,7 +64,7 @@ class RepositoryTest {
         assertNotNull(forecast.data?.next_1_hours?.summary?.symbol_code)
     }
     /*
-      suspend fun fetchTakeoffs(): List<Takeoff> {
+      suspend fun fetchTakeoffs(): List<com.example.thrillcast.ui.viemodels.map.Takeoff> {
      */
     @Test
     fun takeOffListIsNotEmpty(){
@@ -76,7 +76,7 @@ class RepositoryTest {
         assertTrue(fetchTakeoffsResult.isNotEmpty())
     }
     /*
-     suspend fun fetchHolfuyObjects(): List<HolfuyObject>
+     suspend fun fetchHolfuyObjects(): List<com.example.thrillcast.data.datamodels.HolfuyObject>
      */
     @Test
     fun fetchHolfuyObjectsIsNotEmpty(){

@@ -1,6 +1,5 @@
 
 import android.content.Context
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -8,7 +7,6 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -41,7 +39,7 @@ fun ThrillCastApp(){
 fun NavigationGraph( navController: NavHostController, context: Context){
     NavHost(navController, startDestination = "introscreen") {
         composable(NavItem.settings.route) { SettingsScreen() }
-        composable(NavItem.map.route) { MapModBotSheet(navigateBack = { navController.navigate("introscreen")}, context = context)}
+        composable(NavItem.map.route) { MapScreen(navigateBack = { navController.navigate("introscreen")}, context = context)}
         composable(NavItem.favorites.route) { FavoritesScreen() }
         composable("introscreen") { IntroScreen2(onNavigate = { navController.navigate(NavItem.map.route)})}
     }
