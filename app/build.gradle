@@ -7,6 +7,8 @@ plugins {
 
     id 'kotlin-kapt' // Added line for room
 
+    id("com.google.dagger.hilt.android") //Hilt
+
 }
 
 android {
@@ -100,4 +102,12 @@ dependencies {
     implementation "androidx.compose.runtime:runtime-livedata:1.2.1"
     annotationProcessor "androidx.room:room-compiler:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
+
+    implementation("com.google.dagger:hilt-android:2.44") // hilt
+    kapt("com.google.dagger:hilt-android-compiler:2.44") //hilt
+}
+
+// Allow references to generated code
+kapt {
+    correctErrorTypes = true
 }

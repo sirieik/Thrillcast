@@ -7,8 +7,6 @@ import androidx.room.RoomDatabase
 abstract class StationsDatabase: RoomDatabase() {
     abstract fun stationsDao(): StationsDao
 
-
-
 }
 
 
