@@ -1,3 +1,5 @@
+package com.example.thrillcast.data.datasources.windyhelpers
+
 data class WindyRequest(
     val lat: Double,
     val lon: Double,

@@ -1,7 +1,9 @@
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.thrillcast.data.Repository
+import com.example.thrillcast.data.datamodels.Wind
+import com.example.thrillcast.data.datasources.windyhelpers.WindyWinds
+import com.example.thrillcast.data.repositories.Repository
 import com.example.thrillcast.data.met.nowcast.Timesery
 import com.example.thrillcast.data.met.weatherforecast.WeatherForecast
 import com.google.android.gms.maps.model.LatLng
@@ -17,7 +19,7 @@ class WeatherViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(
         WeatherUiState(
             Takeoff(0, LatLng(0.0,0.0), "", 0, 0,0),
-            Wind(0.0,0.0,0.0,"",0),
+            Wind(0,0.0,0.0,0.0,""),
             null,
             emptyList(),
             emptyList(),

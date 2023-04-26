@@ -1,11 +1,10 @@
 package com.example.thrillcast.ui.screens.mapScreen
 
-import HolfuyModel
 import MapUiState
 import TakeoffUiState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.thrillcast.data.Repository
+import com.example.thrillcast.data.repositories.Repository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

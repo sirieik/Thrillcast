@@ -1,3 +1,5 @@
+import com.example.thrillcast.data.datamodels.Wind
+import com.example.thrillcast.data.datasources.windyhelpers.WindyWinds
 import com.example.thrillcast.data.met.nowcast.Timesery
 import com.example.thrillcast.data.met.weatherforecast.WeatherForecast
 

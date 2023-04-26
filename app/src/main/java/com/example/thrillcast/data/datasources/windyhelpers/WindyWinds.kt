@@ -1,3 +1,5 @@
+package com.example.thrillcast.data.datasources.windyhelpers
+
 data class WindyWinds(
     val time: Long,
     val speedDir800h: Pair<Double, Double>,

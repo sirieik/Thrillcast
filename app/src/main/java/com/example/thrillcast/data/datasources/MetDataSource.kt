@@ -1,3 +1,5 @@
+package com.example.thrillcast.data.datasources
+
 import com.example.thrillcast.data.met.MetObject
 import com.example.thrillcast.data.met.nowcast.NowCastObject
 import com.google.gson.JsonDeserializer
@@ -9,7 +11,7 @@ import io.ktor.http.*
 import io.ktor.serialization.gson.*
 import java.time.ZonedDateTime
 
-class MetModel() {
+class MetDataSource() {
 
     //Met API key
     //val apiKey = "4cb78578-f2d3-4f28-a810-7b8f7582a1fb"

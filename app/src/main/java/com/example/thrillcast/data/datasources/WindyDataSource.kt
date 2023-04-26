@@ -1,16 +1,15 @@
-import android.util.Log
-import com.example.thrillcast.data.windy.Units
+package com.example.thrillcast.data.datasources
+
+import com.example.thrillcast.data.datamodels.WindyObject
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
-import io.ktor.client.statement.*
 import io.ktor.content.*
 import io.ktor.http.*
 import io.ktor.serialization.gson.*
-import org.json.JSONObject
 
-class WindyModel() {
+class WindyDataSource() {
 
     //Windy API key
     private val apiKey = "ZNn24b3G6rq28A1xMOmRFHJ6YYmzv45C"
@@ -30,8 +29,8 @@ class WindyModel() {
         val stringBody =
             """
             {
-                "lat": 60.053889,
-                "lon": 10.322500,
+                "lat": $lat,
+                "lon": $lon,
                 "model": "iconEu",
                 "parameters": ["wind"],
                 "levels": ["950h", "900h", "850h", "800h"],

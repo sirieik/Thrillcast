@@ -1,13 +1,13 @@
-package com.example.thrillcast.data
+package com.example.thrillcast.data.repositories
 
-import HolfuyModel
-import HolfuyObject
-import MetModel
+import com.example.thrillcast.data.datasources.HolfuyDataSource
+import com.example.thrillcast.data.datamodels.HolfuyObject
+import com.example.thrillcast.data.datasources.MetDataSource
 import Takeoff
-import Wind
-import WindyModel
-import WindyObject
-import WindyWinds
+import com.example.thrillcast.data.datamodels.Wind
+import com.example.thrillcast.data.datamodels.WindyObject
+import com.example.thrillcast.data.datasources.WindyDataSource
+import com.example.thrillcast.data.datasources.windyhelpers.WindyWinds
 import com.example.thrillcast.data.met.nowcast.NowCastObject
 import com.example.thrillcast.data.met.weatherforecast.WeatherForecast
 import com.google.android.gms.maps.model.LatLng
@@ -23,9 +23,9 @@ import kotlin.math.sqrt
  */
 class Repository {
 
-    private val holfuyModel: HolfuyModel = HolfuyModel()
-    private val metModel: MetModel = MetModel()
-    private val windyModel: WindyModel = WindyModel()
+    private val holfuyDataSource: HolfuyDataSource = HolfuyDataSource()
+    private val metDataSource: MetDataSource = MetDataSource()
+    private val windyDataSource: WindyDataSource = WindyDataSource()
     // private val databaseClass: DatabaseModel = Databasemodel()
 
     /**
@@ -46,7 +46,7 @@ class Repository {
     suspend fun fetchHolfuyObjects(): List<HolfuyObject> {
         var holfuyObjects = listOf<HolfuyObject>()
         for (item: String in stations) {
-            holfuyObjects += holfuyModel.fetchHolfuyObject(item)
+            holfuyObjects += holfuyDataSource.fetchHolfuyObject(item)
         }
         return holfuyObjects;
     }
@@ -66,7 +66,7 @@ class Repository {
      */
     suspend fun fetchWindyObjects(): List<WindyObject> {
         var windyObjects = listOf<WindyObject>()
-        windyObjects += windyModel.fetchWindyObject("", "")
+        windyObjects += windyDataSource.fetchWindyObject("", "")
 
         return windyObjects;
     }
@@ -96,7 +96,7 @@ class Repository {
 
     //Funksjon for å sette steder på kart uten database
     suspend fun fetchStationLatLngAndNames(): HashMap<String, LatLng> {
-        var stations = holfuyModel.fetchHolfuyStations()
+        var stations = holfuyDataSource.fetchHolfuyStations()
         var stationsInNor = stations.filter { it.location?.countryCode == "NO" }
         var namesAndLatLng: HashMap<String, LatLng> = hashMapOf()
 
@@ -118,7 +118,7 @@ class Repository {
     }
 
     suspend fun fetchTakeoffs(): List<Takeoff> {
-        var stations = holfuyModel.fetchHolfuyStations()
+        var stations = holfuyDataSource.fetchHolfuyStations()
         var stationsInNor = stations.filter { it.location?.countryCode == "NO" }
         var takeoffs: MutableList<Takeoff> = mutableListOf()
 
@@ -151,29 +151,29 @@ class Repository {
         return takeoffs
     }
     suspend fun fetchHolfuyStationWeather(id: Int): Wind? {
-        val holfObject = holfuyModel.fetchHolfuyObject("$id")
+        val holfObject = holfuyDataSource.fetchHolfuyObject("$id")
         return holfObject.wind
     }
 
 
     suspend fun fetchMetWeatherForecast(lat:Double, lon:Double): List<WeatherForecast> {
-        val metObject = metModel.fetchMetObject(lat, lon)
+        val metObject = metDataSource.fetchMetObject(lat, lon)
         val tomorrowsDate = LocalDate.now().plusDays(1)
 
         return metObject.properties.timeseries.filter { it.time.toLocalDate() == tomorrowsDate }
     }
 
     suspend fun fetchLocationForecast(lat:Double, lon:Double): List<WeatherForecast> {
-        val metObject = metModel.fetchMetObject(lat, lon)
+        val metObject = metDataSource.fetchMetObject(lat, lon)
         return metObject.properties.timeseries
     }
 
     suspend fun fetchNowCastObject(lat: Double, lon: Double): NowCastObject {
-        return metModel.fetchNowCastObject(lat, lon)
+        return metDataSource.fetchNowCastObject(lat, lon)
     }
 
     suspend fun fetchWindyWindsList(lat: String, lng: String): List<WindyWinds> {
-        val windyObject = windyModel.fetchWindyObject(lat, lng)
+        val windyObject = windyDataSource.fetchWindyObject(lat, lng)
 
         val timestamps = windyObject.ts
         val windU950h  = windyObject.windU950h
