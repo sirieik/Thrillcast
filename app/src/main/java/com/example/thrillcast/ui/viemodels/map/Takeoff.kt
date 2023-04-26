@@ -1,3 +1,5 @@
+package com.example.thrillcast.ui.viemodels.map
+
 import com.google.android.gms.maps.model.LatLng
 
 data class Takeoff(

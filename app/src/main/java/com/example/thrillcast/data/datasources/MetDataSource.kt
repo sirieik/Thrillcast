@@ -1,7 +1,6 @@
 package com.example.thrillcast.data.datasources
 
 import MetObject
-import com.example.thrillcast.data.met.nowcast.NowCastObject
 import com.google.gson.JsonDeserializer
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -35,7 +34,7 @@ class MetDataSource() {
             }
         }
     }
-    suspend fun fetchMetObject(lat:Double, lon:Double): MetObject{
+    suspend fun fetchLocationForecastObject(lat:Double, lon:Double): MetObject{
         return client.get("${path2}locationforecast/2.0/compact?lat=${lat}&lon=${lon}") {
             headers {
                 append("X-Gravitee-API-Key","4cb78578-f2d3-4f28-a810-7b8f7582a1fb" )
@@ -43,7 +42,7 @@ class MetDataSource() {
         }.body()
     }
 
-    suspend fun fetchNowCastObject(lat:Double, lon: Double): NowCastObject {
+    suspend fun fetchNowCastObject(lat:Double, lon: Double): MetObject {
         return client.get("${path2}nowcast/2.0/complete?lat=${lat}&lon=${lon}"){
             headers {
                 append("X-Gravitee-API-Key","4cb78578-f2d3-4f28-a810-7b8f7582a1fb" )

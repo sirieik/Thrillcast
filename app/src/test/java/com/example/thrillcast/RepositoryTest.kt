@@ -64,7 +64,7 @@ class RepositoryTest {
         assertNotNull(forecast.data?.next_1_hours?.summary?.symbol_code)
     }
     /*
-      suspend fun fetchTakeoffs(): List<Takeoff> {
+      suspend fun fetchTakeoffs(): List<com.example.thrillcast.ui.viemodels.map.Takeoff> {
      */
     @Test
     fun takeOffListIsNotEmpty(){

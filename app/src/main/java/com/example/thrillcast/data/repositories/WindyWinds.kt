@@ -1,5 +1,6 @@
 package com.example.thrillcast.data.repositories
 
+//Dette er en custom dataklasse for å sortere data fra Windy API-et.
 data class WindyWinds(
     val time: Long,
     val speedDir800h: Pair<Double, Double>,
