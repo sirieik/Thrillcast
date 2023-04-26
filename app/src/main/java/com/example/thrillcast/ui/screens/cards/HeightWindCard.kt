@@ -124,16 +124,14 @@ fun HeightWindCard( weatherViewModel: WeatherViewModel){
         ) {
             Text(
                 modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .weight(0.2f, true)
-                    .padding(6.dp),
+                    .align(Alignment.CenterHorizontally),
+                    //.weight(0.2f, true),
                 text = "Height wind",
                 fontSize = 20.sp
             )
             LazyRow(
-                modifier = Modifier
-                    .weight(0.2f, true)
-                    .padding(4.dp),
+                modifier = Modifier,
+                  //  .weight(0.2f, true),
                 contentPadding = PaddingValues(6.dp),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.Top
@@ -141,6 +139,7 @@ fun HeightWindCard( weatherViewModel: WeatherViewModel){
                 itemsIndexed(buttonTimes) { index, time ->
                     val isSelected = index == selectedButtonIndex
                     ElevatedButton(
+                        modifier = Modifier.padding(6.dp),
                         onClick = {
                             selectedButtonIndex = index
                         }
