@@ -1,4 +1,5 @@
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
@@ -8,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -23,22 +25,23 @@ import com.example.thrillcast.ui.theme.GreenLight
 @Composable
 fun ThrillCastApp(){
     val navController = rememberNavController()
+    val context = LocalContext.current
     Scaffold(
         bottomBar = { NavBar(navController = navController) }
     ) {
             innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
-            NavigationGraph(navController = navController)
+            NavigationGraph(navController = navController, context = context)
         }
     }
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun NavigationGraph( navController: NavHostController ){
+fun NavigationGraph( navController: NavHostController, context: Context){
     NavHost(navController, startDestination = "introscreen") {
         composable(NavItem.settings.route) { SettingsScreen() }
-        composable(NavItem.map.route) { MapModBotSheet(navigateBack = { navController.navigate("introscreen")})}
+        composable(NavItem.map.route) { MapModBotSheet(navigateBack = { navController.navigate("introscreen")}, context = context)}
         composable(NavItem.favorites.route) { FavoritesScreen() }
         composable("introscreen") { IntroScreen2(onNavigate = { navController.navigate(NavItem.map.route)})}
     }

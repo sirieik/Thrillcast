@@ -11,4 +11,6 @@ open class WeatherUiState(
 
     val weatherForecast: List<WeatherForecast>,
 
+    val locationForecast: List<WeatherForecast>?
+
 )

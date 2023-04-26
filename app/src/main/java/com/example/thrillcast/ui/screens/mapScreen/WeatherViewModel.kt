@@ -21,6 +21,7 @@ class WeatherViewModel : ViewModel() {
             null,
             emptyList(),
             emptyList(),
+            null
         )
     )
 
@@ -36,14 +37,21 @@ class WeatherViewModel : ViewModel() {
 
             val nowCastObject: Timesery? = repo.fetchNowCastObject(takeoff.coordinates.latitude, takeoff.coordinates.longitude).properties?.timeseries?.get(0)
 
+            val locationForecast: List<WeatherForecast> = repo.fetchLocationForecast(takeoff.coordinates.latitude, takeoff.coordinates.longitude)
+
             Log.d("Activity", "${nowCastObject==null}")
 
             if (nowCastObject != null) {
                 Log.d("Activity", "${nowCastObject.data?.instant?.details?.air_temperature}")
             }
 
-            _uiState.value = weather?.let { WeatherUiState(takeoff = takeoff, wind = it, nowCastObject = nowCastObject, windyWindsList = windyWindsList, weatherForecast = weatherForecast) }!!
-
+            _uiState.value = weather?.let {
+                WeatherUiState(
+                    takeoff = takeoff, wind = it, nowCastObject = nowCastObject,
+                    windyWindsList = windyWindsList, weatherForecast = weatherForecast,
+                    locationForecast = locationForecast
+                )
+            }!!
         }
     }
 }
