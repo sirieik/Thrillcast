@@ -1,6 +1,6 @@
 package com.example.thrillcast.data.datasources
 
-import com.example.thrillcast.data.met.MetObject
+import MetObject
 import com.example.thrillcast.data.met.nowcast.NowCastObject
 import com.google.gson.JsonDeserializer
 import io.ktor.client.*

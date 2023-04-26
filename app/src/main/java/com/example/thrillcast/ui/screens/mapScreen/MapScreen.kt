@@ -1,7 +1,7 @@
 package com.example.thrillcast.ui.screens.mapScreen
 
 import Takeoff
-import WeatherViewModel
+import com.example.thrillcast.ui.viemodels.weather.WeatherViewModel
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.core.tween
@@ -28,7 +28,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalFocusManager
 
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 
 import androidx.compose.ui.text.AnnotatedString
@@ -39,6 +38,7 @@ import com.example.thrillcast.R
 import com.example.thrillcast.ui.theme.GreenDark
 import com.example.thrillcast.ui.theme.GreenLight
 import com.example.thrillcast.ui.theme.gruppo
+import com.example.thrillcast.ui.viemodels.map.MapViewModel
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng

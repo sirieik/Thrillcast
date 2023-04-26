@@ -1,10 +1,9 @@
-package com.example.thrillcast.ui.screens.mapScreen
+package com.example.thrillcast.ui.viemodels.map
 
-import MapUiState
+import HolfuyRepository
 import TakeoffUiState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.thrillcast.data.repositories.Repository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,7 +11,7 @@ import kotlinx.coroutines.launch
 
 class MapViewModel : ViewModel() {
 
-    val repo = Repository()
+    val holfuyRepo = HolfuyRepository()
 
     private val _takoffsUiState = MutableStateFlow(MapUiState(listOf()))
 
@@ -28,7 +27,7 @@ class MapViewModel : ViewModel() {
     //Hente steder rett fra API uten database
     fun retrieveStations() {
         viewModelScope.launch {
-            val takeoffs = repo.fetchTakeoffs()
+            val takeoffs = holfuyRepo.fetchTakeoffs()
 
             _takoffsUiState.value = MapUiState(takeoffs)
         }

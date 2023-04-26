@@ -1,3 +1,6 @@
+import java.time.ZonedDateTime
+
+/*
 data class LocationForecastObject(
     val geometry: Geometry,
     val properties: Properties,
@@ -11,7 +14,7 @@ data class Geometry(
 
 data class Properties(
     val meta: Meta,
-    val timeseries: List<Timesery>
+    val timeseries: List<WeatherForecast>
 )
 
 data class Meta(
@@ -36,9 +39,9 @@ data class Units(
 
 data class Data(
     val instant: Instant,
-    val next_12_hours: Next12Hours,
+   // val next_12_hours: Next12Hours,
     val next_1_hours: Next1Hours,
-    val next_6_hours: Next6Hours
+   // val next_6_hours: Next6Hours
 )
 
 data class Instant(
@@ -74,4 +77,54 @@ data class Summary(
 
 data class DetailsXX(
     val precipitation_amount: Double
+)
+
+
+//Tror denne er selvlagd? @Clara
+data class WeatherForecast (
+    var time : ZonedDateTime,
+    var data : Data?
+)
+
+ */
+
+data class WeatherForecast (
+    var time : ZonedDateTime,
+    var data : Data?
+)
+
+data class Summary (
+    var symbol_code : String?
+)
+
+data class Next_1_hour (
+
+    var summary : Summary? = null
+)
+
+data class Instant(
+    var details : Details
+
+)
+
+data class Data (
+    var next_1_hours : Next_1_hour?,
+    var instant : Instant
+)
+
+data class Details (
+    var air_temperature : Double?,
+    var wind_speed : Double?
+)
+
+data class MetObject(
+
+    var properties: Properties
+
+)
+
+data class Properties (
+    var timeseries : List<WeatherForecast>
+
+
 )

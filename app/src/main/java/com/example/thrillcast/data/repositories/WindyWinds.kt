@@ -1,4 +1,4 @@
-package com.example.thrillcast.data.datasources.windyhelpers
+package com.example.thrillcast.data.repositories
 
 data class WindyWinds(
     val time: Long,

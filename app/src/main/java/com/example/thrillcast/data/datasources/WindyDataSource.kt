@@ -24,7 +24,7 @@ class WindyDataSource() {
         }
     }
 
-    suspend fun fetchWindyObject(lat : String, lon : String): WindyObject {
+    suspend fun fetchWindyObject(lat : Double, lon : Double): WindyObject {
 
         val stringBody =
             """

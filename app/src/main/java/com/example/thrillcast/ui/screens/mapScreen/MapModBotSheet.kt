@@ -38,13 +38,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.thrillcast.R
 import com.example.thrillcast.data.met.nowcast.NowCastObject
 import com.example.thrillcast.ui.screens.mapScreen.MapScreen
-import com.example.thrillcast.ui.screens.mapScreen.MapViewModel
+import com.example.thrillcast.ui.viemodels.map.MapViewModel
 import com.example.thrillcast.ui.screens.mapScreen.SearchBarViewModel
+import com.example.thrillcast.ui.viemodels.weather.WeatherViewModel
 import kotlinx.coroutines.launch
-import java.time.LocalDate
-import java.time.ZoneOffset
 import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 @SuppressLint("StateFlowValueCalledInComposition")

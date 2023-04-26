@@ -1,9 +1,14 @@
+package com.example.thrillcast.ui.viemodels.weather
+
+import HolfuyRepository
+import MetRepository
+import Takeoff
+import WindyRepository
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.thrillcast.data.datamodels.Wind
-import com.example.thrillcast.data.datasources.windyhelpers.WindyWinds
-import com.example.thrillcast.data.repositories.Repository
+import com.example.thrillcast.data.repositories.WindyWinds
 import com.example.thrillcast.data.met.nowcast.Timesery
 import com.example.thrillcast.data.met.weatherforecast.WeatherForecast
 import com.google.android.gms.maps.model.LatLng
@@ -14,12 +19,15 @@ import kotlinx.coroutines.launch
 
 class WeatherViewModel : ViewModel() {
 
-    val repo = Repository()
+    val metRepo = MetRepository()
+    val holfuyRepo = HolfuyRepository()
+    val windyRepo = WindyRepository()
+
 
     private val _uiState = MutableStateFlow(
         WeatherUiState(
-            Takeoff(0, LatLng(0.0,0.0), "", 0, 0,0),
-            Wind(0,0.0,0.0,0.0,""),
+            Takeoff(0, LatLng(0.0, 0.0), "", 0, 0, 0),
+            Wind(0, 0.0, 0.0, 0.0, ""),
             null,
             emptyList(),
             emptyList(),
@@ -32,14 +40,14 @@ class WeatherViewModel : ViewModel() {
     fun retrieveStationWeather(takeoff: Takeoff) {
         viewModelScope.launch {
 
-            val weather: Wind? = repo.fetchHolfuyStationWeather(takeoff.id)
-            val weatherForecast: List<WeatherForecast> = repo.fetchMetWeatherForecast(takeoff.coordinates.latitude, takeoff.coordinates.longitude)
+            val weather: Wind? = holfuyRepo.fetchHolfuyStationWeather(takeoff.id)
+            val weatherForecast: List<WeatherForecast> = metRepo.fetchMetWeatherForecast(takeoff.coordinates.latitude, takeoff.coordinates.longitude)
 
-            val windyWindsList: List<WindyWinds> = repo.fetchWindyWindsList("$takeoff.coordinates.latitude", "$takeoff.coordinates.longitude")
+            val windyWindsList: List<WindyWinds> = windyRepo.fetchWindyWindsList(takeoff.coordinates.latitude, takeoff.coordinates.longitude)
 
-            val nowCastObject: Timesery? = repo.fetchNowCastObject(takeoff.coordinates.latitude, takeoff.coordinates.longitude).properties?.timeseries?.get(0)
+            val nowCastObject: Timesery? = metRepo.fetchNowCastObject(takeoff.coordinates.latitude, takeoff.coordinates.longitude).properties?.timeseries?.get(0)
 
-            val locationForecast: List<WeatherForecast> = repo.fetchLocationForecast(takeoff.coordinates.latitude, takeoff.coordinates.longitude)
+            val locationForecast: List<WeatherForecast> = metRepo.fetchLocationForecast(takeoff.coordinates.latitude, takeoff.coordinates.longitude)
 
             Log.d("Activity", "${nowCastObject==null}")
 
