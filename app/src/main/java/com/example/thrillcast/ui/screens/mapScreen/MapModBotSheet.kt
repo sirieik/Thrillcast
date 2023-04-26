@@ -76,8 +76,7 @@ fun MapModBotSheet(
         sheetContent = {
 
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
+                modifier = Modifier.fillMaxWidth()
                     .height(400.dp)
             ) {
                 Row(
