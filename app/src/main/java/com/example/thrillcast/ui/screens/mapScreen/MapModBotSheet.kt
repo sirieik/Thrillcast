@@ -27,8 +27,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -109,7 +112,11 @@ fun MapModBotSheet(
                         Tab(
                             selected = tabState == index,
                             onClick = { tabState = index },
-                            text = { Text(text = title, maxLines = 1, overflow = TextOverflow.Ellipsis) }
+                            text = {
+                                Text(
+                                    text = title, maxLines = 1, overflow = TextOverflow.Ellipsis, fontSize = 20.sp
+                                )
+                            }
                         )
                     }
                 }
@@ -363,7 +370,7 @@ fun HeightWindCard( weatherViewModel: WeatherViewModel){
                         mutableStateOf(0f)
                     }
                     //Spacer(modifier = Modifier.height(100.dp))
-                    Text(text = "Height:")
+                    Text(text = stringResource(id =R.string.height))
                     Slider(
 
                         modifier = Modifier
@@ -466,7 +473,7 @@ fun NowWeatherCard(viewModel: WeatherViewModel, context: Context) {
 
             ) {
                 Text(
-                    text = "Now",
+                    text = stringResource(id = R.string.now),
                 )
                 Text(
                     text = "${weatherUiState.value.nowCastObject?.data?.instant?.details?.air_temperature} °C",
@@ -622,29 +629,56 @@ fun ChangeDayButton(
     }
 }
 
-@SuppressLint("SuspiciousIndentation")
 @Composable
 fun InfoPage(weatherViewModel: WeatherViewModel) {
 
+    val minCertificate = "PP2/SP2"
     val weatherUiState = weatherViewModel.uiState.collectAsState()
-        Text(text = "PP2")
-    weatherUiState.value.takeoff.coordinates?.let{
-        Text(text = "Coordinate: ${it.latitude}, ${it.longitude}")
-
+    ElevatedCard(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Text(
+            text = buildAnnotatedString {
+                withStyle(style = androidx.compose.ui.text.SpanStyle(fontWeight = FontWeight.Bold)) {
+                    append("Minimum certification: ")
+                }
+                append("$minCertificate")
+            },
+            fontSize = 22.sp,
+            modifier = Modifier.padding(8.dp)
+        )
+        weatherUiState.value.takeoff.coordinates?.let {
+            Text(
+                text = buildAnnotatedString {
+                    withStyle(style = androidx.compose.ui.text.SpanStyle(fontWeight = FontWeight.Bold)) {
+                        append("Coordinate: ")
+                    }
+                    append("${it.latitude}, ${it.longitude}")
+                },
+                fontSize = 22.sp,
+                modifier = Modifier.padding(8.dp)
+            )
+        }
+        weatherUiState.value.takeoff.moh?.let {
+            Text(
+                text = buildAnnotatedString {
+                    withStyle(style = androidx.compose.ui.text.SpanStyle(fontWeight = FontWeight.Bold)) {
+                        append("MOH: ")
+                    }
+                    append("$it")
+                },
+                fontSize = 22.sp,
+                modifier = Modifier.padding(8.dp)
+            )
+        }
     }
-    weatherUiState.value.takeoff.moh?.let{
-        Text(text = "MOH: $it")
-    }
-
-    //Text(text = "INFO")
 }
-
 
 
 @Composable
 fun FuturePage(weatherViewModel: WeatherViewModel) {
     val weatherUiState = weatherViewModel.uiState.collectAsState()
-    Text(text = "Future")
+    Text(text = stringResource(id = R.string.future))
     //HFUiState.value.weatherForecast.next_1_hour.summary.symbol_code
     /**
      * import androidx.compose.foundation.lazy.items

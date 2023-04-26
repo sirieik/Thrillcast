@@ -11,7 +11,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
@@ -26,12 +25,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalFocusManager
+
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thrillcast.R
+import com.example.thrillcast.ui.theme.GreenDark
+import com.example.thrillcast.ui.theme.GreenLight
+import com.example.thrillcast.ui.theme.gruppo
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -72,7 +79,6 @@ fun MapScreen(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
 
-        
         topBar = {
 
             Crossfade(
@@ -196,7 +202,6 @@ fun TopBar(
     mapViewModel: MapViewModel,
     onTakeoffSelected: (Takeoff) -> Unit
 ) {
-
     var searchInput by remember { mutableStateOf("") }
     val hideKeyboard = LocalFocusManager.current
 
@@ -205,10 +210,9 @@ fun TopBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color(0xFF355e3b))
+            .background(GreenDark)
             .height(60.dp)
-            //.clip(RoundedCornerShape(40))
-            .border(1.dp, color = Color(0xFF90ee90), RoundedCornerShape(2)),
+            .border(1.dp, color = GreenLight, RectangleShape),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -218,13 +222,13 @@ fun TopBar(
             Icon(
                 imageVector = Icons.Filled.ArrowBack,
                 contentDescription = "Back Icon",
-                tint = Color(0xFF90ee90)
+                tint = GreenLight
             )
         }
 
         Text(
-            text = "Paragliding", style = MaterialTheme.typography.titleLarge,
-            color = Color(0xFF90ee90),
+            text = "Paragliding", style = MaterialTheme.typography.titleSmall,
+            color = GreenLight,
             fontSize = 30.sp,
         )
 
@@ -234,7 +238,7 @@ fun TopBar(
             Icon(
                 imageVector = Icons.Filled.Search,
                 contentDescription = "Search Icon",
-                tint = Color(0xFF90ee90)
+                tint = GreenLight
             )
         }
     }
@@ -254,13 +258,11 @@ fun SearchBar(
 
     val uiState = mapViewModel.takeoffsUiState.collectAsState()
 
-    Column() {
+    Column{
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0xFF001A40)),
-            //.border(1.dp, color = Color(0xFFD7E2FF), RoundedCornerShape(2)),
-            //horizontalArrangement = Arrangement.SpaceBetween,
+                .background(GreenDark),
             verticalAlignment = Alignment.CenterVertically,
 
             ) {
@@ -270,19 +272,19 @@ fun SearchBar(
                     //.width(320.dp)
                     .fillMaxWidth()
                     .height(60.dp)
-                    .clip(shape = RoundedCornerShape(15))
+                    .clip(shape = RectangleShape)
                     .background(Color.Transparent),
                 value = searchInput,
                 onValueChange = { searchInput = it },
-                placeholder = { Text("Find takeoff locations", color = Color(0xFFD7E2FF)) },
+                placeholder = { Text(text = stringResource(id = R.string.find_takeoff), color = GreenLight, style = MaterialTheme.typography.labelSmall, fontSize = 12.sp) },
                 singleLine = true,
                 maxLines = 1,
-                shape = RoundedCornerShape(15),
+                shape = RectangleShape,
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Filled.Search,
                         contentDescription = "Search Icon",
-                        tint = Color(0xFFD7E2FF)
+                        tint = GreenLight
                     )
                 },
                 trailingIcon = {
@@ -298,15 +300,15 @@ fun SearchBar(
                         Icon(
                             imageVector = Icons.Filled.Close,
                             contentDescription = "Close Icon",
-                            tint = Color(0xFFD7E2FF)
+                            tint = GreenLight
                         )
                     }
                 },
                 colors = TextFieldDefaults.outlinedTextFieldColors(
-                    textColor = Color(0xFFD7E2FF),
-                    //unfocusedBorderColor = Color.Transparent,
-                    focusedBorderColor = Color(0xFFD7E2FF),
-                    cursorColor = Color(0xFFD7E2FF),
+                    textColor = GreenLight,
+                    unfocusedBorderColor = GreenLight,
+                    focusedBorderColor = GreenLight,
+                    cursorColor = GreenLight,
                     unfocusedTrailingIconColor = Color.White,
                     focusedTrailingIconColor = Color.Black
                 ),
@@ -333,9 +335,11 @@ fun SearchBar(
                             },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .background(Color(0xFF001A40))
+                                .background(GreenLight)
+                                .border(2.dp, color = GreenDark, shape = RectangleShape)
                                 .padding(vertical = 16.dp),
-                            style = TextStyle(fontSize = 20.sp, color = Color(0xFFD7E2FF))
+
+                            style = TextStyle(fontSize = 20.sp, color = GreenDark, fontFamily = gruppo)
                         )
                     }
                 }

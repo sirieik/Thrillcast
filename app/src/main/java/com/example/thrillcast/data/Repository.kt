@@ -202,8 +202,8 @@ class Repository {
         return windyWindsList
     }
 
-
-    private fun calculateWindSpeedAndDirection(u: Double, v: Double): Pair<Double, Double> {
+    //Delete 'private' before fun, in order to use for unittest
+    fun calculateWindSpeedAndDirection(u: Double, v: Double): Pair<Double, Double> {
         val windSpeed = sqrt(u.pow(2) + v.pow(2))
         val windDirection = atan2(v, u) * 180 / PI
         return Pair(windSpeed, windDirection)
