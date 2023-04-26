@@ -6,6 +6,7 @@
 //import androidx.compose.ui.graphics.Color
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -25,7 +26,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -38,6 +38,10 @@ import com.example.thrillcast.ui.screens.mapScreen.MapScreen
 import com.example.thrillcast.ui.screens.mapScreen.MapViewModel
 import com.example.thrillcast.ui.screens.mapScreen.SearchBarViewModel
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 @SuppressLint("StateFlowValueCalledInComposition")
@@ -47,7 +51,8 @@ fun MapModBotSheet(
     mapViewModel: MapViewModel = viewModel(),
     weatherViewModel: WeatherViewModel = viewModel(),
     searchBarViewModel: SearchBarViewModel = viewModel(),
-    navigateBack: () -> Unit
+    navigateBack: () -> Unit,
+    context: Context
 ) {
     val weatherUiState = weatherViewModel.uiState.collectAsState()
     val coroutineScope = rememberCoroutineScope()
@@ -113,7 +118,7 @@ fun MapModBotSheet(
                 ) {
                     when (tabState) {
                         0 -> InfoPage(weatherViewModel = weatherViewModel)
-                        1 -> NowPage(weatherViewModel = weatherViewModel)
+                        1 -> NowPage(weatherViewModel = weatherViewModel, context = context)
                         else -> FuturePage(weatherViewModel = weatherViewModel)// it may need changes
                     }
                 }
@@ -152,7 +157,7 @@ fun ChangePageButton(
 }
 
 @Composable
-fun NowPage(weatherViewModel: WeatherViewModel) {
+fun NowPage(weatherViewModel: WeatherViewModel, context: Context) {
 
     val scrollState = rememberScrollState()
 
@@ -182,10 +187,23 @@ fun NowPage(weatherViewModel: WeatherViewModel) {
                     .padding(4.dp)
             ) {
                 item {
-                    NowWeatherCard(viewModel = weatherViewModel)
+                    NowWeatherCard(viewModel = weatherViewModel, context = context)
                 }
                 items(7){
-                    TodayWeatherCard(weatherViewModel = weatherViewModel)
+
+                    //set(year: Int, month: Int, date: Int, hour: Int, minute: Int, second: Int)
+
+                    val nowDate = Calendar.getInstance()
+                    nowDate.set(Calendar.MINUTE, 0)
+                    nowDate.set(Calendar.SECOND, 0)
+
+                    val now = ZonedDateTime.now()
+                        .withMinute(0)
+                        .withSecond(0)
+                        .withNano(0)
+                        .withFixedOffsetZone()
+                        .plusHours((it + 1).toLong())
+                    TodayWeatherCard(weatherViewModel = weatherViewModel, context = context, time = now)
                 }
             }
         }
@@ -387,7 +405,7 @@ fun HeightWindCard( weatherViewModel: WeatherViewModel){
                             contentDescription = "wind direction",
                             modifier = Modifier
                                 .size(100.dp)
-                                .rotate(windDirection.toFloat())
+                                .rotate((windDirection + 90.0).toFloat())
                         )
                     }
                     Text(
@@ -401,9 +419,8 @@ fun HeightWindCard( weatherViewModel: WeatherViewModel){
 }
 
 @Composable
-fun NowWeatherCard(viewModel: WeatherViewModel) {
+fun NowWeatherCard(viewModel: WeatherViewModel, context: Context) {
 
-    val context = LocalContext.current
     val weatherUiState = viewModel.uiState.collectAsState()
 
     val symbolCode = weatherUiState.value.nowCastObject?.data?.next_1_hours?.summary?.symbol_code
@@ -476,7 +493,7 @@ fun NowWeatherCard(viewModel: WeatherViewModel) {
 }
 
 @Composable
-fun TodayWeatherCard(weatherViewModel: WeatherViewModel) {
+fun TodayWeatherCard(weatherViewModel: WeatherViewModel, context: Context, time: ZonedDateTime) {
     ElevatedCard(
         modifier = Modifier
             .height(125.dp)
@@ -490,7 +507,29 @@ fun TodayWeatherCard(weatherViewModel: WeatherViewModel) {
         val greenStart = weatherUiState.value.takeoff.greenStart
         val greenStop = weatherUiState.value.takeoff.greenStop
 
-        val temperature = 0
+        val today = weatherUiState.value.locationForecast?.filter {
+            it.time == time
+        }
+
+        weatherUiState.value.locationForecast?.forEach {
+
+            Log.d("Date", "APITime:${it.time}")
+            Log.d("Date", "MyTime:$time")
+
+        }
+
+        var symbolCode: String? = null
+
+        var temperature: Double? = null
+
+        if (today != null) {
+            if (today.isNotEmpty()){
+                temperature = today[0].data?.instant?.details?.air_temperature
+                symbolCode = today[0].data?.next_1_hours?.summary?.symbol_code
+            }
+        }
+
+
 
         Row(
 
@@ -520,7 +559,7 @@ fun TodayWeatherCard(weatherViewModel: WeatherViewModel) {
                             contentDescription = "wind direction",
                             modifier = Modifier
                                 .size(32.dp)
-                                .rotate(windDirection.toFloat())
+                                .rotate((windDirection + 90).toFloat())
                         )
                     }
                     val unit = weatherUiState.value.wind.unit
@@ -539,19 +578,27 @@ fun TodayWeatherCard(weatherViewModel: WeatherViewModel) {
 
             ) {
                 Text(
-                    text = "Now",
+                    text = "$time" //"${time.hour}:${time.minute}0",
                 )
                 Text(
                     text = "$temperature °C",
                     fontSize = 40.sp
                 )
             }
-            Image(
-                modifier = Modifier.weight(0.33f, true),
-                alignment = Alignment.Center,
-                painter = painterResource(
-                    id = R.drawable.clearsky_day), contentDescription = "weather"
-            )
+            if(symbolCode != null && symbolCode.isNotEmpty()) {
+                Image(
+                    modifier = Modifier.weight(0.33f, true),
+                    alignment = Alignment.Center,
+                    painter = painterResource(
+                        id = context.resources.getIdentifier(
+                            symbolCode,
+                            "drawable",
+                            context.packageName
+                        )
+                    ),
+                    contentDescription = symbolCode
+                )
+            }
         }
     }
 }
