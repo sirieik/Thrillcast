@@ -8,7 +8,7 @@ data class Takeoff(
     val name: String,
     val greenStart: Int,
     val greenStop: Int,
-    //ADD Altitude(MOH)
-    val moh : Int
+    val moh : Int,
+    val isFavorite : Boolean = false
 
 )

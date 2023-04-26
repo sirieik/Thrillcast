@@ -5,6 +5,7 @@ import MetRepository
 import com.example.thrillcast.ui.viemodels.map.Takeoff
 import WeatherForecast
 import WindyRepository
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,10 +17,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class WeatherViewModel : ViewModel() {
+class WeatherViewModel(context: Context) : ViewModel() {
 
     val metRepo = MetRepository()
-    val holfuyRepo = HolfuyRepository()
+    val holfuyRepo = HolfuyRepository(context)
     val windyRepo = WindyRepository()
 
 

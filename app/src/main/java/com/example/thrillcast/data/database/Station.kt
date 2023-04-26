@@ -18,13 +18,13 @@ data class Station(
     val name: String,
 
     @ColumnInfo(name = "latitude")
-    val latitude: Float,
+    val latitude: Double,
 
     @ColumnInfo(name = "longitude")
-    val longitude: Float,
+    val longitude: Double,
 
-    @ColumnInfo(name = "altitude")
-    val altitude: Int,
+    @ColumnInfo(name = "moh")
+    val moh: Int,
 
     @ColumnInfo(name = "greenStart")
     val greenStart: Int,

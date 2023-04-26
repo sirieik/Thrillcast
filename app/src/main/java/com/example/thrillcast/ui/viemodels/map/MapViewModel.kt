@@ -1,5 +1,6 @@
 package com.example.thrillcast.ui.viemodels.map
 
+import android.content.Context
 import HolfuyRepository
 import TakeoffUiState
 import androidx.lifecycle.ViewModel
@@ -9,9 +10,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class MapViewModel : ViewModel() {
+class MapViewModel(context: Context) : ViewModel() {
 
-    val holfuyRepo = HolfuyRepository()
+    val holfuyRepo = HolfuyRepository(context)
 
     private val _takoffsUiState = MutableStateFlow(MapUiState(listOf()))
 
