@@ -1,3 +1,28 @@
 <resources>
-    <string name="app_name">ThrillCast</string>
+    <string name = "app_name">ThrillCast</string>
+
+    // introscreen
+    <string name = "choose_sport">Choose Sport</string>
+    <string name = "paragliding">Paragliding</string>
+    <string name = "hanggliding">Hanggliding</string>
+
+    // mapscreen
+    <string name = "find_takeoff">Find takeoff locations</string>
+
+    // mapmodbotsheet
+    <string name = "info">Info</string>
+    <string name = "now">Now</string>
+    <string name = "future">Future</string>
+    <string name = "Future">FUTURE</string>
+    <string name = "height">Height:</string>
+
+
+
+    // favourites
+    <string name = "favourites">Favourites</string>
+
+    // settings
+    <string name = "settings">Setting</string>
+
+
 </resources>

@@ -1,7 +1,7 @@
 package com.example.thrillcast.ui.screens.introScreen2
 
-import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -11,96 +11,94 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.thrillcast.R
+import com.example.thrillcast.ui.theme.GreenDark
+import com.example.thrillcast.ui.theme.GreenLight
 
 @Composable
 fun IntroScreen2(onNavigate: () -> Unit) {
 
     Column(
         Modifier
-            .background(color = Color(0xFF93B3F3))
+            .background(color = GreenDark)
             .fillMaxSize()
             .padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.Top),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Icon(
-            painter = painterResource(id = com.example.thrillcast.R.drawable.paragliding),
-            null,
-            Modifier.size(80.dp),
-            tint = Color.White
-        )
-        Text(
-            text = "ThrillCast",
-            style = MaterialTheme.typography.labelSmall,
-            color = Color.White,
-            fontSize = 40.sp,
-        )
+        Spacer(modifier = Modifier.padding(20.dp))
+
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween
+        ){
+
+            Icon(
+                painter = painterResource(id = com.example.thrillcast.R.drawable.skjermbilde_2023_03_27_kl__17_52_54),
+                null,
+                Modifier.size(80.dp),
+                tint = Color.White
+            )
+            Text(
+                text = stringResource(id = R.string.app_name),
+                style = MaterialTheme.typography.headlineLarge,
+                color = Color.White,
+                fontSize = 40.sp,
+            )
+        }
 
         Spacer(modifier = Modifier.padding(5.dp))
 
         Column(
             Modifier
-                .height(350.dp)
+                .height(290.dp)
                 .width(250.dp)
                 //.padding(60.dp)
                 .clip(shape = RoundedCornerShape(20.dp))
-                .background(color = Color(0xFFF3EDF7))
-                .fillMaxSize(),
+                .background(color = GreenLight)
+                .fillMaxSize()
+                .border(7.dp, color = Color(0xFFD6EF3E), shape = RoundedCornerShape(20.dp) ),
             verticalArrangement = Arrangement.spacedBy(20.dp, alignment = Alignment.Bottom),
             horizontalAlignment = Alignment.CenterHorizontally,
 
             ) {
 
-            Spacer(modifier = Modifier.padding(7.dp))
+            Spacer(modifier = Modifier.padding(8.dp))
 
             Text(
-                text = " Choose Sport", style = MaterialTheme.typography.titleLarge,
-                color = Color.Black,
+                text = stringResource(id = R.string.choose_sport),
+                style = MaterialTheme.typography.titleSmall,
+                color = GreenDark,
                 fontSize = 30.sp,
             )
-            
-            Spacer(modifier = Modifier.padding(1.dp))
 
-            Button(
+            ElevatedButton(
                 onClick = onNavigate,
                 colors = ButtonDefaults.buttonColors(Color.White),
                 modifier = Modifier.width(200.dp),
                 shape = RoundedCornerShape(30)
             ) {
                 Text(
-                    text = "Paragliding",
-                    style = MaterialTheme.typography.titleLarge,
+                    text = stringResource(id = R.string.paragliding),
+                    style = MaterialTheme.typography.titleSmall,
                     color = Color.Black,
                     modifier = Modifier.padding(vertical = 3.dp),
                     fontSize = 20.sp,
                 )
             }
-            Button(
+
+            ElevatedButton(
                 onClick = {},
                 colors = ButtonDefaults.buttonColors(Color.White),
                 modifier = Modifier.width(200.dp),
                 shape = RoundedCornerShape(30)
             ) {
                 Text(
-                    text = "Skydiving",
-                    style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.padding(vertical = 3.dp),
-                    color = Color.Black,
-                    fontSize = 20.sp
-                )
-            }
-            Button(
-                onClick = {},
-                colors = ButtonDefaults.buttonColors(Color.White),
-                modifier = Modifier.width(200.dp),
-                shape = RoundedCornerShape(30)
-            ) {
-                Text(
-                    text = "Hanggliding",
-                    style = MaterialTheme.typography.titleLarge,
+                    text = stringResource(id = R.string.hanggliding),
+                    style = MaterialTheme.typography.titleSmall,
                     color = Color.Black,
                     modifier = Modifier.padding(vertical = 3.dp),
                     fontSize = 20.sp,
