@@ -17,10 +17,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class WeatherViewModel(context: Context) : ViewModel() {
+class WeatherViewModel() : ViewModel() {
 
     val metRepo = MetRepository()
-    val holfuyRepo = HolfuyRepository(context)
+    val holfuyRepo = HolfuyRepository()
     val windyRepo = WindyRepository()
 
 

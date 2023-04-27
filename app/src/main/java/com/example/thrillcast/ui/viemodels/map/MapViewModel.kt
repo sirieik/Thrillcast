@@ -10,9 +10,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class MapViewModel(context: Context) : ViewModel() {
+class MapViewModel() : ViewModel() {
 
-    val holfuyRepo = HolfuyRepository(context)
+    val holfuyRepo = HolfuyRepository()
 
     private val _takoffsUiState = MutableStateFlow(MapUiState(listOf()))
 
