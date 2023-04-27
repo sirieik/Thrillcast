@@ -7,13 +7,18 @@ import com.example.thrillcast.data.datasources.HolfuyDataSource
 import com.example.thrillcast.ui.viemodels.map.Takeoff
 import com.google.android.gms.maps.model.LatLng
 
-class HolfuyRepository(context: Context){
+class HolfuyRepository(){
 
     private val holfuyDataSource: HolfuyDataSource = HolfuyDataSource()
+
+    /*
     private val db = Room.databaseBuilder(
             context,
             StationsDatabase::class.java, "stations-database"
             ).build()
+
+
+     */
 
     suspend fun fetchTakeoffs(): List<Takeoff> {
         val stations = holfuyDataSource.fetchHolfuyStations()
@@ -46,7 +51,7 @@ class HolfuyRepository(context: Context){
         }
         return takeoffs
     }
-
+/*
     suspend fun fillDatabase(){
         val stationDao = db.stationsDao()
         val stationList = fetchTakeoffs()
@@ -64,6 +69,8 @@ class HolfuyRepository(context: Context){
             stationDao.upsertStation(station)
         }
     }
+
+ */
 
     suspend fun fetchHolfuyStationWeather(id: Int): Wind? {
         val holfObject = holfuyDataSource.fetchHolfuyObject("$id")

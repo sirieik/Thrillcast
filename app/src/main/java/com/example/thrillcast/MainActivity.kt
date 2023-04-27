@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
 
-                    ThrillCastApp()
+                    ThrillCastApp(context = this)
                 }
             }
         }
