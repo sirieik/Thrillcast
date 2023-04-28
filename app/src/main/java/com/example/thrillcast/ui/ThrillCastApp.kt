@@ -9,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -17,13 +18,14 @@ import com.example.thrillcast.ui.NavItem
 import com.example.thrillcast.ui.screens.introScreen2.IntroScreen2
 import com.example.thrillcast.ui.theme.GreenDark
 import com.example.thrillcast.ui.theme.GreenLight
+import com.example.thrillcast.ui.viemodels.map.MapViewModel
+import com.example.thrillcast.ui.viemodels.weather.WeatherViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ThrillCastApp(){
+fun ThrillCastApp(context: Context){
     val navController = rememberNavController()
-    val context = LocalContext.current
     Scaffold(
         bottomBar = { NavBar(navController = navController) }
     ) {
@@ -37,6 +39,10 @@ fun ThrillCastApp(){
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun NavigationGraph( navController: NavHostController, context: Context){
+
+    val weatherViewModel: WeatherViewModel = viewModel()
+    val mapWeatherViewModel: MapViewModel = viewModel()
+
     NavHost(navController, startDestination = "introscreen") {
         composable(NavItem.settings.route) { SettingsScreen() }
         composable(NavItem.map.route) { MapScreen(navigateBack = { navController.navigate("introscreen")}, context = context)}
