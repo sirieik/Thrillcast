@@ -29,7 +29,7 @@ fun FavoritesScreen(addedFavorites: List<WeatherViewModel>, weatherViewModel: We
                 LazyColumn(modifier = Modifier.fillMaxWidth()) {
                     /*items(addedFavorites) {
                         NowWeatherCard(viewModel = weatherViewModel)
-                    }hei*/
+                    }*/
                 }
             }
         }
