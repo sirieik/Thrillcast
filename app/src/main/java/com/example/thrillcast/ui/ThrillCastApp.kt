@@ -7,7 +7,6 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -46,7 +45,7 @@ fun NavigationGraph( navController: NavHostController, context: Context){
     NavHost(navController, startDestination = "introscreen") {
         composable(NavItem.settings.route) { SettingsScreen() }
         composable(NavItem.map.route) { MapScreen(navigateBack = { navController.navigate("introscreen")}, context = context)}
-        composable(NavItem.favorites.route) { FavoritesScreen() }
+        composable(NavItem.favorites.route) { FavoritesScreen(emptyList()) }
         composable("introscreen") { IntroScreen2(onNavigate = { navController.navigate(NavItem.map.route)})}
     }
 }
