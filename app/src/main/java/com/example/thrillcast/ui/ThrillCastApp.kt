@@ -45,7 +45,7 @@ fun NavigationGraph( navController: NavHostController, context: Context){
     NavHost(navController, startDestination = "introscreen") {
         composable(NavItem.settings.route) { SettingsScreen() }
         composable(NavItem.map.route) { MapScreen(navigateBack = { navController.navigate("introscreen")}, context = context)}
-        composable(NavItem.favorites.route) { FavoritesScreen(emptyList()) }
+        composable(NavItem.favorites.route) { FavoritesScreen(emptyList(), context = context) }
         composable("introscreen") { IntroScreen2(onNavigate = { navController.navigate(NavItem.map.route)})}
     }
 }
