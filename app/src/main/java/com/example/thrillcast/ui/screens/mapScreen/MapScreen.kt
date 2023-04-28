@@ -61,6 +61,11 @@ fun MapScreen(
         confirmStateChange = { it != ModalBottomSheetValue.HalfExpanded },
         skipHalfExpanded = true
     )
+    val favoriteLocations = remember { mutableStateListOf<WeatherViewModel>() }
+    FavoritesScreen(
+        addedFavorites = favoriteLocations,
+        weatherViewModel = weatherViewModel
+    )
 
     val tabList = listOf("Info", "Today", "Future")
 
@@ -92,6 +97,19 @@ fun MapScreen(
                             .weight(0.8f, true),
                         color = Color.Black
                     )
+                    IconButton(
+                        onClick = {
+                            if(!favoriteLocations.contains(weatherViewModel)) {
+                                favoriteLocations.add(weatherViewModel)
+                            }
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Favorite,
+                            contentDescription = "Favorites button",
+                            tint = Color.Magenta
+                        )
+                    }
                     IconButton(
                         onClick = { coroutineScope.launch { modalSheetState.hide() } },
                         modifier = Modifier
