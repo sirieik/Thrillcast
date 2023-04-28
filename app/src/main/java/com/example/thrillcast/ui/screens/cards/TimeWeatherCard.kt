@@ -19,7 +19,7 @@ import com.example.thrillcast.ui.viemodels.weather.WeatherViewModel
 import java.time.ZonedDateTime
 
 @Composable
-fun TodayWeatherCard(weatherViewModel: WeatherViewModel, context: Context, time: ZonedDateTime) {
+fun TimeWeatherCard(weatherViewModel: WeatherViewModel, context: Context, time: ZonedDateTime) {
     ElevatedCard(
         modifier = Modifier
             .height(125.dp)
@@ -28,19 +28,17 @@ fun TodayWeatherCard(weatherViewModel: WeatherViewModel, context: Context, time:
 
         val weatherUiState = weatherViewModel.uiState.collectAsState()
 
-        val windDirection = weatherUiState.value.wind.direction
-
         val greenStart = weatherUiState.value.takeoff.greenStart
         val greenStop = weatherUiState.value.takeoff.greenStop
 
         val today = weatherUiState.value.locationForecast?.filter {
-            it.time == time
+            it.time.toLocalDateTime() == time.toLocalDateTime()
         }
 
         weatherUiState.value.locationForecast?.forEach {
 
-            Log.d("Date", "APITime:${it.time}")
-            Log.d("Date", "MyTime:$time")
+            Log.d("Date", "APITime:${it.time.toLocalDateTime()}")
+            Log.d("Date", "MyTime:${time.toLocalDateTime()}")
 
         }
 
@@ -48,11 +46,16 @@ fun TodayWeatherCard(weatherViewModel: WeatherViewModel, context: Context, time:
 
         var temperature: Double? = null
 
-        if (today != null) {
-            if (today.isNotEmpty()){
+        var windDirection: Double? = null
+        var windSpeed: Double? = null
+
+        if (today != null && today.isNotEmpty()) {
+
                 temperature = today[0].data?.instant?.details?.air_temperature
                 symbolCode = today[0].data?.next_1_hours?.summary?.symbol_code
-            }
+                windDirection = today[0].data.instant.details.wind_from_direction
+                windSpeed = today[0].data.instant.details.wind_speed
+
         }
 
 
@@ -64,7 +67,9 @@ fun TodayWeatherCard(weatherViewModel: WeatherViewModel, context: Context, time:
             Card(
                 modifier = Modifier
                     .aspectRatio(1f)
-                    .weight(0.33f, true),
+                    .weight(0.33f, true)
+                    .fillMaxSize()
+                    .padding(6.dp),
 
                 //Here we set the color as green if the winddirection falls inside the holfuywheel
                 //If not we set it as red
@@ -88,13 +93,10 @@ fun TodayWeatherCard(weatherViewModel: WeatherViewModel, context: Context, time:
                                 .rotate((windDirection + 90).toFloat())
                         )
                     }
-                    val unit = weatherUiState.value.wind.unit
-                    val speed = weatherUiState.value.wind.speed
-                    val gust = weatherUiState.value.wind.gust
 
                     weatherUiState.value.wind.unit?.let {
 
-                        Text(text = "$speed $unit")
+                        Text(text = "$windSpeed m/s")
                     }
                 }
             }
@@ -104,11 +106,12 @@ fun TodayWeatherCard(weatherViewModel: WeatherViewModel, context: Context, time:
 
             ) {
                 Text(
-                    text = "$time" //"${time.hour}:${time.minute}0",
+                    text = "${time.hour}:${time.minute}0",
                 )
                 Text(
                     text = "$temperature °C",
-                    fontSize = 40.sp
+                    fontSize = 40.sp,
+                    maxLines = 1
                 )
             }
             if(symbolCode != null && symbolCode.isNotEmpty()) {

@@ -141,8 +141,8 @@ fun MapScreen(
     }
 }
 
-fun isDegreeBetween(value: Int, min: Int, max: Int): Boolean {
-    val valueRadians = Math.toRadians(value.toDouble())
+fun isDegreeBetween(value: Double, min: Int, max: Int): Boolean {
+    val valueRadians = Math.toRadians(value)
     val minRadians = Math.toRadians(min.toDouble())
     val maxRadians = Math.toRadians(max.toDouble())
 

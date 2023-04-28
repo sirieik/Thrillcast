@@ -46,21 +46,16 @@ fun NowPage(weatherViewModel: WeatherViewModel, context: Context) {
                 item {
                     NowWeatherCard(viewModel = weatherViewModel, context = context)
                 }
-                items(7){
+                val now = ZonedDateTime.now()
+                    .withMinute(0)
+                    .withSecond(0)
+                    .withNano(0)
+                    .withFixedOffsetZone()
 
-                    //set(year: Int, month: Int, date: Int, hour: Int, minute: Int, second: Int)
+                val cardcount = (23 - now.hour)
 
-                    val nowDate = Calendar.getInstance()
-                    nowDate.set(Calendar.MINUTE, 0)
-                    nowDate.set(Calendar.SECOND, 0)
-
-                    val now = ZonedDateTime.now()
-                        .withMinute(0)
-                        .withSecond(0)
-                        .withNano(0)
-                        .withFixedOffsetZone()
-                        .plusHours((it + 1).toLong())
-                    TodayWeatherCard(weatherViewModel = weatherViewModel, context = context, time = now)
+                items(cardcount){
+                    TimeWeatherCard(weatherViewModel = weatherViewModel, context = context, time = now.plusHours((it + 1).toLong()))
                 }
             }
         }
