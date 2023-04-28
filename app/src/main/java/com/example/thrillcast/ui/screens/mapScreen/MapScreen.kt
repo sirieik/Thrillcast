@@ -61,6 +61,11 @@ fun MapScreen(
         confirmStateChange = { it != ModalBottomSheetValue.HalfExpanded },
         skipHalfExpanded = true
     )
+    val favoriteLocations = remember { mutableStateListOf<WeatherViewModel>() }
+    FavoritesScreen(
+        addedFavorites = favoriteLocations,
+        weatherViewModel = weatherViewModel
+    )
 
     val tabList = listOf("Info", "Today", "Future")
 
