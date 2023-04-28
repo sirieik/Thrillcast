@@ -93,6 +93,19 @@ fun MapScreen(
                         color = Color.Black
                     )
                     IconButton(
+                        onClick = {
+                            if(!favoriteLocations.contains(weatherViewModel)) {
+                                favoriteLocations.add(weatherViewModel)
+                            }
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Favorite,
+                            contentDescription = "Favorites button",
+                            tint = Color.Magenta
+                        )
+                    }
+                    IconButton(
                         onClick = { coroutineScope.launch { modalSheetState.hide() } },
                         modifier = Modifier
                             .weight(0.2f, true)
