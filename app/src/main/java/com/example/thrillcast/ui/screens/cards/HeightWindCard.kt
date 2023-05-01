@@ -1,3 +1,5 @@
+package com.example.thrillcast.ui.screens.cards
+
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -22,23 +24,28 @@ import com.example.thrillcast.R
 import com.example.thrillcast.ui.viemodels.weather.WeatherViewModel
 import java.util.*
 
+//Dette kortet brukes i Today-pagen for å fremstille vinddata i høyden
 @Composable
 fun HeightWindCard( weatherViewModel: WeatherViewModel){
 
+    //Henter weatherUIstate, denne inneholder alt av data vi trenger
     val weatherUiState = weatherViewModel.uiState.collectAsState()
+
 
     val buttonTimes = listOf(
         //2,
         5, 8, 11, 14, 17, 20, 23
     )
     val buttonTimestamps: MutableList<Long> = mutableListOf()
+
+    //Liste med høydene vi ønsker å fremstille
     val heights = listOf("600 m", "900m", "1500m", "2000m")
 
     weatherUiState.value.windyWindsList?.forEach{
         Log.d("Activity", "${Date(it.time)}")
     }
 
-    // Set the time to todays desired times
+    //Sette tiden for dagens ønskede tidspunkter
     buttonTimes.forEach {
         val time = Calendar.getInstance(TimeZone.getTimeZone("GMT+2")).apply {
             set(Calendar.HOUR_OF_DAY, it)
@@ -50,17 +57,19 @@ fun HeightWindCard( weatherViewModel: WeatherViewModel){
         buttonTimestamps.add(time)
     }
 
-
+    //Denne tar vare på hvilket punkt på slideren man har valgt
     var selectedHeightIndex by remember {
         mutableStateOf(0)
     }
 
+    //Denne tar vare på hvilket klokkeslett man har trykket
     var selectedButtonIndex by remember { mutableStateOf(0) }
 
     var windDirection: Double? = null
     var windSpeed: Double? = null
 
     try {
+        //Her henter vi høydevind for valgt høyde og klokkeslett og oppdaterer dataen som fremstilles
         when (selectedHeightIndex) {
             0 -> {
                 val windDirAndSpeed = weatherUiState.value.windyWindsList?.filter {
@@ -111,6 +120,7 @@ fun HeightWindCard( weatherViewModel: WeatherViewModel){
          */
     }
 
+    //Her lager vi det man ser inne i et kort, selve Høydevindskortet
     ElevatedCard(
         modifier = Modifier
             .aspectRatio(1f)
@@ -129,6 +139,7 @@ fun HeightWindCard( weatherViewModel: WeatherViewModel){
                 text = "Height wind",
                 fontSize = 20.sp
             )
+            //Lager en lazyrow for å bla gjennom de tilgjengelige tidspunktene
             LazyRow(
                 modifier = Modifier,
                   //  .weight(0.2f, true),
@@ -136,6 +147,7 @@ fun HeightWindCard( weatherViewModel: WeatherViewModel){
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.Top
             ) {
+                //Lager en knapp for hvert klokkeslett og oppdaterer valgt knapp ved trykk
                 itemsIndexed(buttonTimes) { index, time ->
                     val isSelected = index == selectedButtonIndex
                     ElevatedButton(
@@ -165,7 +177,7 @@ fun HeightWindCard( weatherViewModel: WeatherViewModel){
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    var sliderValue by remember {
+                    val sliderValue by remember {
                         mutableStateOf(0f)
                     }
                     //Spacer(modifier = Modifier.height(100.dp))
@@ -183,8 +195,8 @@ fun HeightWindCard( weatherViewModel: WeatherViewModel){
                             .padding(20.dp),
 
                         value = selectedHeightIndex.toFloat(),
-                        onValueChange = { sliderValue ->
-                            selectedHeightIndex = sliderValue.toInt()
+                        onValueChange = {
+                            selectedHeightIndex = it.toInt()
                         },
                         onValueChangeFinished = {
 

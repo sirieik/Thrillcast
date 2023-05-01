@@ -1,12 +1,12 @@
 package com.example.thrillcast.ui.viemodels.weather
 
-import HolfuyRepository
-import MetRepository
 import WeatherForecast
-import WindyRepository
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.thrillcast.data.datamodels.Wind
+import com.example.thrillcast.data.repositories.HolfuyRepository
+import com.example.thrillcast.data.repositories.MetRepository
+import com.example.thrillcast.data.repositories.WindyRepository
 import com.example.thrillcast.data.repositories.WindyWinds
 import com.example.thrillcast.ui.viemodels.map.Takeoff
 import com.google.android.gms.maps.model.LatLng

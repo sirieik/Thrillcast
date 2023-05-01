@@ -1,14 +1,22 @@
+package com.example.thrillcast.data.repositories
+
 import com.example.thrillcast.data.datasources.WindyDataSource
-import com.example.thrillcast.data.repositories.WindyWinds
 import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.pow
 import kotlin.math.sqrt
 
+//Dette er repository-et til Windy, her henter vi data fra WindyDataSource,
+//tar ut det vi trenger og sender videre til ViewModels
 class WindyRepository {
 
+    //Setter opp et WindyDataSource-objekt for å gjøre kall
     private val windyDataSource: WindyDataSource = WindyDataSource()
 
+    //Henter data fra Windy for angitt lokasjon med lat og lon, returnerer en liste med WindyWinds.
+    //WindyWinds er et objekt vi har laget selv for å samle all værdata for de
+    // ulike høydene vi ønsker å fremstille, det finnes da ett objekt for hver timestamp vi får med
+    //data for alle fire ulike høyder.
     suspend fun fetchWindyWindsList(lat: Double, lng: Double): List<WindyWinds> {
         val windyObject = windyDataSource.fetchWindyObject(lat, lng)
 
@@ -39,7 +47,16 @@ class WindyRepository {
         return windyWindsList
     }
 
-    //Delete 'private' before fun, in order to use for unittest
+    //Slettet 'private' for å kjøre enhetstest
+
+    /*
+    Vindhastighet og retning defineres av en todimensjonal vektor. Parameteret u definerer hastigheten
+    til en vind som blåser fra vest mot øst (en negativ verdi antyder derfor motsatt retning).
+    Parameteret v definerer tilsvarende hastigheten til en vind som blåser fra sør mot nord.
+
+    Denne funksjonen bruker vi for å regne ut vindhastighet- og retning ut ifra verdiene vi får,
+    vi returner da en pair der first er windhastighet og second er vindretning.
+     */
     fun calculateWindSpeedAndDirection(u: Double, v: Double): Pair<Double, Double> {
         val windSpeed = sqrt(u.pow(2) + v.pow(2))
         val windDirection = atan2(v, u) * 180 / PI
