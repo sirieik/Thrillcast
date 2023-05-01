@@ -16,7 +16,7 @@ import com.example.thrillcast.ui.viemodels.map.Takeoff
 import com.example.thrillcast.ui.viemodels.weather.WeatherViewModel
 
 @Composable
-fun NowWeatherCard(viewModel: WeatherViewModel, takeoff: Takeoff, context: Context) {
+fun NowWeatherCard(viewModel: WeatherViewModel, context: Context) {
 
 
 
