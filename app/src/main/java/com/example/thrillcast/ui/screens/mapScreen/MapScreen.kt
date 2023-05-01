@@ -124,7 +124,7 @@ fun MapScreen(
                     when (tabState) {
                         0 -> InfoPage(weatherViewModel = weatherViewModel)
                         1 -> NowPage(weatherViewModel = weatherViewModel, context = context)
-                        else -> FuturePage(weatherViewModel = weatherViewModel)// it may need changes
+                        else -> FuturePage(weatherViewModel = weatherViewModel, context = context)// it may need changes
                     }
                 }
             }
