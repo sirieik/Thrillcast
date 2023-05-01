@@ -32,7 +32,8 @@ fun FuturePage(weatherViewModel: WeatherViewModel, context : Context) {
      */
 
     LazyRow(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
 
             .padding(4.dp),
         contentPadding = PaddingValues(6.dp),
@@ -56,27 +57,14 @@ fun FuturePage(weatherViewModel: WeatherViewModel, context : Context) {
         }
     }
     //fix LazyColum
-    LazyColumn(modifier = Modifier.fillMaxWidth()) {
+    LazyColumn(modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         items(weatherUiState.value.weatherForecast.filter { it.time.toLocalDate() == buttonDays[selectedButtonIndex] }) { weatherForecast ->
-            val time = weatherForecast.time.toLocalTime()
-            val symbol_code = weatherForecast.data?.next_1_hours?.summary?.symbol_code ?: ""
-            val air_temp = weatherForecast.data?.instant?.details?.air_temperature ?: 0.0
-            val wind_speed = weatherForecast.data?.instant?.details?.wind_speed ?: 0.0
 
-
-            FutureWeatherCard(weatherForecast, context)
+            TimeWeatherCard(weatherViewModel = weatherViewModel, context = context, time = weatherForecast.time)
         }
-/*
-            ElevatedCard {
-                Row {
-                    Text(text = "${time}       ${air_temp}C         ${wind_speed}m/s        ${text}")
-                }
 
-            }
 
-        }
-    }
-
- */
     }
 }
