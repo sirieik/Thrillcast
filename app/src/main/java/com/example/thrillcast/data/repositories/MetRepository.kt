@@ -9,9 +9,10 @@ class MetRepository {
 
     suspend fun fetchMetWeatherForecast(lat:Double, lon:Double): List<WeatherForecast> {
         val metObject = metDataSource.fetchLocationForecastObject(lat, lon)
-        val tomorrowsDate = LocalDate.now().plusDays(1)
+        //val tomorrowsDate = LocalDate.now().plusDays(1)
 
-        return metObject.properties.timeseries.filter { it.time.toLocalDate() == tomorrowsDate }
+        return metObject.properties.timeseries
+        //.filter { it.time.toLocalDate() == tomorrowsDate }
     }
 
     suspend fun fetchLocationForecast(lat:Double, lon:Double): List<WeatherForecast> {
