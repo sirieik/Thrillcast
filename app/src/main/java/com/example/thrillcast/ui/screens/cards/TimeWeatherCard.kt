@@ -15,6 +15,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thrillcast.R
+import com.example.thrillcast.ui.theme.FlightGreen
+import com.example.thrillcast.ui.theme.GreenDark
+import com.example.thrillcast.ui.theme.Red60
 import com.example.thrillcast.ui.viemodels.weather.WeatherViewModel
 import java.time.ZonedDateTime
 
@@ -75,9 +78,9 @@ fun TimeWeatherCard(weatherViewModel: WeatherViewModel, context: Context, time: 
                 //If not we set it as red
                 backgroundColor =
                 if (windDirection?.let { isDegreeBetween(it, greenStart, greenStop) } == true) {
-                    Color.Green
+                    FlightGreen
                 } else {
-                    Color.Red
+                    Red60
                 }
             ) {
                 Column(

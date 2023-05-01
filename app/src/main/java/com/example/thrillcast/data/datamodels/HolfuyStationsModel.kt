@@ -1,3 +1,5 @@
+
+//Dette er dataklassene vi trenger for å parse responsen fra holfuyAPIet med alle stasjonene deres
 data class StationList(
     val holfuyStationsList: List<HolfuyStations>,
     val stationCnt: Int

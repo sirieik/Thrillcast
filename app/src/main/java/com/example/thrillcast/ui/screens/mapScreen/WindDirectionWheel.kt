@@ -11,6 +11,8 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.thrillcast.ui.theme.FlightGreen
+import com.example.thrillcast.ui.theme.Red60
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -61,7 +63,7 @@ fun WindDirectionWheel(
             val endY = centerY + radius * vectorY
             //CHAD
 
-            drawCircle(Color.Green)
+            drawCircle(FlightGreen)
             drawArc(
                 color = Color.LightGray,
                 startAngle = greenStartAngle,
@@ -94,7 +96,7 @@ fun WindDirectionWheel(
             //CHAD
             // Draw line for wind direction
             drawLine(
-                color = Color.Red,
+                color = Red60,
                 start = Offset(endX, endY),
                 end = Offset(centerX, centerY),
                 strokeWidth = 5.dp.toPx()

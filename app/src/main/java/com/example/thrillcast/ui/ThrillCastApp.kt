@@ -41,7 +41,7 @@ fun ThrillCastApp(context: Context){
 fun NavigationGraph( navController: NavHostController, context: Context){
 
     val weatherViewModel: WeatherViewModel = viewModel()
-    val mapWeatherViewModel: MapViewModel = viewModel()
+    val mapViewModel: MapViewModel = viewModel()
 
     NavHost(navController, startDestination = "introscreen") {
         composable(NavItem.settings.route) { SettingsScreen() }
