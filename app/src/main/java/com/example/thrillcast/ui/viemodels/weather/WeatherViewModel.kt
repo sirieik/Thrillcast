@@ -2,15 +2,13 @@ package com.example.thrillcast.ui.viemodels.weather
 
 import HolfuyRepository
 import MetRepository
-import com.example.thrillcast.ui.viemodels.map.Takeoff
 import WeatherForecast
 import WindyRepository
-import android.content.Context
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.thrillcast.data.datamodels.Wind
 import com.example.thrillcast.data.repositories.WindyWinds
+import com.example.thrillcast.ui.viemodels.map.Takeoff
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,9 +17,9 @@ import kotlinx.coroutines.launch
 
 class WeatherViewModel() : ViewModel() {
 
-    val metRepo = MetRepository()
-    val holfuyRepo = HolfuyRepository()
-    val windyRepo = WindyRepository()
+    private val metRepo = MetRepository()
+    private val holfuyRepo = HolfuyRepository()
+    private val windyRepo = WindyRepository()
 
 
     private val _uiState = MutableStateFlow(
@@ -45,15 +43,10 @@ class WeatherViewModel() : ViewModel() {
 
             val windyWindsList: List<WindyWinds> = windyRepo.fetchWindyWindsList(takeoff.coordinates.latitude, takeoff.coordinates.longitude)
 
-            val nowCastObject: WeatherForecast? = metRepo.fetchNowCastObject(takeoff.coordinates.latitude, takeoff.coordinates.longitude).properties?.timeseries?.get(0)
+            val nowCastObject: WeatherForecast =
+                metRepo.fetchNowCastObject(takeoff.coordinates.latitude, takeoff.coordinates.longitude).properties.timeseries[0]
 
             val locationForecast: List<WeatherForecast> = metRepo.fetchLocationForecast(takeoff.coordinates.latitude, takeoff.coordinates.longitude)
-
-            Log.d("Activity", "${nowCastObject==null}")
-
-            if (nowCastObject != null) {
-                Log.d("Activity", "${nowCastObject.data?.instant?.details?.air_temperature}")
-            }
 
             _uiState.value = weather?.let {
                 WeatherUiState(
