@@ -10,22 +10,19 @@ import io.ktor.http.*
 import io.ktor.serialization.gson.*
 import java.time.ZonedDateTime
 
-class MetDataSource() {
+//Her henter vi data fra Meterologisk Institutt
+class MetDataSource {
 
-    //Met API key
-    //val apiKey = "4cb78578-f2d3-4f28-a810-7b8f7582a1fb"
-    //Met API
-    //val path = "https://gw-uio.intark.uh-it.no/in2000/weatherapi/"
-    //Met API med eksempel lat og lon
-    //val path2 = "https://api.met.no/weatherapi/locationforecast/2.0/compact"
-    //"https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=60.10&lon=9.58"
+    //Stien til proxy-serveren til meterologisk institutt
+    private val path = "https://gw-uio.intark.uh-it.no/in2000/weatherapi/"
+    //Tittelen på headeren som må legges til
+    private val header = "X-Gravitee-API-Key"
+    //Vår nøkkel til APIet
+    private val apiKey = "4cb78578-f2d3-4f28-a810-7b8f7582a1fb"
 
-    //NEW with Proxy
-    //https://gw-uio.intark.uh-it.no/in2000/weatherapi/locationforecast/2.0/compact?lat=60.10&lon=9.58
-    val path2 = "https://gw-uio.intark.uh-it.no/in2000/weatherapi/"
-
-    //Set up HTTP client
-    private val client = HttpClient() {
+    //Sette opp HTTP klient
+    //Legger til slik at den kan parse string til ZonedDateTime for videre bruk
+    private val client = HttpClient {
         install(ContentNegotiation) {
             gson(ContentType.Application.Json) {
                 this.registerTypeAdapter(ZonedDateTime::class.java, JsonDeserializer { json, _, _ ->
@@ -34,18 +31,23 @@ class MetDataSource() {
             }
         }
     }
+
+    //Hente objekt fra LocationForecast for angitt sted med latitude og longitude, altså
+    //koordinater. Denne melder været fremover i tid
     suspend fun fetchLocationForecastObject(lat:Double, lon:Double): MetObject{
-        return client.get("${path2}locationforecast/2.0/compact?lat=${lat}&lon=${lon}") {
+        return client.get("${path}locationforecast/2.0/compact?lat=${lat}&lon=${lon}") {
             headers {
-                append("X-Gravitee-API-Key","4cb78578-f2d3-4f28-a810-7b8f7582a1fb" )
+                append(header,apiKey )
             }
         }.body()
     }
 
+    //Hente objekt fra NowCast for angitt sted med latitude og longitude, altså
+    //koordinater. Denne melder været akkurat nå
     suspend fun fetchNowCastObject(lat:Double, lon: Double): MetObject {
-        return client.get("${path2}nowcast/2.0/complete?lat=${lat}&lon=${lon}"){
+        return client.get("${path}nowcast/2.0/complete?lat=${lat}&lon=${lon}"){
             headers {
-                append("X-Gravitee-API-Key","4cb78578-f2d3-4f28-a810-7b8f7582a1fb" )
+                append(header,apiKey )
             }
         }.body()
     }

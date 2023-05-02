@@ -2,6 +2,7 @@ import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.material3.ElevatedCard
@@ -9,21 +10,28 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thrillcast.R
+import com.example.thrillcast.ui.theme.FlightGreen
+import com.example.thrillcast.ui.theme.GreenDark
+import com.example.thrillcast.ui.theme.Red60
 import com.example.thrillcast.ui.viemodels.weather.WeatherViewModel
 import java.time.ZonedDateTime
 
 @Composable
 fun TimeWeatherCard(weatherViewModel: WeatherViewModel, context: Context, time: ZonedDateTime) {
+    //fun TimeWeatherCard(temperature: , windDirection, windSpeed, symbolCode)
     ElevatedCard(
         modifier = Modifier
             .height(125.dp)
             .width(350.dp)
+            .clip(RoundedCornerShape(4.dp))
+            .padding(4.dp)
     ) {
 
         val weatherUiState = weatherViewModel.uiState.collectAsState()
@@ -53,6 +61,10 @@ fun TimeWeatherCard(weatherViewModel: WeatherViewModel, context: Context, time: 
 
                 temperature = today[0].data?.instant?.details?.air_temperature
                 symbolCode = today[0].data?.next_1_hours?.summary?.symbol_code
+                    ?: today[0].data?.next_6_hours?.summary?.symbol_code
+                            ?: ""
+
+
                 windDirection = today[0].data.instant.details.wind_from_direction
                 windSpeed = today[0].data.instant.details.wind_speed
 
@@ -61,7 +73,7 @@ fun TimeWeatherCard(weatherViewModel: WeatherViewModel, context: Context, time: 
 
 
         Row(
-
+            verticalAlignment = Alignment.CenterVertically
         ) {
 
             Card(
@@ -75,14 +87,17 @@ fun TimeWeatherCard(weatherViewModel: WeatherViewModel, context: Context, time: 
                 //If not we set it as red
                 backgroundColor =
                 if (windDirection?.let { isDegreeBetween(it, greenStart, greenStop) } == true) {
-                    Color.Green
+                    FlightGreen
                 } else {
-                    Color.Red
+                    Red60
                 }
             ) {
                 Column(
                     verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
+
+
+
                 ) {
                     if (windDirection != null) {
                         Image(
@@ -90,7 +105,8 @@ fun TimeWeatherCard(weatherViewModel: WeatherViewModel, context: Context, time: 
                             contentDescription = "wind direction",
                             modifier = Modifier
                                 .size(32.dp)
-                                .rotate((windDirection + 90).toFloat())
+                                .rotate((windDirection + 90).toFloat())//Jeg trodde at -90, men kan
+
                         )
                     }
 
@@ -109,7 +125,7 @@ fun TimeWeatherCard(weatherViewModel: WeatherViewModel, context: Context, time: 
                     text = "${time.hour}:${time.minute}0",
                 )
                 Text(
-                    text = "$temperature °C",
+                    text = "$temperature°C",
                     fontSize = 40.sp,
                     maxLines = 1
                 )

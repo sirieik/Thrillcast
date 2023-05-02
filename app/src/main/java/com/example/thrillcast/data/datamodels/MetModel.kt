@@ -17,16 +17,17 @@ data class WeatherForecast(
 
 data class Data(
     val instant: Instant,
-    val next_1_hours: Next1Hours
+    val next_1_hours: NextHours?,
+    val next_6_hours: NextHours?
 )
 
 data class Instant(
     val details: Details
 )
 
-data class Next1Hours(
+data class NextHours(
     val details: DetailsX,
-    val summary: Summary
+    val summary: Summary?
 )
 
 data class Details(

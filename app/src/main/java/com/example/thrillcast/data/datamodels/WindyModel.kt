@@ -2,6 +2,8 @@ package com.example.thrillcast.data.datamodels
 
 import com.google.gson.annotations.SerializedName
 
+//Dette er dataklassene vi trenger for å parse responsen fra
+//windyAPIet med vinddata for de høydene vi ønsker
 data class WindyObject (
 
     @SerializedName("ts"          ) var ts         : ArrayList<Long>    = arrayListOf(),

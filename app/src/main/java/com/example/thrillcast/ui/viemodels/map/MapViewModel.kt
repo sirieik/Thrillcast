@@ -1,7 +1,6 @@
 package com.example.thrillcast.ui.viemodels.map
 
-import android.content.Context
-import HolfuyRepository
+import com.example.thrillcast.data.repositories.HolfuyRepository
 import TakeoffUiState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

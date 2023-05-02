@@ -12,10 +12,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thrillcast.R
+import com.example.thrillcast.ui.viemodels.map.Takeoff
 import com.example.thrillcast.ui.viemodels.weather.WeatherViewModel
 
 @Composable
 fun NowWeatherCard(viewModel: WeatherViewModel, context: Context) {
+
+
 
     val weatherUiState = viewModel.uiState.collectAsState()
 
