@@ -1,3 +1,4 @@
+
 package com.example.thrillcast.data.repositories
 
 import com.example.thrillcast.data.datamodels.Wind

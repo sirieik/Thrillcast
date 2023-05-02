@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.thrillcast.ui.screens.mapScreen.MapScreenContent
 import com.example.thrillcast.ui.screens.mapScreen.SearchBarViewModel
+import com.example.thrillcast.ui.viemodels.favorites.FavoriteViewModel
 import com.example.thrillcast.ui.viemodels.map.MapViewModel
 import com.example.thrillcast.ui.viemodels.weather.WeatherViewModel
 import kotlinx.coroutines.launch
@@ -33,21 +34,17 @@ fun MapScreen(
     mapViewModel: MapViewModel = viewModel(),
     weatherViewModel: WeatherViewModel = viewModel(),
     searchBarViewModel: SearchBarViewModel = viewModel(),
+    favoriteViewModel: FavoriteViewModel = viewModel(),
     navigateBack: () -> Unit,
     context: Context
 ) {
     val weatherUiState = weatherViewModel.uiState.collectAsState()
+    val favoriteUiState = favoriteViewModel.favoriteUiState.collectAsState()
     val coroutineScope = rememberCoroutineScope()
     val modalSheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
         confirmStateChange = { it != ModalBottomSheetValue.HalfExpanded },
         skipHalfExpanded = true
-    )
-    val favoriteLocations = remember { mutableStateListOf<WeatherViewModel>() }
-    FavoritesScreen(
-        addedFavorites = favoriteLocations,
-        weatherViewModel = weatherViewModel,
-        context = context
     )
 
     val tabList = listOf("Info", "Today", "Future")
@@ -82,8 +79,10 @@ fun MapScreen(
                     )
                     IconButton(
                         onClick = {
-                            if(!favoriteLocations.contains(weatherViewModel)) {
-                                favoriteLocations.add(weatherViewModel)
+                            if(!favoriteUiState.value.favoriteList.contains(weatherUiState.value.takeoff)) {
+                                favoriteViewModel.addFavorite(weatherUiState.value.takeoff)
+                            } else {
+                                favoriteViewModel.removeFavorite(weatherUiState.value.takeoff)
                             }
                         }
                     ) {
