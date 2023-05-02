@@ -2,15 +2,14 @@ package com.example.thrillcast.ui.viemodels.weather
 
 import HolfuyRepository
 import MetRepository
-import com.example.thrillcast.ui.viemodels.map.Takeoff
 import WeatherForecast
 import WindyRepository
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.thrillcast.data.datamodels.Wind
 import com.example.thrillcast.data.repositories.WindyWinds
+import com.example.thrillcast.ui.viemodels.map.Takeoff
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

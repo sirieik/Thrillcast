@@ -1,7 +1,5 @@
 package com.example.thrillcast.ui.screens.mapScreen
 
-import com.example.thrillcast.ui.viemodels.map.Takeoff
-import com.example.thrillcast.ui.viemodels.weather.WeatherViewModel
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.core.tween
@@ -9,36 +7,26 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalFocusManager
-
-import androidx.compose.ui.res.stringResource
-
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thrillcast.R
 import com.example.thrillcast.ui.theme.GreenDark
 import com.example.thrillcast.ui.theme.GreenLight
-import com.example.thrillcast.ui.theme.gruppo
 import com.example.thrillcast.ui.viemodels.map.MapViewModel
+import com.example.thrillcast.ui.viemodels.map.Takeoff
+import com.example.thrillcast.ui.viemodels.weather.WeatherViewModel
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -49,7 +37,6 @@ import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
@@ -244,7 +231,7 @@ fun TopBar(
     }
 }
 
-
+/*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBar(
@@ -346,4 +333,4 @@ fun SearchBar(
             }
         }
     }
-}
+}*/
