@@ -22,6 +22,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.thrillcast.ui.screens.mapScreen.MapScreenContent
 import com.example.thrillcast.ui.screens.mapScreen.SearchBarViewModel
 import com.example.thrillcast.ui.viemodels.map.MapViewModel
+import com.example.thrillcast.ui.viemodels.map.Takeoff
 import com.example.thrillcast.ui.viemodels.weather.WeatherViewModel
 import kotlinx.coroutines.launch
 import java.util.*
@@ -36,14 +37,14 @@ fun MapScreen(
     navigateBack: () -> Unit,
     context: Context
 ) {
-    val weatherUiState = weatherViewModel.uiState.collectAsState()
+    val takeoffUiState = weatherViewModel.takeoffUiState.collectAsState()
     val coroutineScope = rememberCoroutineScope()
     val modalSheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
         confirmStateChange = { it != ModalBottomSheetValue.HalfExpanded },
         skipHalfExpanded = true
     )
-    val favoriteLocations = remember { mutableStateListOf<WeatherViewModel>() }
+    val favoriteLocations = remember { mutableStateListOf<Takeoff>() }
     FavoritesScreen(
         addedFavorites = favoriteLocations,
         weatherViewModel = weatherViewModel,
@@ -70,20 +71,22 @@ fun MapScreen(
                         .fillMaxWidth()
                         .weight(0.1f, true)
                 ) {
-                    Text(
-                        text = weatherUiState.value.takeoff.name,
-                        style = MaterialTheme.typography.subtitle1.copy(fontWeight = FontWeight.W900),
-                        fontSize = 18.sp,
-                        modifier = Modifier
-                            .padding(top = 8.dp)
-                            .padding(start = 20.dp)
-                            .weight(0.8f, true),
-                        color = Color.Black
-                    )
+                    takeoffUiState.value.takeoff?.let {
+                        Text(
+                            text = it.name,
+                            style = MaterialTheme.typography.subtitle1.copy(fontWeight = FontWeight.W900),
+                            fontSize = 18.sp,
+                            modifier = Modifier
+                                .padding(top = 8.dp)
+                                .padding(start = 20.dp)
+                                .weight(0.8f, true),
+                            color = Color.Black
+                        )
+                    }
                     IconButton(
                         onClick = {
-                            if(!favoriteLocations.contains(weatherViewModel)) {
-                                favoriteLocations.add(weatherViewModel)
+                            if(!favoriteLocations.contains(takeoffUiState.value.takeoff)) {
+                                takeoffUiState.value.takeoff?.let { favoriteLocations.add(it) }
                             }
                         }
                     ) {
@@ -137,6 +140,7 @@ fun MapScreen(
             mapViewModel = mapViewModel,
             weatherViewModel = weatherViewModel,
             searchBarViewModel = searchBarViewModel,
+            context = context,
             navigateBack
         )
     }

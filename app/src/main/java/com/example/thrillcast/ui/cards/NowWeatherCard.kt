@@ -3,6 +3,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -16,13 +17,18 @@ import com.example.thrillcast.ui.viemodels.map.Takeoff
 import com.example.thrillcast.ui.viemodels.weather.WeatherViewModel
 
 @Composable
-fun NowWeatherCard(viewModel: WeatherViewModel, context: Context) {
+fun NowWeatherCard(viewModel: WeatherViewModel, takeoff: Takeoff, context: Context) {
 
+    viewModel.retrieveCurrentWeather(takeoff)
 
-
-    val weatherUiState = viewModel.uiState.collectAsState()
+    val weatherUiState = viewModel.currentWeatherUiState.collectAsState()
 
     val symbolCode = weatherUiState.value.nowCastObject?.data?.next_1_hours?.summary?.symbol_code
+
+    val unit = weatherUiState.value.wind?.unit ?: ""
+    val speed = weatherUiState.value.wind?.speed ?: 0.0
+    val gust = weatherUiState.value.wind?.gust ?: 0.0
+    val temperature = weatherUiState.value.nowCastObject?.data?.instant?.details?.air_temperature ?: 0
 
     ElevatedCard(
         modifier = Modifier
@@ -40,22 +46,19 @@ fun NowWeatherCard(viewModel: WeatherViewModel, context: Context) {
                     .weight(0.33f, true)
             ) {
                 Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    weatherUiState.value.wind.direction?.let {
+                    weatherUiState.value.wind?.direction?.let {
                         WindDirectionWheel(
-                            greenStart = weatherUiState.value.takeoff.greenStart,
-                            greenStop = weatherUiState.value.takeoff.greenStop,
+                            greenStart = takeoff.greenStart,
+                            greenStop = takeoff.greenStop,
                             windDirection = it,
                         )
-                    }
-                    val unit = weatherUiState.value.wind.unit
-                    val speed = weatherUiState.value.wind.speed
-                    val gust = weatherUiState.value.wind.gust
-
-                    weatherUiState.value.wind.unit?.let {
-
-                        Text(text = "$speed($gust) $unit")
+                        Text(
+                            text = "$speed($gust) $unit",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
                     }
                 }
             }
@@ -66,14 +69,16 @@ fun NowWeatherCard(viewModel: WeatherViewModel, context: Context) {
             ) {
                 Text(
                     text = stringResource(id = R.string.now),
+                    style = MaterialTheme.typography.labelMedium
                 )
                 Text(
-                    text = "${weatherUiState.value.nowCastObject?.data?.instant?.details?.air_temperature} °C",
-                    fontSize = 40.sp
+                    text = "$temperature °C",
+                    style = MaterialTheme.typography.bodyLarge,
+                    maxLines = 1
                 )
             }
 
-            if(symbolCode != null && symbolCode.isNotEmpty()) {
+            if((symbolCode != null) && symbolCode.isNotEmpty()) {
                 Image(
                     modifier = Modifier.weight(0.33f, true),
                     alignment = Alignment.Center,

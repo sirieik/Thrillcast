@@ -6,6 +6,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -20,6 +21,7 @@ import com.example.thrillcast.R
 import com.example.thrillcast.ui.theme.FlightGreen
 import com.example.thrillcast.ui.theme.GreenDark
 import com.example.thrillcast.ui.theme.Red60
+import com.example.thrillcast.ui.viemodels.map.Takeoff
 import com.example.thrillcast.ui.viemodels.weather.WeatherViewModel
 import java.time.ZonedDateTime
 
@@ -34,20 +36,14 @@ fun TimeWeatherCard(weatherViewModel: WeatherViewModel, context: Context, time: 
             .padding(4.dp)
     ) {
 
-        val weatherUiState = weatherViewModel.uiState.collectAsState()
+        val weatherUiState = weatherViewModel.forecastWeatherUiState.collectAsState()
+        val takeoffUiState = weatherViewModel.takeoffUiState.collectAsState()
 
-        val greenStart = weatherUiState.value.takeoff.greenStart
-        val greenStop = weatherUiState.value.takeoff.greenStop
+        val greenStart = takeoffUiState.value.takeoff?.greenStart ?: 0
+        val greenStop = takeoffUiState.value.takeoff?.greenStop ?: 0
 
         val today = weatherUiState.value.locationForecast?.filter {
-            it.time.toLocalDateTime() == time.toLocalDateTime()
-        }
-
-        weatherUiState.value.locationForecast?.forEach {
-
-            Log.d("Date", "APITime:${it.time.toLocalDateTime()}")
-            Log.d("Date", "MyTime:${time.toLocalDateTime()}")
-
+            it.time?.toLocalDateTime() == time.toLocalDateTime()
         }
 
         var symbolCode: String? = null
@@ -59,14 +55,14 @@ fun TimeWeatherCard(weatherViewModel: WeatherViewModel, context: Context, time: 
 
         if (today != null && today.isNotEmpty()) {
 
-                temperature = today[0].data?.instant?.details?.air_temperature
+                temperature = today[0].data?.instant?.details?.air_temperature ?: 0.0
                 symbolCode = today[0].data?.next_1_hours?.summary?.symbol_code
                     ?: today[0].data?.next_6_hours?.summary?.symbol_code
                             ?: ""
 
 
-                windDirection = today[0].data.instant.details.wind_from_direction
-                windSpeed = today[0].data.instant.details.wind_speed
+                windDirection = today[0].data?.instant?.details?.wind_from_direction ?: 0.0
+                windSpeed = today[0].data?.instant?.details?.wind_speed ?: 0.0
 
         }
 
@@ -110,10 +106,11 @@ fun TimeWeatherCard(weatherViewModel: WeatherViewModel, context: Context, time: 
                         )
                     }
 
-                    weatherUiState.value.wind.unit?.let {
+                    Text(
+                        text = "$windSpeed m/s",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
 
-                        Text(text = "$windSpeed m/s")
-                    }
                 }
             }
             Column(
@@ -123,10 +120,11 @@ fun TimeWeatherCard(weatherViewModel: WeatherViewModel, context: Context, time: 
             ) {
                 Text(
                     text = "${time.hour}:${time.minute}0",
+                    style = MaterialTheme.typography.labelMedium
                 )
                 Text(
                     text = "$temperature°C",
-                    fontSize = 40.sp,
+                    style = MaterialTheme.typography.bodyLarge,
                     maxLines = 1
                 )
             }

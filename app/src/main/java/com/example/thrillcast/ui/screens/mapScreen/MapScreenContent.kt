@@ -1,7 +1,9 @@
 package com.example.thrillcast.ui.screens.mapScreen
 
-import com.example.thrillcast.ui.viemodels.map.Takeoff
-import com.example.thrillcast.ui.viemodels.weather.WeatherViewModel
+import WindDirectionWheel
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.core.tween
@@ -26,10 +28,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalFocusManager
-
 import androidx.compose.ui.res.stringResource
-
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -39,6 +40,8 @@ import com.example.thrillcast.ui.theme.GreenDark
 import com.example.thrillcast.ui.theme.GreenLight
 import com.example.thrillcast.ui.theme.gruppo
 import com.example.thrillcast.ui.viemodels.map.MapViewModel
+import com.example.thrillcast.ui.viemodels.map.Takeoff
+import com.example.thrillcast.ui.viemodels.weather.WeatherViewModel
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -59,6 +62,7 @@ fun MapScreenContent(
     mapViewModel: MapViewModel,
     weatherViewModel: WeatherViewModel,
     searchBarViewModel: SearchBarViewModel,
+    context: Context,
     onNavigate: () -> Unit
 ) {
 
@@ -102,7 +106,9 @@ fun MapScreenContent(
                                 if (modalSheetState.isVisible) {
                                     modalSheetState.hide()
                                 } else {
-                                    weatherViewModel.retrieveStationWeather(selectedSearchItem!!)
+                                    weatherViewModel.updateChosenTakeoff(selectedSearchItem!!)
+                                    //weatherViewModel.retrieveStationWeather(takeoff)
+                                    weatherViewModel.retrieveHeightWind(selectedSearchItem!!)
                                     modalSheetState.animateTo(ModalBottomSheetValue.Expanded)
                                 }
                             }
@@ -122,7 +128,9 @@ fun MapScreenContent(
                                     modalSheetState.hide()
                                 } else {
 
-                                    weatherViewModel.retrieveStationWeather(selectedSearchItem!!)
+                                    weatherViewModel.updateChosenTakeoff(selectedSearchItem!!)
+                                    //weatherViewModel.retrieveStationWeather(takeoff)
+                                    weatherViewModel.retrieveHeightWind(selectedSearchItem!!)
                                     modalSheetState.animateTo(ModalBottomSheetValue.Expanded)
                                 }
                             }
@@ -149,7 +157,21 @@ fun MapScreenContent(
                          Marker(
                             state = MarkerState(takeoff.coordinates),
                             title = takeoff.name,
-                            icon = BitmapDescriptorFactory.fromResource(R.drawable.parachuting),
+                            icon =
+                            /*
+                            BitmapDescriptorFactory.fromBitmap(
+                                canvasToBitmap(
+                                    WindDirectionWheel(
+                                        greenStart = 220,
+                                        greenStop = 0,
+                                        windDirection = 90
+                                    ),
+                                    context
+                                )
+                            )
+
+                             */
+                            BitmapDescriptorFactory.fromResource(R.drawable.parachuting),
                             onInfoWindowClick = {
                                 //Få inn hva som skjer når man trykker på infovindu m tekst
                                 //Tenker at det er mer praktisk å få opp infoskjerm etter å trykke på
@@ -165,8 +187,9 @@ fun MapScreenContent(
                                         modalSheetState.hide()
                                     }
                                     else {
-
-                                        weatherViewModel.retrieveStationWeather(takeoff)
+                                        weatherViewModel.updateChosenTakeoff(takeoff)
+                                        //weatherViewModel.retrieveStationWeather(takeoff)
+                                        weatherViewModel.retrieveHeightWind(takeoff = takeoff)
                                         modalSheetState.animateTo(ModalBottomSheetValue.Expanded)
                                     }
                                 }
@@ -193,6 +216,23 @@ fun MapScreenContent(
             }
         }
     )
+}
+
+fun canvasToBitmap(composable: Unit, context: Context): Bitmap {
+
+    val view =  ComposeView(context).apply{
+        setContent {
+            composable
+        }
+    }
+
+    val bitmap = Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888)
+
+    val canvas = Canvas(bitmap)
+
+    view.draw(canvas)
+
+    return bitmap
 }
 
 @Composable

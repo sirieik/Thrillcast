@@ -1,9 +1,9 @@
 package com.example.thrillcast.ui.viemodels.map
 
 import com.example.thrillcast.data.repositories.HolfuyRepository
-import TakeoffUiState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.thrillcast.ui.viemodels.weather.TakeoffUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,7 +19,6 @@ class MapViewModel() : ViewModel() {
 
     private val _currentTakeoffUiState = MutableStateFlow(TakeoffUiState(null))
 
-    val currentTakeoffUiState: StateFlow<TakeoffUiState> = _currentTakeoffUiState.asStateFlow()
     init {
         retrieveStations()
     }

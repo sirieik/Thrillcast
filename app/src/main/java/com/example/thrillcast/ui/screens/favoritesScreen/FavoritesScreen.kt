@@ -12,11 +12,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.thrillcast.ui.viemodels.map.Takeoff
 import com.example.thrillcast.ui.viemodels.weather.WeatherViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FavoritesScreen(addedFavorites: List<WeatherViewModel>, weatherViewModel: WeatherViewModel = viewModel(), context: Context) {
+fun FavoritesScreen(addedFavorites: List<Takeoff>, weatherViewModel: WeatherViewModel = viewModel(), context: Context) {
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -30,7 +31,7 @@ fun FavoritesScreen(addedFavorites: List<WeatherViewModel>, weatherViewModel: We
                 Text(text = "Favorites")
                 LazyColumn(modifier = Modifier.fillMaxWidth()) {
                     items(addedFavorites) {
-                        NowWeatherCard(viewModel = weatherViewModel, context = context)
+                        NowWeatherCard(viewModel = weatherViewModel, context = context, takeoff = it)
                     }
                 }
             }

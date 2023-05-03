@@ -20,19 +20,19 @@ class WindyRepository {
     suspend fun fetchWindyWindsList(lat: Double, lng: Double): List<WindyWinds> {
         val windyObject = windyDataSource.fetchWindyObject(lat, lng)
 
-        val timestamps = windyObject.ts
-        val windU950h  = windyObject.windU950h
-        val windU900h  = windyObject.windU900h
-        val windU850h  = windyObject.windU850h
-        val windU800h  = windyObject.windU800h
-        val windV950h  = windyObject.windV950h
-        val windV900h  = windyObject.windV900h
-        val windV850h  = windyObject.windV850h
-        val windV800h  = windyObject.windV800h
+        val timestamps = windyObject?.ts ?: listOf<Long>(0)
+        val windU950h  = windyObject?.windU950h ?: listOf<Double>(0.0)
+        val windU900h  = windyObject?.windU900h ?: listOf<Double>(0.0)
+        val windU850h  = windyObject?.windU850h ?: listOf<Double>(0.0)
+        val windU800h  = windyObject?.windU800h ?: listOf<Double>(0.0)
+        val windV950h  = windyObject?.windV950h ?: listOf<Double>(0.0)
+        val windV900h  = windyObject?.windV900h ?: listOf<Double>(0.0)
+        val windV850h  = windyObject?.windV850h ?: listOf<Double>(0.0)
+        val windV800h  = windyObject?.windV800h ?: listOf<Double>(0.0)
 
         val windyWindsList: MutableList<WindyWinds> = mutableListOf()
 
-        timestamps.forEachIndexed { index, timestamp ->
+        timestamps?.forEachIndexed { index, timestamp ->
             windyWindsList.add(
                 WindyWinds(
                     time = timestamp,

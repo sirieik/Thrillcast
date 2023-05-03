@@ -21,6 +21,7 @@ class WeatherViewModel() : ViewModel() {
     private val holfuyRepo = HolfuyRepository()
     private val windyRepo = WindyRepository()
 
+/*
 
     private val _uiState = MutableStateFlow(
         WeatherUiState(
@@ -28,33 +29,102 @@ class WeatherViewModel() : ViewModel() {
             Wind(0, 0.0, 0.0, 0.0, ""),
             null,
             emptyList(),
-            emptyList(),
             null
         )
     )
 
     val uiState: StateFlow<WeatherUiState> = _uiState.asStateFlow()
 
+ */
+
+    private val _currentWeatherUiState = MutableStateFlow(
+        CurrentWeatherUiState(
+            null,
+            null
+        )
+    )
+
+    val currentWeatherUiState: StateFlow<CurrentWeatherUiState> = _currentWeatherUiState.asStateFlow()
+
+    private val _forecastUiState = MutableStateFlow(
+        ForecastUiState(
+            null
+        )
+    )
+
+    val forecastWeatherUiState: StateFlow<ForecastUiState> = _forecastUiState.asStateFlow()
+
+    private val _heightWindUiState = MutableStateFlow(
+        HeightWindUiState(
+            null
+        )
+    )
+
+    val heightWindUiState: StateFlow<HeightWindUiState> = _heightWindUiState.asStateFlow()
+
+    private val _takeoffUiState = MutableStateFlow(
+        TakeoffUiState(
+            null
+        )
+    )
+
+    val takeoffUiState: StateFlow<TakeoffUiState> = _takeoffUiState.asStateFlow()
+
+/*
     fun retrieveStationWeather(takeoff: Takeoff) {
         viewModelScope.launch {
 
             val weather: Wind? = holfuyRepo.fetchHolfuyStationWeather(takeoff.id)
-            val weatherForecast: List<WeatherForecast> = metRepo.fetchMetWeatherForecast(takeoff.coordinates.latitude, takeoff.coordinates.longitude)
 
             val windyWindsList: List<WindyWinds> = windyRepo.fetchWindyWindsList(takeoff.coordinates.latitude, takeoff.coordinates.longitude)
 
-            val nowCastObject: WeatherForecast =
-                metRepo.fetchNowCastObject(takeoff.coordinates.latitude, takeoff.coordinates.longitude).properties.timeseries[0]
+            val nowCastObject: WeatherForecast? =
+                metRepo.fetchNowCastObject(takeoff.coordinates.latitude, takeoff.coordinates.longitude).properties?.timeseries?.get(0)
 
-            val locationForecast: List<WeatherForecast> = metRepo.fetchLocationForecast(takeoff.coordinates.latitude, takeoff.coordinates.longitude)
+            val locationForecast: List<WeatherForecast>? = metRepo.fetchLocationForecast(takeoff.coordinates.latitude, takeoff.coordinates.longitude)
 
             _uiState.value = weather?.let {
                 WeatherUiState(
                     takeoff = takeoff, wind = it, nowCastObject = nowCastObject,
-                    windyWindsList = windyWindsList, weatherForecast = weatherForecast,
+                    windyWindsList = windyWindsList,
                     locationForecast = locationForecast
                 )
             }!!
+        }
+    }
+
+ */
+
+    fun retrieveCurrentWeather(takeoff: Takeoff) {
+        viewModelScope.launch {
+            val stationWind: Wind? = holfuyRepo.fetchHolfuyStationWeather(takeoff.id)
+            val nowWeather: WeatherForecast? =
+                try {
+                    metRepo.fetchNowCastObject(takeoff.coordinates.latitude, takeoff.coordinates.longitude)?.properties?.timeseries?.get(0)
+                } catch (e: Exception) {
+                    null
+                }
+            _currentWeatherUiState.value = CurrentWeatherUiState(wind = stationWind, nowCastObject = nowWeather)
+        }
+    }
+
+    fun retrieveForecastWeather(takeoff: Takeoff) {
+        viewModelScope.launch {
+            val locationForecast: List<WeatherForecast>? = metRepo.fetchLocationForecast(takeoff.coordinates.latitude, takeoff.coordinates.longitude)
+            _forecastUiState.value = ForecastUiState(locationForecast = locationForecast)
+        }
+    }
+
+    fun retrieveHeightWind(takeoff: Takeoff) {
+        viewModelScope.launch {
+            val windyWinds: List<WindyWinds> = windyRepo.fetchWindyWindsList(takeoff.coordinates.latitude, takeoff.coordinates.longitude)
+            _heightWindUiState.value = HeightWindUiState(windyWindsList = windyWinds)
+        }
+    }
+
+    fun updateChosenTakeoff(takeoff: Takeoff) {
+        viewModelScope.launch {
+            _takeoffUiState.value = TakeoffUiState(takeoff = takeoff)
         }
     }
 }

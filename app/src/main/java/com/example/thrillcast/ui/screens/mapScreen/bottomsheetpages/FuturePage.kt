@@ -14,13 +14,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.thrillcast.ui.screens.cards.FutureWeatherCard
 import com.example.thrillcast.ui.viemodels.weather.WeatherViewModel
 import java.time.LocalDate
 
 @Composable
 fun FuturePage(weatherViewModel: WeatherViewModel, context : Context) {
-    val weatherUiState = weatherViewModel.uiState.collectAsState()
+
+    val takeoffUiState = weatherViewModel.takeoffUiState.collectAsState()
+
+    takeoffUiState.value.takeoff?.let {
+        weatherViewModel.retrieveForecastWeather(takeoff = it)
+    }
+
+    val weatherUiState = weatherViewModel.forecastWeatherUiState.collectAsState()
+
     val buttonDays = listOf(
         1L, 2L, 3L, 4L, 5L, 6L, 7L
     ).map { LocalDate.now().plusDays(it) }
@@ -60,11 +67,17 @@ fun FuturePage(weatherViewModel: WeatherViewModel, context : Context) {
     LazyColumn(modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        items(weatherUiState.value.weatherForecast.filter { it.time.toLocalDate() == buttonDays[selectedButtonIndex] }) { weatherForecast ->
+        weatherUiState.value.locationForecast?.let { forecastList ->
+            items(forecastList.filter { it.time?.toLocalDate() == buttonDays[selectedButtonIndex] }) { weatherForecast ->
 
-            TimeWeatherCard(weatherViewModel = weatherViewModel, context = context, time = weatherForecast.time)
+                weatherForecast.time?.let {
+                    TimeWeatherCard(
+                        weatherViewModel = weatherViewModel,
+                        context = context,
+                        time = it
+                    )
+                }
+            }
         }
-
-
     }
 }
