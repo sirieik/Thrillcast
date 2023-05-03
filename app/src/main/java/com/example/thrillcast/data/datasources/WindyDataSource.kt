@@ -25,15 +25,19 @@ class WindyDataSource {
     }
 
     //Her henter vi vinddata for angitt punkt i koordinater, lat og lon.
-    suspend fun fetchWindyObject(lat : Double, lon : Double): WindyObject {
+    suspend fun fetchWindyObject(lat : Double, lon : Double): WindyObject? {
 
-        //Dette er body-en vi sender med i post requesten til windy.
-        //Her legger vi ved koordinatene vi tar i parameterene til funksjonen,
-        //"model : iconEU" dekker Europa og omkransende områder
-        //"parameters : [wind]" henter inn vindstyrke- og retning
-        //"levels : ["950h", "900h", "850h", "800h"]" henter inn høydevindstyrke- og retning
-        // for omtrentlig hver 500. meter
-        //"key" tar imot nøkkelen til APIet
+        /*
+
+        Dette er body-en vi sender med i post requesten til windy.
+        Her legger vi ved koordinatene vi tar i parameterene til funksjonen,
+        "model : iconEU" dekker Europa og omkransende områder
+        "parameters : [wind]" henter inn vindstyrke- og retning
+        "levels : ["950h", "900h", "850h", "800h"]" henter inn høydevindstyrke- og retning
+         for omtrentlig hver 500. meter
+        "key" tar imot nøkkelen til APIet
+
+         */
 
         val stringBody =
             """
@@ -52,9 +56,14 @@ class WindyDataSource {
 
 
         //Her henter vi data og parser responsen til WindyObject
-        val response: WindyObject = client.post(path) {
-            setBody(body)
-        }.body()
+        val response: WindyObject? =
+            try {
+                client.post(path) {
+                    setBody(body)
+                }.body()
+            } catch (e: Exception){
+                null
+            }
 
         return response
     }

@@ -9,31 +9,23 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.thrillcast.ui.screens.cards.HeightWindCard
+import com.example.thrillcast.ui.cards.HeightWindCard
 import com.example.thrillcast.ui.viemodels.weather.WeatherViewModel
 import java.time.ZonedDateTime
 
 @Composable
 fun NowPage(weatherViewModel: WeatherViewModel, context: Context) {
 
-    val scrollState = rememberScrollState()
+    val takeoffUiState = weatherViewModel.takeoffUiState.collectAsState()
 
-    var currentHeightWindSpeed by remember {
-        mutableStateOf("3(2)")
+    takeoffUiState.value.takeoff?.let {
+        weatherViewModel.retrieveForecastWeather(takeoff = it)
     }
-    var currentHeightWindDirection by remember {
-        mutableStateOf(Icons.Filled.ArrowBack)
-    }
-
-    var weatherTimeList = emptyList<MetObject>()
-
 
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .height(200.dp)
-        //    .verticalScroll(scrollState)
-        ,
+            .height(200.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
@@ -44,7 +36,13 @@ fun NowPage(weatherViewModel: WeatherViewModel, context: Context) {
                     .padding(4.dp)
             ) {
                 item {
-                    NowWeatherCard(viewModel = weatherViewModel, context = context)
+                    takeoffUiState.value.takeoff?.let {
+                        NowWeatherCard(
+                            viewModel = weatherViewModel,
+                            context = context,
+                            takeoff = it
+                        )
+                    }
                 }
                 val now = ZonedDateTime.now()
                     .withMinute(0)

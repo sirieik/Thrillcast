@@ -17,7 +17,7 @@ import com.example.thrillcast.ui.viemodels.weather.WeatherViewModel
 fun InfoPage(weatherViewModel: WeatherViewModel) {
 
     val minCertificate = "PP2/SP2"
-    val weatherUiState = weatherViewModel.uiState.collectAsState()
+    val takeoffUiState = weatherViewModel.takeoffUiState.collectAsState()
     ElevatedCard(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -31,7 +31,7 @@ fun InfoPage(weatherViewModel: WeatherViewModel) {
             fontSize = 22.sp,
             modifier = Modifier.padding(8.dp)
         )
-        weatherUiState.value.takeoff.coordinates?.let {
+        takeoffUiState.value.takeoff?.coordinates?.let {
             Text(
                 text = buildAnnotatedString {
                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
@@ -43,7 +43,7 @@ fun InfoPage(weatherViewModel: WeatherViewModel) {
                 modifier = Modifier.padding(8.dp)
             )
         }
-        weatherUiState.value.takeoff.moh?.let {
+        takeoffUiState.value.takeoff?.moh?.let {
             Text(
                 text = buildAnnotatedString {
                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {

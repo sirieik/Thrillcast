@@ -1,4 +1,4 @@
-package com.example.thrillcast.ui.screens.cards
+package com.example.thrillcast.ui.cards
 
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -26,10 +26,10 @@ import java.util.*
 
 //Dette kortet brukes i Today-pagen for å fremstille vinddata i høyden
 @Composable
-fun HeightWindCard( weatherViewModel: WeatherViewModel){
+fun HeightWindCard(weatherViewModel: WeatherViewModel){
 
-    //Henter weatherUIstate, denne inneholder alt av data vi trenger
-    val weatherUiState = weatherViewModel.uiState.collectAsState()
+    //Henter heightWindUIstate, denne inneholder data vi trenger for høydevind
+    val heightWindUiState = weatherViewModel.heightWindUiState.collectAsState()
 
 
     val buttonTimes = listOf(
@@ -41,7 +41,7 @@ fun HeightWindCard( weatherViewModel: WeatherViewModel){
     //Liste med høydene vi ønsker å fremstille
     val heights = listOf("600 m", "900m", "1500m", "2000m")
 
-    weatherUiState.value.windyWindsList?.forEach{
+    heightWindUiState.value.windyWindsList?.forEach{
         Log.d("Activity", "${Date(it.time)}")
     }
 
@@ -72,7 +72,7 @@ fun HeightWindCard( weatherViewModel: WeatherViewModel){
         //Her henter vi høydevind for valgt høyde og klokkeslett og oppdaterer dataen som fremstilles
         when (selectedHeightIndex) {
             0 -> {
-                val windDirAndSpeed = weatherUiState.value.windyWindsList?.filter {
+                val windDirAndSpeed = heightWindUiState.value.windyWindsList?.filter {
                     it.time == buttonTimestamps[selectedButtonIndex]
                 }?.get(0)?.speedDir800h
 
@@ -82,7 +82,7 @@ fun HeightWindCard( weatherViewModel: WeatherViewModel){
                 }
             }
             1 -> {
-                val windDirAndSpeed = weatherUiState.value.windyWindsList?.filter {
+                val windDirAndSpeed = heightWindUiState.value.windyWindsList?.filter {
                     it.time == buttonTimestamps[selectedButtonIndex]
                 }?.get(0)?.speedDir850h
 
@@ -92,7 +92,7 @@ fun HeightWindCard( weatherViewModel: WeatherViewModel){
                 }
             }
             2 -> {
-                val windDirAndSpeed = weatherUiState.value.windyWindsList?.filter {
+                val windDirAndSpeed = heightWindUiState.value.windyWindsList?.filter {
                     it.time == buttonTimestamps[selectedButtonIndex]
                 }?.get(0)?.speedDir900h
 
@@ -102,7 +102,7 @@ fun HeightWindCard( weatherViewModel: WeatherViewModel){
                 }
             }
             else -> {
-                val windDirAndSpeed = weatherUiState.value.windyWindsList?.filter {
+                val windDirAndSpeed = heightWindUiState.value.windyWindsList?.filter {
                     it.time == buttonTimestamps[selectedButtonIndex]
                 }?.get(0)?.speedDir950h
 

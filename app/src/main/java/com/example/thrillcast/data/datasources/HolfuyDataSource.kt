@@ -29,14 +29,21 @@ class HolfuyDataSource {
     }
 
     //Hente værdata for én værstasjon gitt av parameter "station", her sender vi med en ID
-    suspend fun fetchHolfuyObject(station: String): HolfuyObject {
-        return client.get(path + station + endOfPath).body()
+    suspend fun fetchHolfuyObject(station: String): HolfuyObject? {
+        return try {
+            client.get(path + station + endOfPath).body()
+        } catch (e: Exception) {
+            null
+        }
     }
 
     //Hente liste over alle stasjonene med tilhørende informasjon
-    suspend fun fetchHolfuyStations(): List<HolfuyStations> {
-        val stations: StationList = client.get("https://api.holfuy.com/stations/stations.json").body()
-        return stations.holfuyStationsList
+    suspend fun fetchHolfuyStations(): List<HolfuyStations>? {
+        return try {
+            client.get("https://api.holfuy.com/stations/stations.json").body<StationList>().holfuyStationsList
+        } catch (e: Exception) {
+            null
+        }
     }
 
 }

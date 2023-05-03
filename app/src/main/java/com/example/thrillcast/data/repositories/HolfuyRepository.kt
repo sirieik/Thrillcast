@@ -1,6 +1,7 @@
 
 package com.example.thrillcast.data.repositories
 
+import android.util.Log
 import com.example.thrillcast.data.datamodels.Wind
 import com.example.thrillcast.data.datasources.HolfuyDataSource
 import com.example.thrillcast.ui.viemodels.map.Takeoff
@@ -29,7 +30,7 @@ class HolfuyRepository {
         val stations = holfuyDataSource.fetchHolfuyStations()
 
         //Vi sorterer ut kun de takeofflokasjonene som er i Norge
-        val stationsInNor = stations.filter { it.location.countryCode == "NO" }
+        val stationsInNor = stations?.filter { it.location?.countryCode == "NO" }
 
         //Initierer en mutableList for alle takeofflokasjonene
         val takeoffs: MutableList<Takeoff> = mutableListOf()
@@ -37,17 +38,17 @@ class HolfuyRepository {
 
         //Her oppretter vi Takeoff-objekter for hver lokasjon i listen med kun norske stasjoner
         //og legger de til i listen over.
-        stationsInNor.forEach {
-            val name = it.name
-            val latLng = it.location.latitude.let { it1 ->
-                it.location.longitude.let { it2 ->
-                    LatLng(it1, it2)
-                }
-            }
-            val id = it.id
-            val greenStart = it.directionZones.green.start
-            val greenStop = it.directionZones.green.stop
-            val moh = it.location.altitude
+        stationsInNor?.forEach {
+            val name = it.name ?: "IFI"
+            val latLng = LatLng(
+                it.location?.latitude ?: 58.88083,
+                it.location?.longitude ?: 9.01861
+            )
+
+            val id = it.id ?: 0
+            val greenStart = it.directionZones?.green?.start ?: 0
+            val greenStop = it.directionZones?.green?.stop ?: 0
+            val moh = it.location?.altitude ?: 0
             takeoffs.add(
                 Takeoff(
                     id = id,
@@ -59,6 +60,7 @@ class HolfuyRepository {
                 )
             )
         }
+        Log.d("Map", "$takeoffs")
         return takeoffs
     }
 
@@ -85,8 +87,8 @@ class HolfuyRepository {
  */
 
     //Her henter vi værdata for valgt stasjon angitt ved "id"
-    suspend fun fetchHolfuyStationWeather(id: Int): Wind {
+    suspend fun fetchHolfuyStationWeather(id: Int): Wind? {
         val holfObject = holfuyDataSource.fetchHolfuyObject("$id")
-        return holfObject.wind
+        return holfObject?.wind
     }
 }

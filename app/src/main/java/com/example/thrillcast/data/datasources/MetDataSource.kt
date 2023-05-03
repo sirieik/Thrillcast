@@ -34,22 +34,30 @@ class MetDataSource {
 
     //Hente objekt fra LocationForecast for angitt sted med latitude og longitude, altså
     //koordinater. Denne melder været fremover i tid
-    suspend fun fetchLocationForecastObject(lat:Double, lon:Double): MetObject{
-        return client.get("${path}locationforecast/2.0/compact?lat=${lat}&lon=${lon}") {
-            headers {
-                append(header,apiKey )
-            }
-        }.body()
+    suspend fun fetchLocationForecastObject(lat:Double, lon:Double): MetObject? {
+        return try{
+            client.get("${path}locationforecast/2.0/compact?lat=${lat}&lon=${lon}") {
+                headers {
+                    append(header,apiKey )
+                }
+            }.body()
+        } catch (e: Exception) {
+            null
+        }
     }
 
     //Hente objekt fra NowCast for angitt sted med latitude og longitude, altså
     //koordinater. Denne melder været akkurat nå
-    suspend fun fetchNowCastObject(lat:Double, lon: Double): MetObject {
-        return client.get("${path}nowcast/2.0/complete?lat=${lat}&lon=${lon}"){
-            headers {
-                append(header,apiKey )
-            }
-        }.body()
+    suspend fun fetchNowCastObject(lat:Double, lon: Double): MetObject? {
+        return try {
+            client.get("${path}nowcast/2.0/complete?lat=${lat}&lon=${lon}") {
+                headers {
+                    append(header, apiKey)
+                }
+            }.body()
+        } catch (e: Exception) {
+            null
+        }
     }
 
 }
