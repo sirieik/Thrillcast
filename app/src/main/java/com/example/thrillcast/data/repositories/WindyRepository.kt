@@ -1,6 +1,8 @@
 package com.example.thrillcast.data.repositories
 
 import com.example.thrillcast.data.datasources.WindyDataSource
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.pow
@@ -8,7 +10,9 @@ import kotlin.math.sqrt
 
 //Dette er repository-et til Windy, her henter vi data fra WindyDataSource,
 //tar ut det vi trenger og sender videre til ViewModels
-class WindyRepository {
+
+@Singleton
+class WindyRepository @Inject constructor() {
 
     //Setter opp et WindyDataSource-objekt for å gjøre kall
     private val windyDataSource: WindyDataSource = WindyDataSource()

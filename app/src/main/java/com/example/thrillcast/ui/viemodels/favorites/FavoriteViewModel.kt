@@ -1,17 +1,24 @@
 package com.example.thrillcast.ui.viemodels.favorites
 
-import HolfuyRepository
-import MetRepository
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.thrillcast.data.datamodels.Wind
+import com.example.thrillcast.data.repositories.HolfuyRepository
+import com.example.thrillcast.data.repositories.MetRepository
+import com.example.thrillcast.data.repositories.WindyRepository
 import com.example.thrillcast.ui.viemodels.map.Takeoff
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FavoriteViewModel: ViewModel() {
+@HiltViewModel
+class FavoriteViewModel @Inject constructor(
+    val holfuyRepository: HolfuyRepository,
+    val metRepository: MetRepository,
+) : ViewModel() {
 
     val holfuyRepo = HolfuyRepository()
     val metRepo = MetRepository()

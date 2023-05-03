@@ -8,6 +8,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -17,8 +18,10 @@ import com.example.thrillcast.ui.NavItem
 import com.example.thrillcast.ui.screens.introScreen2.IntroScreen2
 import com.example.thrillcast.ui.theme.GreenDark
 import com.example.thrillcast.ui.theme.GreenLight
+import com.example.thrillcast.ui.viemodels.favorites.FavoriteViewModel
 import com.example.thrillcast.ui.viemodels.map.MapViewModel
 import com.example.thrillcast.ui.viemodels.weather.WeatherViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,13 +42,26 @@ fun ThrillCastApp(context: Context){
 @Composable
 fun NavigationGraph( navController: NavHostController, context: Context){
 
-    val weatherViewModel: WeatherViewModel = viewModel()
-    val mapViewModel: MapViewModel = viewModel()
+    val favoriteViewModel: FavoriteViewModel = viewModel()
+    val weatherViewModel: WeatherViewModel = hiltViewModel()
 
     NavHost(navController, startDestination = "introscreen") {
         composable(NavItem.settings.route) { SettingsScreen() }
-        composable(NavItem.map.route) { MapScreen(navigateBack = { navController.navigate("introscreen")}, context = context)}
-        composable(NavItem.favorites.route) { FavoritesScreen(emptyList(), context = context) }
+        composable(NavItem.map.route) {
+            MapScreen(
+                navigateBack = { navController.navigate("introscreen")},
+                context = context,
+                weatherViewModel = weatherViewModel,
+                favoriteViewModel = favoriteViewModel,
+            )
+        }
+        composable(NavItem.favorites.route) {
+            FavoritesScreen(
+                weatherViewModel = weatherViewModel,
+                favoriteViewModel = favoriteViewModel,
+                context = context
+            )
+        }
         composable("introscreen") { IntroScreen2(onNavigate = { navController.navigate(NavItem.map.route)})}
     }
 }

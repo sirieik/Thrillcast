@@ -17,7 +17,12 @@ import com.example.thrillcast.ui.viemodels.map.Takeoff
 import com.example.thrillcast.ui.viemodels.weather.WeatherViewModel
 
 @Composable
-fun NowWeatherCard(viewModel: WeatherViewModel, takeoff: Takeoff, context: Context) {
+fun NowWeatherCard(
+    viewModel: WeatherViewModel,
+    takeoff: Takeoff,
+    context: Context,
+    topText: String = stringResource(id = R.string.now)
+) {
 
     viewModel.retrieveCurrentWeather(takeoff)
 
@@ -68,7 +73,7 @@ fun NowWeatherCard(viewModel: WeatherViewModel, takeoff: Takeoff, context: Conte
 
             ) {
                 Text(
-                    text = stringResource(id = R.string.now),
+                    text = topText,
                     style = MaterialTheme.typography.labelMedium
                 )
                 Text(
