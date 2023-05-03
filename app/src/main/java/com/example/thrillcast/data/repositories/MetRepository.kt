@@ -4,10 +4,14 @@ import WeatherForecast
 import com.example.thrillcast.data.datasources.MetDataSource
 
 import java.time.LocalDate
+import javax.inject.Inject
+import javax.inject.Singleton
 
 //Dette er repository-et til Met, her henter vi data fra MetDataSource,
 //tar ut det vi trenger og sender videre til ViewModels
-class MetRepository {
+
+@Singleton
+class MetRepository @Inject constructor(){
 
     //Setter opp et MetDataSource-objekt for å gjøre kall
     private val metDataSource: MetDataSource = MetDataSource()

@@ -6,24 +6,18 @@ import com.example.thrillcast.data.datamodels.Wind
 import com.example.thrillcast.data.datasources.HolfuyDataSource
 import com.example.thrillcast.ui.viemodels.map.Takeoff
 import com.google.android.gms.maps.model.LatLng
+import javax.inject.Inject
+import javax.inject.Singleton
 
 //Dette er repository-et til Holfuy, her henter vi data fra HolfuyDataSource,
 //tar ut det vi trenger og sender videre til ViewModels
-class HolfuyRepository {
+
+@Singleton
+class HolfuyRepository @Inject constructor() {
 
     //Setter opp et HolfuyDataSource objekt for å gjøre kall
     private val holfuyDataSource: HolfuyDataSource = HolfuyDataSource()
 
-
-    //Her skal vi sette opp databasen
-    /*
-    private val db = Room.databaseBuilder(
-            context,
-            StationsDatabase::class.java, "stations-database"
-            ).build()
-
-
-     */
 
     //Her henter vi inn stasjonene fra Holfuy
     suspend fun fetchTakeoffs(): List<Takeoff> {
@@ -63,28 +57,6 @@ class HolfuyRepository {
         Log.d("Map", "$takeoffs")
         return takeoffs
     }
-
-    //Denne skal brukes for å prepopulate databasen vår
-/*
-    suspend fun fillDatabase(){
-        val stationDao = db.stationsDao()
-        val stationList = fetchTakeoffs()
-        for (item in stationList){
-            val station = Station(
-                item.id,
-                item.name,
-                item.coordinates.latitude,
-                item.coordinates.longitude,
-                item.moh,
-                item.greenStart,
-                item.greenStop,
-                false
-            )
-            stationDao.upsertStation(station)
-        }
-    }
-
- */
 
     //Her henter vi værdata for valgt stasjon angitt ved "id"
     suspend fun fetchHolfuyStationWeather(id: Int): Wind? {

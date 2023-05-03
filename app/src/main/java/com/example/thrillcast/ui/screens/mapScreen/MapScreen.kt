@@ -33,9 +33,9 @@ import java.util.*
 @Composable
 fun MapScreen(
     mapViewModel: MapViewModel = viewModel(),
-    weatherViewModel: WeatherViewModel = viewModel(),
+    weatherViewModel: WeatherViewModel,
     searchBarViewModel: SearchBarViewModel = viewModel(),
-    favoriteViewModel: FavoriteViewModel = viewModel(),
+    favoriteViewModel: FavoriteViewModel,
     navigateBack: () -> Unit,
     context: Context
 ) {
@@ -85,9 +85,17 @@ fun MapScreen(
                     IconButton(
                         onClick = {
                             if(!favoriteUiState.value.favoriteList.contains(takeoffUiState.value.takeoff)) {
-                                favoriteViewModel.addFavorite(takeoffUistate.value.takeoff)
+                                takeoffUiState.value.takeoff?.let {
+                                    favoriteViewModel.addFavorite(
+                                        it
+                                    )
+                                }
                             } else {
-                                favoriteViewModel.removeFavorite(takeoffUiState.value.takeoff)
+                                takeoffUiState.value.takeoff?.let {
+                                    favoriteViewModel.removeFavorite(
+                                        it
+                                    )
+                                }
                             }
                         }
                     ) {
