@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.thrillcast.ui.screens.mapScreen.MapScreenContent
 import com.example.thrillcast.ui.screens.mapScreen.SearchBarViewModel
+import com.example.thrillcast.ui.viemodels.favorites.FavoriteViewModel
 import com.example.thrillcast.ui.viemodels.map.MapViewModel
 import com.example.thrillcast.ui.viemodels.map.Takeoff
 import com.example.thrillcast.ui.viemodels.weather.WeatherViewModel
@@ -34,21 +35,19 @@ fun MapScreen(
     mapViewModel: MapViewModel = viewModel(),
     weatherViewModel: WeatherViewModel = viewModel(),
     searchBarViewModel: SearchBarViewModel = viewModel(),
+    favoriteViewModel: FavoriteViewModel = viewModel(),
     navigateBack: () -> Unit,
     context: Context
 ) {
+
     val takeoffUiState = weatherViewModel.takeoffUiState.collectAsState()
+    val favoriteUiState = favoriteViewModel.favoriteUiState.collectAsState()
+
     val coroutineScope = rememberCoroutineScope()
     val modalSheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
         confirmStateChange = { it != ModalBottomSheetValue.HalfExpanded },
         skipHalfExpanded = true
-    )
-    val favoriteLocations = remember { mutableStateListOf<Takeoff>() }
-    FavoritesScreen(
-        addedFavorites = favoriteLocations,
-        weatherViewModel = weatherViewModel,
-        context = context
     )
 
     val tabList = listOf("Info", "Today", "Future")
@@ -85,8 +84,10 @@ fun MapScreen(
                     }
                     IconButton(
                         onClick = {
-                            if(!favoriteLocations.contains(takeoffUiState.value.takeoff)) {
-                                takeoffUiState.value.takeoff?.let { favoriteLocations.add(it) }
+                            if(!favoriteUiState.value.favoriteList.contains(takeoffUiState.value.takeoff)) {
+                                favoriteViewModel.addFavorite(takeoffUistate.value.takeoff)
+                            } else {
+                                favoriteViewModel.removeFavorite(takeoffUiState.value.takeoff)
                             }
                         }
                     ) {

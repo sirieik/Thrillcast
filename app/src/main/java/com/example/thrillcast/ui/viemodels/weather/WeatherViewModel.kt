@@ -1,6 +1,11 @@
 package com.example.thrillcast.ui.viemodels.weather
 
+import HolfuyRepository
+import MetRepository
 import WeatherForecast
+import WindyRepository
+import android.util.Log
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.thrillcast.data.datamodels.Wind

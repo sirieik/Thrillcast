@@ -20,6 +20,9 @@ class SearchBarViewModel: ViewModel() {
                     isSearchBarVisible = true
                 )
             }
+            else -> {
+                /* TODO - kanskje fikse denne else delen killa(?) */
+            }
         }
     }
 }
