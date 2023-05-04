@@ -39,10 +39,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
-import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.Marker
-import com.google.maps.android.compose.MarkerState
-import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.maps.android.compose.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -143,7 +140,8 @@ fun MapScreenContent(
                     onMapLoaded = {
                         //Her oppdaterer vi verdien til true dersom kartet er ferdig lastet inn
                         isMapLoaded = true
-                    }
+                    },
+                    properties = MapProperties(mapType = MapType.TERRAIN)
                 ) {
                     takeoffsUiState.value.takeoffs.forEach{ takeoff ->
                          Marker(
