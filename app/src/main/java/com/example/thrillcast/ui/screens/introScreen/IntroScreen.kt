@@ -69,7 +69,7 @@ fun IntroScreen(videoUri: Uri) {
         ) {
             Spacer(modifier = Modifier.padding(25.dp))
             Icon(
-                painter = painterResource(id = R.drawable.paragliding),
+                painter = painterResource(id = R.drawable.parachuting),
                 null,
                 Modifier.size(80.dp),
                 tint = Color.White

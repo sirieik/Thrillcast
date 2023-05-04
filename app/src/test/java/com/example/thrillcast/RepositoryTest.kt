@@ -1,6 +1,5 @@
 package com.example.thrillcast
 
-import com.example.thrillcast.data.repositories.Repository
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import org.junit.Assert.*
