@@ -4,16 +4,23 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.thrillcast.ui.theme.Yellow
 import com.example.thrillcast.ui.viemodels.weather.WeatherViewModel
 import java.time.LocalDate
 
@@ -41,7 +48,6 @@ fun FuturePage(weatherViewModel: WeatherViewModel, context : Context) {
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
-
             .padding(4.dp),
         contentPadding = PaddingValues(6.dp),
         horizontalArrangement = Arrangement.Center,
@@ -52,7 +58,10 @@ fun FuturePage(weatherViewModel: WeatherViewModel, context : Context) {
             ElevatedButton(
                 onClick = {
                     selectedButtonIndex = index
-                }
+                },
+                shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.buttonColors(Yellow),
+
             ) {
                 Text(
                     text = day.dayOfWeek.name.take(3),

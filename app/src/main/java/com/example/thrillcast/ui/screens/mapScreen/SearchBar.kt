@@ -25,6 +25,12 @@ import androidx.compose.ui.unit.sp
 import com.example.thrillcast.R
 import com.example.thrillcast.ui.theme.GreenDark
 import com.example.thrillcast.ui.theme.GreenLight
+import com.example.thrillcast.ui.theme.Red
+import com.example.thrillcast.ui.theme.Yellow
+import com.example.thrillcast.ui.theme.White
+import com.example.thrillcast.ui.theme.Silver
+import com.example.thrillcast.ui.theme.LightBlue
+import com.example.thrillcast.ui.theme.DarkBlue
 import com.example.thrillcast.ui.theme.gruppo
 import com.example.thrillcast.ui.viemodels.map.MapViewModel
 import com.example.thrillcast.ui.viemodels.map.Takeoff
@@ -46,21 +52,21 @@ fun SearchBar(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(GreenDark),
+                .background(DarkBlue),
             verticalAlignment = Alignment.CenterVertically,
 
             ) {
 
             OutlinedTextField(
                 modifier = Modifier
-                    //.width(320.dp)
                     .fillMaxWidth()
                     .height(60.dp)
                     .clip(shape = RectangleShape)
-                    .background(Color.Transparent),
+                    .background(Color.Transparent)
+                    .border(1.dp, color = Silver, RectangleShape),
                 value = searchInput,
                 onValueChange = { searchInput = it },
-                placeholder = { Text(text = stringResource(id = R.string.find_takeoff), color = GreenLight, style = MaterialTheme.typography.labelSmall, fontSize = 12.sp) },
+                placeholder = { Text(text = stringResource(id = R.string.find_takeoff), color = Silver, style = MaterialTheme.typography.labelSmall, fontSize = 12.sp) },
                 singleLine = true,
                 maxLines = 1,
                 shape = RectangleShape,
@@ -68,7 +74,7 @@ fun SearchBar(
                     Icon(
                         imageVector = Icons.Filled.Search,
                         contentDescription = "Search Icon",
-                        tint = GreenLight
+                        tint = Silver
                     )
                 },
                 trailingIcon = {
@@ -84,15 +90,15 @@ fun SearchBar(
                         Icon(
                             imageVector = Icons.Filled.Close,
                             contentDescription = "Close Icon",
-                            tint = GreenLight
+                            tint = Silver
                         )
                     }
                 },
                 colors = TextFieldDefaults.outlinedTextFieldColors(
-                    textColor = GreenLight,
-                    unfocusedBorderColor = GreenLight,
-                    focusedBorderColor = GreenLight,
-                    cursorColor = GreenLight,
+                    textColor = Silver,
+                    //unfocusedBorderColor = Silver,
+                    //focusedBorderColor = Silver,
+                    cursorColor = Silver,
                     unfocusedTrailingIconColor = Color.White,
                     focusedTrailingIconColor = Color.Black
                 ),
@@ -119,11 +125,11 @@ fun SearchBar(
                             },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .background(GreenLight)
-                                .border(2.dp, color = GreenDark, shape = RectangleShape)
+                                .background(Silver)
+                                //.border(2.dp, color = GreenDark, shape = RectangleShape)
                                 .padding(vertical = 16.dp),
 
-                            style = TextStyle(fontSize = 20.sp, color = GreenDark, fontFamily = gruppo)
+                            style = TextStyle(fontSize = 20.sp, color = DarkBlue, fontFamily = gruppo)
                         )
                     }
                 }

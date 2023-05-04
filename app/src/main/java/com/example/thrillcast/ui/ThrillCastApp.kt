@@ -40,7 +40,7 @@ fun ThrillCastApp(context: Context){
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun NavigationGraph( navController: NavHostController, context: Context){
+/*fun NavigationGraph( navController: NavHostController, context: Context){
 
     val favoriteViewModel: FavoriteViewModel = viewModel()
     val weatherViewModel: WeatherViewModel = hiltViewModel()
@@ -64,8 +64,31 @@ fun NavigationGraph( navController: NavHostController, context: Context){
         }
         composable("introscreen") { IntroScreen2(onNavigate = { navController.navigate(NavItem.map.route)})}
     }
-}
+}*/
 
+fun NavigationGraph(navController: NavHostController, context: Context) {
+    val favoriteViewModel: FavoriteViewModel = viewModel()
+    val weatherViewModel: WeatherViewModel = hiltViewModel()
+
+    NavHost(navController, startDestination = "map") {
+        composable(NavItem.settings.route) { SettingsScreen() }
+        composable(NavItem.map.route) {
+            MapScreen(
+                navigateBack = { navController.navigate("map") },
+                context = context,
+                weatherViewModel = weatherViewModel,
+                favoriteViewModel = favoriteViewModel,
+            )
+        }
+        composable(NavItem.favorites.route) {
+            FavoritesScreen(
+                weatherViewModel = weatherViewModel,
+                favoriteViewModel = favoriteViewModel,
+                context = context
+            )
+        }
+    }
+}
 @Composable
 fun NavBar(navController: NavHostController) {
 

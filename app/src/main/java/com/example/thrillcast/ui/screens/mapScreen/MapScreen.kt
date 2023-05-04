@@ -21,6 +21,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.thrillcast.ui.screens.mapScreen.MapScreenContent
 import com.example.thrillcast.ui.screens.mapScreen.SearchBarViewModel
+import com.example.thrillcast.ui.theme.Red
+import com.example.thrillcast.ui.theme.Silver
 import com.example.thrillcast.ui.viemodels.favorites.FavoriteViewModel
 import com.example.thrillcast.ui.viemodels.map.MapViewModel
 import com.example.thrillcast.ui.viemodels.map.Takeoff
@@ -117,14 +119,17 @@ fun MapScreen(
                         )
                     }
                 }
-                TabRow(selectedTabIndex = tabState) {
+                TabRow(
+                    selectedTabIndex = tabState,
+                    backgroundColor = Red
+                ) {
                     tabList.forEachIndexed { index, title ->
                         Tab(
                             selected = tabState == index,
                             onClick = { tabState = index },
                             text = {
                                 Text(
-                                    text = title, maxLines = 1, overflow = TextOverflow.Ellipsis, fontSize = 20.sp
+                                    text = title, maxLines = 1, overflow = TextOverflow.Ellipsis, fontSize = 20.sp, color = Silver
                                 )
                             }
                         )

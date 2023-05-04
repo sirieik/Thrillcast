@@ -15,3 +15,10 @@ val GreenLight = Color(0xFFBDECDE)
 
 val Red60 = Color(0xFFFF5439)
 val FlightGreen = Color(0xFF77DD77)
+
+val Red = Color(0xFFD03551)
+val Yellow = Color(0xFFF8D548)
+val White = Color(0xFFF2EBEE)
+val Silver = Color(0xFFD8D4CF)
+val LightBlue = Color(0xFF020B87)
+val DarkBlue = Color(0xFF1C19A5)

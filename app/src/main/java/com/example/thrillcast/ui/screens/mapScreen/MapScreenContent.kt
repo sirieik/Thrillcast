@@ -32,6 +32,12 @@ import androidx.compose.ui.unit.sp
 import com.example.thrillcast.R
 import com.example.thrillcast.ui.theme.GreenDark
 import com.example.thrillcast.ui.theme.GreenLight
+import com.example.thrillcast.ui.theme.Red
+import com.example.thrillcast.ui.theme.Yellow
+import com.example.thrillcast.ui.theme.White
+import com.example.thrillcast.ui.theme.Silver
+import com.example.thrillcast.ui.theme.LightBlue
+import com.example.thrillcast.ui.theme.DarkBlue
 import com.example.thrillcast.ui.viemodels.map.MapViewModel
 import com.example.thrillcast.ui.viemodels.map.Takeoff
 import com.example.thrillcast.ui.viemodels.weather.WeatherViewModel
@@ -242,9 +248,9 @@ fun TopBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(GreenDark)
+            .background(DarkBlue)
             .height(60.dp)
-            .border(1.dp, color = GreenLight, RectangleShape),
+            .border(1.dp, color = Silver, RectangleShape),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -254,13 +260,13 @@ fun TopBar(
             Icon(
                 imageVector = Icons.Filled.ArrowBack,
                 contentDescription = "Back Icon",
-                tint = GreenLight
+                tint = Silver
             )
         }
 
         Text(
             text = "Paragliding", style = MaterialTheme.typography.titleSmall,
-            color = GreenLight,
+            color = Silver,
             fontSize = 30.sp,
         )
 
@@ -270,7 +276,7 @@ fun TopBar(
             Icon(
                 imageVector = Icons.Filled.Search,
                 contentDescription = "Search Icon",
-                tint = GreenLight
+                tint = Silver
             )
         }
     }
