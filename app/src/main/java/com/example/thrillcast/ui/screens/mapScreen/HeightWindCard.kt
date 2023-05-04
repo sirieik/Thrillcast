@@ -1,4 +1,4 @@
-package com.example.thrillcast.ui.cards
+package com.example.thrillcast.ui.common.cards
 
 import android.util.Log
 import androidx.compose.foundation.Image

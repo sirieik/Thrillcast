@@ -171,3 +171,9 @@ fun isDegreeBetween(value: Double, min: Int, max: Int): Boolean {
         valueRadians >= minRadians || valueRadians <= maxRadians
     }
 }
+
+fun isDirectionValid(direction: Int, greenStart: Int, greenStop: Int): Boolean {
+    return if(greenStart > greenStop) {
+         (direction in greenStart .. 360 || direction in 0..greenStop)
+    } else (direction in greenStart..greenStop)
+}

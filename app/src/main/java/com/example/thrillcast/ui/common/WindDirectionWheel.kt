@@ -9,6 +9,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.thrillcast.ui.theme.FlightGreen
@@ -63,14 +69,27 @@ fun WindDirectionWheel(
             val endY = centerY + radius * vectorY
             //CHAD
 
-            drawCircle(FlightGreen)
-            drawArc(
-                color = Color.LightGray,
-                startAngle = greenStartAngle,
-                //We have to do the area that isnt flyable to display, because otherwise it doesn't work
-                sweepAngle = greenStopAngle - greenStartAngle,
-                useCenter = true
-            )
+
+            val sweepAngle = greenStopAngle - greenStartAngle
+            if (sweepAngle <= 0) {
+                drawCircle(FlightGreen)
+                drawArc(
+                    color = Color.LightGray,
+                    startAngle = greenStartAngle,
+                    //We have to do the area that isnt flyable to display, because otherwise it doesn't work
+                    sweepAngle = sweepAngle,
+                    useCenter = true
+                )
+            } else {
+                drawCircle(Color.LightGray)
+                drawArc(
+                    color = FlightGreen,
+                    startAngle = greenStartAngle,
+                    //We have to do the area that isnt flyable to display, because otherwise it doesn't work
+                    sweepAngle = sweepAngle,
+                    useCenter = true
+                )
+            }
 
             //Sirkelen i bunn er grønn og skal representere "bra-sonen"
             //over legger jeg en gul sirkel over de områdene som ikke er bra
@@ -102,6 +121,7 @@ fun WindDirectionWheel(
                 strokeWidth = 5.dp.toPx()
             )
             //CHAD
+
         }
     )
 }
@@ -109,5 +129,5 @@ fun WindDirectionWheel(
 @Preview
 @Composable
 fun WheelPreview() {
-    WindDirectionWheel(240, 0, 90)
+    WindDirectionWheel(180, 190, 90)
 }

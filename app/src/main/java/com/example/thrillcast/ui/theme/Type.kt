@@ -45,10 +45,20 @@ val Typography = Typography(
         fontWeight = FontWeight.Normal,
         fontSize = 60.sp,
     ),
+    titleMedium = TextStyle(
+        fontFamily = gruppo,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 30.sp
+    ),
     labelSmall = TextStyle(
         fontFamily = montserrat,
         fontWeight = FontWeight.Normal,
         fontSize = 60.sp,
+    ),
+    bodySmall = TextStyle(
+        fontFamily = montserrat,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 15.sp
     ),
     bodyMedium = TextStyle(
         fontFamily = montserrat,

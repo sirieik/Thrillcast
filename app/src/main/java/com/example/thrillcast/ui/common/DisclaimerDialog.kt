@@ -26,7 +26,7 @@ fun DisclaimerDialog() {
                 ) {
                     Text(
                         text = "DISCLAIMER:",
-                        style = MaterialTheme.typography.titleSmall
+                        style = MaterialTheme.typography.titleMedium
                     )
                 }
             },
@@ -53,7 +53,7 @@ fun DisclaimerDialog() {
                             "associated with paragliding and assume full " +
                             "responsibility for their actions.",
                     textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodySmall
                 )
             },
             buttons = {

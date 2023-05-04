@@ -26,16 +26,19 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thrillcast.R
+import com.example.thrillcast.data.datamodels.Wind
 import com.example.thrillcast.ui.theme.Silver
 import com.example.thrillcast.ui.theme.DarkBlue
 import com.example.thrillcast.ui.viemodels.map.MapViewModel
 import com.example.thrillcast.ui.viemodels.map.Takeoff
 import com.example.thrillcast.ui.viemodels.weather.WeatherViewModel
+import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
 import com.google.maps.android.compose.*
+import isDegreeBetween
+import isDirectionValid
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -58,12 +61,14 @@ fun MapScreenContent(
     val state = searchBarViewModel.state
     val takeoffsUiState = mapViewModel.takeoffsUiState.collectAsState()
 
+    val currentWeatherUiState = weatherViewModel.currentWeatherUiState.collectAsState()
+
     //Bruke denne til å legge inn lasteskjerm dersom kartet bruker tid
     var isMapLoaded by remember {mutableStateOf(false)}
-    var bottomSheetVisible by remember { mutableStateOf(false)}
-    var selectedMarker by remember { mutableStateOf<Marker?>(null) }
 
     var selectedSearchItem by remember { mutableStateOf<Takeoff?>(null) }
+
+    val weatherMap = mutableMapOf<Takeoff, Wind>()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -140,24 +145,12 @@ fun MapScreenContent(
                     properties = MapProperties(mapType = MapType.TERRAIN)
                 ) {
                     takeoffsUiState.value.takeoffs.forEach{ takeoff ->
+
+                         val wind = weatherViewModel.retrieveWind(takeoff)
                          Marker(
                             state = MarkerState(takeoff.coordinates),
                             title = takeoff.name,
-                            icon =
-                            /*
-                            BitmapDescriptorFactory.fromBitmap(
-                                canvasToBitmap(
-                                    WindDirectionWheel(
-                                        greenStart = 220,
-                                        greenStop = 0,
-                                        windDirection = 90
-                                    ),
-                                    context
-                                )
-                            )
-
-                             */
-                            BitmapDescriptorFactory.fromResource(R.drawable.parachuting),
+                            icon = MarkerIcon(wind, takeoff),
                             onInfoWindowClick = {
                                 //Få inn hva som skjer når man trykker på infovindu m tekst
                                 //Tenker at det er mer praktisk å få opp infoskjerm etter å trykke på
@@ -179,7 +172,29 @@ fun MapScreenContent(
                                         modalSheetState.animateTo(ModalBottomSheetValue.Expanded)
                                     }
                                 }
+                            },
+                             //Bottomsheet kommer med en gang man trykker
+                            onClick =  {
+
+                                cameraPositionState.position = CameraPosition.Builder()
+                                    .target(takeoff.coordinates)
+                                    .zoom(9f)
+                                    .build()
+
+                                coroutineScope.launch {
+                                    if (modalSheetState.isVisible) {
+                                        modalSheetState.hide()
+                                    }
+                                    else {
+                                        weatherViewModel.updateChosenTakeoff(takeoff)
+                                        //weatherViewModel.retrieveStationWeather(takeoff)
+                                        weatherViewModel.retrieveHeightWind(takeoff = takeoff)
+                                        modalSheetState.animateTo(ModalBottomSheetValue.Expanded)
+                                    }
+                                }
+                                true
                             }
+                            //
                         )
                     }
                 }
@@ -270,106 +285,10 @@ fun TopBar(
     }
 }
 
-/*
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun SearchBar(
-    onCloseIconClick: () -> Unit,
-    onNavigate: () -> Unit,
-    mapViewModel: MapViewModel,
-    onTakeoffSelected: (Takeoff) -> Unit
-) {
-    var searchInput by remember { mutableStateOf("") }
-    val hideKeyboard = LocalFocusManager.current
-
-    val uiState = mapViewModel.takeoffsUiState.collectAsState()
-
-    Column{
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(GreenDark),
-            verticalAlignment = Alignment.CenterVertically,
-
-            ) {
-
-            OutlinedTextField(
-                modifier = Modifier
-                    //.width(320.dp)
-                    .fillMaxWidth()
-                    .height(60.dp)
-                    .clip(shape = RectangleShape)
-                    .background(Color.Transparent),
-                value = searchInput,
-                onValueChange = { searchInput = it },
-                placeholder = { Text(text = stringResource(id = R.string.find_takeoff), color = GreenLight, style = MaterialTheme.typography.labelSmall, fontSize = 12.sp) },
-                singleLine = true,
-                maxLines = 1,
-                shape = RectangleShape,
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Search,
-                        contentDescription = "Search Icon",
-                        tint = GreenLight
-                    )
-                },
-                trailingIcon = {
-                    IconButton(
-                        onClick = {
-                            if (searchInput.isNotEmpty()) {
-                                searchInput = ""
-                            } else {
-                                onCloseIconClick()
-                            }
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Close,
-                            contentDescription = "Close Icon",
-                            tint = GreenLight
-                        )
-                    }
-                },
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    textColor = GreenLight,
-                    unfocusedBorderColor = GreenLight,
-                    focusedBorderColor = GreenLight,
-                    cursorColor = GreenLight,
-                    unfocusedTrailingIconColor = Color.White,
-                    focusedTrailingIconColor = Color.Black
-                ),
-                /*keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Password,
-                    imeAction = androidx.compose.ui.text.input.ImeAction.Done,
-                    locale = Locale("no", "NO")
-                )*/
-            )
-        }
-
-        LazyColumn(modifier = Modifier.fillMaxWidth()) {
-            if (searchInput.isNotEmpty()) {
-                items(uiState.value.takeoffs.filter {
-                    it.name.contains(searchInput, ignoreCase = true)
-                }) { takeoff ->
-                    Card {
-                        ClickableText(
-                            text = AnnotatedString(takeoff.name),
-                            onClick = {
-                                searchInput = ""
-                                hideKeyboard.clearFocus()
-                                onTakeoffSelected(takeoff)
-                            },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(GreenLight)
-                                .border(2.dp, color = GreenDark, shape = RectangleShape)
-                                .padding(vertical = 16.dp),
-
-                            style = TextStyle(fontSize = 20.sp, color = GreenDark, fontFamily = gruppo)
-                        )
-                    }
-                }
-            }
-        }
+fun MarkerIcon(wind: Wind, takeoff: Takeoff): BitmapDescriptor {
+    return if (isDegreeBetween((wind.direction?: 0.0).toDouble(), takeoff.greenStart, takeoff.greenStop)) {
+        BitmapDescriptorFactory.fromResource(R.drawable.greendot)
+    } else {
+        BitmapDescriptorFactory.fromResource(R.drawable.red_dot)
     }
-}*/
+}

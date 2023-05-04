@@ -56,6 +56,18 @@ class WeatherViewModel @Inject constructor(
 
     val takeoffUiState: StateFlow<TakeoffUiState> = _takeoffUiState.asStateFlow()
 
+
+    /*
+    Generelt anbefalt å ikke returnere data dra viewModel utenom UIStates, men her så trengs
+    dataen bare en gang og trenger ikke å oppdateres
+     */
+    fun retrieveWind(takeoff: Takeoff): Wind {
+        var stationWind: Wind? = null
+        viewModelScope.launch {
+            stationWind = holfuyRepository.fetchHolfuyStationWeather(takeoff.id)
+        }
+        return stationWind ?: Wind(0, 0.0, 0.0, 0.0, "m/s")
+    }
     fun retrieveCurrentWeather(takeoff: Takeoff) {
         viewModelScope.launch {
             val stationWind: Wind? = holfuyRepository.fetchHolfuyStationWeather(takeoff.id)

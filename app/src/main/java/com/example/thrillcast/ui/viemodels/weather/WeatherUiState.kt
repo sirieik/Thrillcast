@@ -24,7 +24,7 @@ open class WeatherUiState(
 
 open class CurrentWeatherUiState(
 
-    val nowCastObject: WeatherForecast?,
+    val nowCastObject: WeatherForecast? = null,
     val wind: Wind?
 
 )
