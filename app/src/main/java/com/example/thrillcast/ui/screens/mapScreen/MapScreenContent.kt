@@ -1,6 +1,5 @@
 package com.example.thrillcast.ui.screens.mapScreen
 
-import WindDirectionWheel
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -24,19 +23,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thrillcast.R
-import com.example.thrillcast.ui.theme.GreenDark
-import com.example.thrillcast.ui.theme.GreenLight
-import com.example.thrillcast.ui.theme.Red
-import com.example.thrillcast.ui.theme.Yellow
-import com.example.thrillcast.ui.theme.White
 import com.example.thrillcast.ui.theme.Silver
-import com.example.thrillcast.ui.theme.LightBlue
 import com.example.thrillcast.ui.theme.DarkBlue
 import com.example.thrillcast.ui.viemodels.map.MapViewModel
 import com.example.thrillcast.ui.viemodels.map.Takeoff

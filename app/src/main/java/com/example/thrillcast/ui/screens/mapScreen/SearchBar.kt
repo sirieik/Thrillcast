@@ -66,7 +66,14 @@ fun SearchBar(
                     .border(1.dp, color = Silver, RectangleShape),
                 value = searchInput,
                 onValueChange = { searchInput = it },
-                placeholder = { Text(text = stringResource(id = R.string.find_takeoff), color = Silver, style = MaterialTheme.typography.labelSmall, fontSize = 12.sp) },
+                placeholder = {
+                    Text(
+                        text = stringResource(id = R.string.find_takeoff),
+                        color = Silver,
+                        style = MaterialTheme.typography.labelSmall,
+                        fontSize = 12.sp
+                    )
+                },
                 singleLine = true,
                 maxLines = 1,
                 shape = RectangleShape,
