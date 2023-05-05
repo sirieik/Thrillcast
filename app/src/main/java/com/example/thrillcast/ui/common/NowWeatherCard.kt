@@ -19,8 +19,7 @@ import com.example.thrillcast.ui.viemodels.weather.WeatherViewModel
 fun NowWeatherCard(
     viewModel: WeatherViewModel,
     takeoff: Takeoff,
-    context: Context,
-    topText: String = stringResource(id = R.string.now)
+    context: Context
 ) {
 
     viewModel.retrieveCurrentWeather(takeoff)
@@ -41,29 +40,31 @@ fun NowWeatherCard(
     ) {
 
         Row(
-
+            modifier = Modifier
+                .fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically
         ) {
 
-            ElevatedCard(
+            /*ElevatedCard(
                 modifier = Modifier
                     .aspectRatio(1f)
                     .weight(0.33f, true)
+                    .fillMaxHeight()
+            ) {*/
+            Column(
+                modifier = Modifier.fillMaxHeight(),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    weatherUiState.value.wind?.direction?.let {
-                        WindDirectionWheel(
-                            greenStart = takeoff.greenStart,
-                            greenStop = takeoff.greenStop,
-                            windDirection = it,
-                        )
-                        Text(
-                            text = "$speed($gust) $unit",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
+                weatherUiState.value.wind?.direction?.let {
+                    WindDirectionWheel(
+                        greenStart = takeoff.greenStart,
+                        greenStop = takeoff.greenStop,
+                        windDirection = it,
+                    )
+                    Text(
+                        text = "$speed($gust) $unit",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
                 }
             }
             Column(
@@ -72,8 +73,10 @@ fun NowWeatherCard(
 
             ) {
                 Text(
-                    text = topText,
-                    style = MaterialTheme.typography.labelMedium
+                    text = stringResource(id = R.string.now),
+                    style = MaterialTheme.typography.labelMedium,
+                    //TODO - dette gjør at det ikke fucker seg med flere linjer på favorite screen
+                    maxLines = 1
                 )
                 Text(
                     text = "$temperature °C",

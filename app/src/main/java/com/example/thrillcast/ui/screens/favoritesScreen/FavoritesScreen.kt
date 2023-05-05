@@ -49,17 +49,23 @@ fun FavoritesScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues)
+                    .padding(paddingValues),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                //verticalArrangement = Arrangement.Center
             ) {
 
-                LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                LazyColumn(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
                     items(favoriteUiState.value.favoriteList) {
                         if (it != null) {
+                            Text(
+                                text = it.name
+                            )
                             NowWeatherCard(
                                 viewModel = weatherViewModel,
                                 context = context,
-                                takeoff = it,
-                                topText = it.name
+                                takeoff = it
                             )
                         }
                     }
