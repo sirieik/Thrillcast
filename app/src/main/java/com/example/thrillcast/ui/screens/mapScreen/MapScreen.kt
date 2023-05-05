@@ -55,7 +55,7 @@ fun MapScreen(
     val tabList = listOf("Info", "Today", "Future")
 
     var tabState by remember {
-        mutableStateOf(0)
+        mutableStateOf(1)
     }
 
     ModalBottomSheetLayout(

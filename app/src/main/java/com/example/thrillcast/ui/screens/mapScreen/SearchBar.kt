@@ -109,6 +109,8 @@ fun SearchBar(
                     unfocusedTrailingIconColor = Color.White,
                     focusedTrailingIconColor = Color.Black
                 ),
+                //Kan endre denne
+                textStyle = MaterialTheme.typography.bodySmall,
                 /*keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password,
                     imeAction = androidx.compose.ui.text.input.ImeAction.Done,
