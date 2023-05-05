@@ -31,7 +31,7 @@ fun ThrillCastApp(context: Context){
     DisclaimerDialog()
 
     Scaffold(
-        bottomBar = { NavBar(navController = navController) }
+        //bottomBar = { NavBar(navController = navController) }
     ) {
             innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
@@ -73,10 +73,11 @@ fun NavigationGraph(navController: NavHostController, context: Context) {
     val weatherViewModel: WeatherViewModel = hiltViewModel()
 
     NavHost(navController, startDestination = "map") {
-        composable(NavItem.settings.route) { SettingsScreen() }
+        //composable(NavItem.settings.route) { SettingsScreen() }
         composable(NavItem.map.route) {
             MapScreen(
-                navigateBack = { navController.navigate("map") },
+                //Navigasjon er nå kun til favorite screen
+                navigateBack = { navController.navigate("favorites") },
                 context = context,
                 weatherViewModel = weatherViewModel,
                 favoriteViewModel = favoriteViewModel,
@@ -86,6 +87,7 @@ fun NavigationGraph(navController: NavHostController, context: Context) {
             FavoritesScreen(
                 weatherViewModel = weatherViewModel,
                 favoriteViewModel = favoriteViewModel,
+                onNavigate = {navController.navigate("map")},
                 context = context
             )
         }
@@ -94,10 +96,10 @@ fun NavigationGraph(navController: NavHostController, context: Context) {
 @Composable
 fun NavBar(navController: NavHostController) {
 
-    var selectedItem by remember { mutableStateOf(1) }
+    var selectedItem by remember { mutableStateOf(0) }
 
     val navItems = listOf(
-        NavItem.settings,
+        //NavItem.settings,
         NavItem.map,
         NavItem.favorites,
     )

@@ -14,7 +14,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -27,8 +27,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thrillcast.R
 import com.example.thrillcast.data.datamodels.Wind
-import com.example.thrillcast.ui.theme.Silver
 import com.example.thrillcast.ui.theme.DarkBlue
+import com.example.thrillcast.ui.theme.Silver
 import com.example.thrillcast.ui.viemodels.map.MapViewModel
 import com.example.thrillcast.ui.viemodels.map.Takeoff
 import com.example.thrillcast.ui.viemodels.weather.WeatherViewModel
@@ -38,7 +38,6 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
 import isDegreeBetween
-import isDirectionValid
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -261,8 +260,8 @@ fun TopBar(
             onClick = onNavigate
         ) {
             Icon(
-                imageVector = Icons.Filled.ArrowBack,
-                contentDescription = "Back Icon",
+                imageVector = Icons.Filled.Favorite,
+                contentDescription = "Favorite Icon",
                 tint = Silver
             )
         }
