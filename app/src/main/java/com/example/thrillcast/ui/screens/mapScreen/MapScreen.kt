@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,7 +26,6 @@ import com.example.thrillcast.ui.theme.Red
 import com.example.thrillcast.ui.theme.Silver
 import com.example.thrillcast.ui.viemodels.favorites.FavoriteViewModel
 import com.example.thrillcast.ui.viemodels.map.MapViewModel
-import com.example.thrillcast.ui.viemodels.map.Takeoff
 import com.example.thrillcast.ui.viemodels.weather.WeatherViewModel
 import kotlinx.coroutines.launch
 import java.util.*
@@ -101,10 +101,18 @@ fun MapScreen(
                             }
                         }
                     ) {
+                        //Sjekke hvis stedet er i favoritter er hjertet ikonet filled, hvis ikke er det hult
+                        val isFavorite = favoriteUiState.value.favoriteList.contains(takeoffUiState.value.takeoff)
+                        val iconImageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder
+                        val iconOutlineTint = Color.Magenta
+                        val iconFillTint = if (isFavorite) Color.Magenta else Color.White
                         Icon(
-                            imageVector = Icons.Filled.Favorite,
+                            imageVector = iconImageVector,
                             contentDescription = "Favorites button",
-                            tint = Color.Magenta
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .size(48.dp),
+                            tint = if (isFavorite) iconFillTint else iconOutlineTint
                         )
                     }
                     IconButton(
