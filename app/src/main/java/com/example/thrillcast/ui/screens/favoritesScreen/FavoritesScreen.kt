@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.example.thrillcast.ui.viemodels.favorites.FavoriteViewModel
 import com.example.thrillcast.ui.viemodels.weather.WeatherViewModel
 
@@ -41,27 +42,32 @@ fun FavoritesScreen(
 
                 Text(
                     text = "Favorites",
-                    modifier = Modifier.align(Alignment.CenterVertically)
+                    modifier = Modifier.align(Alignment.CenterVertically),
+                    style = MaterialTheme.typography.headlineLarge
                 )
             }
         },
-        content = { paddingValues ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-            ) {
 
-                LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                    items(favoriteUiState.value.favoriteList) {
-                        if (it != null) {
-                            NowWeatherCard(
-                                viewModel = weatherViewModel,
-                                context = context,
-                                takeoff = it,
-                                topText = it.name
-                            )
-                        }
+        content = { paddingValues ->
+
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(paddingValues),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                items(favoriteUiState.value.favoriteList) {
+                    if (it != null) {
+                        Text(
+                            text = it.name,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        NowWeatherCard(
+                            viewModel = weatherViewModel,
+                            context = context,
+                            takeoff = it
+                        )
                     }
                 }
             }
