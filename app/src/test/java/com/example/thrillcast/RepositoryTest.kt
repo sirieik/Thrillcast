@@ -1,5 +1,15 @@
 package com.example.thrillcast
 
+import android.graphics.Bitmap
+import com.example.thrillcast.data.datamodels.Wind
+import com.example.thrillcast.data.repositories.HolfuyRepository
+import com.example.thrillcast.data.repositories.MetRepository
+import com.example.thrillcast.data.repositories.WindyRepository
+import com.example.thrillcast.ui.screens.mapScreen.MarkerIcon
+import com.example.thrillcast.ui.screens.mapScreen.MarkerIconResource
+import com.example.thrillcast.ui.viemodels.map.Takeoff
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import org.junit.Assert.*
@@ -9,13 +19,15 @@ import java.time.LocalDate
 class RepositoryTest {
 
     @Test
-    fun testCalculateWindSpeedNDirection(){
+    fun testCalculateWindSpeedNDirection() {
         //Arrange
         val u = 10.0
         val v = 10.0
 
         //Act
-        val result = Repository().calculateWindSpeedAndDirection(u, v)
+        val result = runBlocking {
+                WindyRepository().calculateWindSpeedAndDirection(u,v)
+        }
 
         //Assert
         assertEquals(14.14, result.first, 0.01)
@@ -23,7 +35,7 @@ class RepositoryTest {
     }
 
     @Test
-    fun fetchMetWeatherForecastIsTomorrow(){
+    fun fetchMetWeatherForecastTomorrow(){
         //Arrange
         val lat = 59.76
         val lon = 10.04
@@ -31,13 +43,12 @@ class RepositoryTest {
 
         //Act
         val result = runBlocking {
-            Repository().fetchMetWeatherForecast(lat,lon)
+            MetRepository().fetchLocationForecast(lat,lon)
         }
+        val tomorrow = result?.filter { it.time?.toLocalDate() == tomorrowDate }
 
         //Assert
-        result.forEach {
-            assertEquals(it.time.toLocalDate(), tomorrowDate)
-        }
+        assertTrue(!tomorrow.isNullOrEmpty())
     }
     /*
     data class Details (
@@ -53,14 +64,14 @@ class RepositoryTest {
 
         //Act
         val result = runBlocking {
-            Repository().fetchMetWeatherForecast(lat,lon)
+            MetRepository().fetchLocationForecast(lat,lon)
         }
 
         //Assert
-        val forecast = result.first()
-        assertNotNull(forecast.data?.instant?.details?.air_temperature)
-        assertNotNull(forecast.data?.instant?.details?.wind_speed)
-        assertNotNull(forecast.data?.next_1_hours?.summary?.symbol_code)
+        val forecast = result?.first()
+        assertNotNull(forecast?.data?.instant?.details?.air_temperature)
+        assertNotNull(forecast?.data?.instant?.details?.wind_speed)
+        assertNotNull(forecast?.data?.next_1_hours?.summary?.symbol_code)
     }
     /*
       suspend fun fetchTakeoffs(): List<com.example.thrillcast.ui.viemodels.map.Takeoff> {
@@ -69,7 +80,7 @@ class RepositoryTest {
     fun takeOffListIsNotEmpty(){
         //Act
         val fetchTakeoffsResult = runBlocking{
-            Repository().fetchTakeoffs()
+            HolfuyRepository().fetchTakeoffs()
         }
         //Assert
         assertTrue(fetchTakeoffsResult.isNotEmpty())
@@ -81,10 +92,45 @@ class RepositoryTest {
     fun fetchHolfuyObjectsIsNotEmpty(){
         //Act
         val holfuyObjectResult = runBlocking {
-            Repository().fetchHolfuyObjects()
+            HolfuyRepository().fetchHolfuyStationWeather(102)
         }
         //Assert
-        assertTrue(holfuyObjectResult.isNotEmpty())
+        assertNotNull(holfuyObjectResult)
+    }
+/*
+fun MarkerIcon(wind: Wind, takeoff: Takeoff): BitmapDescriptor {
+    return if (isDegreeBetween((wind.direction?: 0.0).toDouble(), takeoff.greenStart, takeoff.greenStop)) {
+        BitmapDescriptorFactory.fromResource(R.drawable.greendot)
+    } else {
+        BitmapDescriptorFactory.fromResource(R.drawable.red_dot)
+    }
+}
+ */
+    //for å sjekke at funskjon finner riktig farge av marker
+    @Test
+    fun testMarkerIconFarge() {
+    //Arrange
+    val takeoff = Takeoff(
+        0,
+        LatLng(
+            59.76,
+            10.04
+        ),
+        "Navn",
+        greenStart = 30,
+        greenStop = 90,
+        1200
+    )
+    val greenWind = Wind(50, 5.0, 20.0, 60.0, " m/s ")
+    val redWind = Wind(200, 50.0, 50.0, 100.0,"m/s")
+
+    //Act
+    val greenResult = MarkerIconResource(greenWind, takeoff)
+    val redResult = MarkerIconResource(redWind, takeoff)
+
+    //Assert
+    assertEquals(R.drawable.greendot, greenResult)
+    assertEquals(R.drawable.red_dot, redResult)
     }
 
 }
