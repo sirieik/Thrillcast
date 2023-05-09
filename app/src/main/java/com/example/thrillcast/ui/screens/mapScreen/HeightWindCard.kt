@@ -23,6 +23,8 @@ import androidx.compose.ui.unit.sp
 import com.example.thrillcast.R
 import com.example.thrillcast.ui.viemodels.weather.WeatherViewModel
 import java.util.*
+import kotlin.math.round
+import kotlin.math.roundToInt
 
 //Dette kortet brukes i Today-pagen for å fremstille vinddata i høyden
 @Composable
@@ -228,10 +230,12 @@ fun HeightWindCard(weatherViewModel: WeatherViewModel){
                     }
                     Text(
 
-                        text = "$windSpeed m/s"
+                        text = "${roundDouble(windSpeed)} m/s"
                     )
                 }
             }
         }
     }
 }
+
+fun roundDouble(number: Double?): Double = ((number?: 0 * 100.0).roundToInt() / 100.0)

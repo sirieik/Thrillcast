@@ -19,7 +19,7 @@ import com.example.thrillcast.ui.viemodels.weather.WeatherViewModel
 fun FavoritesScreen(
     favoriteViewModel: FavoriteViewModel,
     weatherViewModel: WeatherViewModel,
-    onNavigate: () -> Unit,
+    navigateBack: () -> Unit,
     context: Context
 ) {
     val favoriteUiState = favoriteViewModel.favoriteUiState.collectAsState()
@@ -31,7 +31,7 @@ fun FavoritesScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 IconButton(
-                    onClick = onNavigate
+                    onClick = navigateBack
                 ) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,

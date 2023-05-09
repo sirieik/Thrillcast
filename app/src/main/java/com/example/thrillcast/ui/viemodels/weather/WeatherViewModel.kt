@@ -56,6 +56,14 @@ class WeatherViewModel @Inject constructor(
 
     val takeoffUiState: StateFlow<TakeoffUiState> = _takeoffUiState.asStateFlow()
 
+    private val _multiCurrentWeatherUiState = MutableStateFlow(
+        MultiCurrentWeatherUiState(
+            mutableListOf()
+        )
+    )
+
+    val multiCurrentWeatherUiState: StateFlow<MultiCurrentWeatherUiState> = _multiCurrentWeatherUiState.asStateFlow()
+
 
     /*
     Generelt anbefalt å ikke returnere data dra viewModel utenom UIStates, men her så trengs
@@ -98,6 +106,32 @@ class WeatherViewModel @Inject constructor(
     fun updateChosenTakeoff(takeoff: Takeoff) {
         viewModelScope.launch {
             _takeoffUiState.value = TakeoffUiState(takeoff = takeoff)
+        }
+    }
+
+    fun addCurrentWeatherUiState(takeoff: Takeoff) {
+        viewModelScope.launch {
+            val stationWind: Wind? = holfuyRepository.fetchHolfuyStationWeather(takeoff.id)
+            val nowWeather: WeatherForecast? =
+                try {
+                    metRepository.fetchNowCastObject(takeoff.coordinates.latitude, takeoff.coordinates.longitude)?.properties?.timeseries?.get(0)
+                } catch (e: Exception) {
+                    null
+                }
+            _multiCurrentWeatherUiState.value.currentWeatherList.add(
+                Pair(
+                    CurrentWeatherUiState(wind = stationWind, nowCastObject = nowWeather),
+                    takeoff
+                )
+            )
+        }
+    }
+
+    fun retrieveFavoritesWeather(favorites: List<Takeoff>) {
+        viewModelScope.launch {
+            favorites.forEach{
+
+            }
         }
     }
 }

@@ -44,3 +44,7 @@ open class HeightWindUiState(
 open class TakeoffUiState(
     val takeoff: Takeoff?
 )
+
+open class MultiCurrentWeatherUiState(
+    val currentWeatherList: MutableList<Pair<CurrentWeatherUiState, Takeoff>>
+    )
