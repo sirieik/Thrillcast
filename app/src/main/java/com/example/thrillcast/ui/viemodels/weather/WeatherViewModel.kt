@@ -10,6 +10,7 @@ import com.example.thrillcast.data.repositories.WindyRepository
 import com.example.thrillcast.data.repositories.WindyWinds
 import com.example.thrillcast.ui.viemodels.map.Takeoff
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -58,11 +59,20 @@ class WeatherViewModel @Inject constructor(
 
     private val _multiCurrentWeatherUiState = MutableStateFlow(
         MultiCurrentWeatherUiState(
-            mutableListOf()
+            listOf()
         )
     )
 
     val multiCurrentWeatherUiState: StateFlow<MultiCurrentWeatherUiState> = _multiCurrentWeatherUiState.asStateFlow()
+
+
+    private val _locationsWindUiState = MutableStateFlow(
+        LocationsWindUiState(
+            listOf()
+        )
+    )
+    val locationsWindUiState: StateFlow<LocationsWindUiState> = _locationsWindUiState.asStateFlow()
+
 
 
     /*
@@ -76,9 +86,18 @@ class WeatherViewModel @Inject constructor(
         }
         return stationWind ?: Wind(0, 0.0, 0.0, 0.0, "m/s")
     }
-    fun retrieveCurrentWeather(takeoff: Takeoff) {
+    fun retrieveCurrentWeather(takeoff: Takeoff?) {
         viewModelScope.launch {
-            val stationWind: Wind? = holfuyRepository.fetchHolfuyStationWeather(takeoff.id)
+            takeoff?.id?.let {
+                val stationWind: Wind? = holfuyRepository.fetchHolfuyStationWeather(takeoff.id)
+                val weather = metRepository.fetchNowCastObject(
+                    takeoff.coordinates.latitude,
+                    takeoff.coordinates.longitude
+                )?.properties?.timeseries?.firstOrNull()
+
+                _currentWeatherUiState.value = CurrentWeatherUiState(wind = stationWind, nowCastObject = weather)
+            }
+            /*
             val nowWeather: WeatherForecast? =
                 try {
                     metRepository.fetchNowCastObject(takeoff.coordinates.latitude, takeoff.coordinates.longitude)?.properties?.timeseries?.get(0)
@@ -86,6 +105,7 @@ class WeatherViewModel @Inject constructor(
                     null
                 }
             _currentWeatherUiState.value = CurrentWeatherUiState(wind = stationWind, nowCastObject = nowWeather)
+            */
         }
     }
 
@@ -109,29 +129,38 @@ class WeatherViewModel @Inject constructor(
         }
     }
 
-    fun addCurrentWeatherUiState(takeoff: Takeoff) {
+    fun retrieveLocationsWind(locations: List<Takeoff>) {
         viewModelScope.launch {
-            val stationWind: Wind? = holfuyRepository.fetchHolfuyStationWeather(takeoff.id)
-            val nowWeather: WeatherForecast? =
-                try {
-                    metRepository.fetchNowCastObject(takeoff.coordinates.latitude, takeoff.coordinates.longitude)?.properties?.timeseries?.get(0)
-                } catch (e: Exception) {
-                    null
-                }
-            _multiCurrentWeatherUiState.value.currentWeatherList.add(
-                Pair(
-                    CurrentWeatherUiState(wind = stationWind, nowCastObject = nowWeather),
-                    takeoff
-                )
-            )
+            var locationWinds = mutableListOf<Wind>()
+            locations.forEach{ location ->
+                val wind = holfuyRepository.fetchHolfuyStationWeather(location.id)
+                locationWinds.add(wind ?: Wind(0,0.0,0.0,0.0,"m/s"))
+            }
+            _locationsWindUiState.value = LocationsWindUiState(locationWinds)
         }
     }
 
-    fun retrieveFavoritesWeather(favorites: List<Takeoff>) {
+    fun retrieveFavoritesWeather(favorites: List<Takeoff?>) {
         viewModelScope.launch {
-            favorites.forEach{
+            var currentWeatherList = mutableListOf<CurrentWeatherUiState>()
 
+            favorites.forEach { favorite ->
+                favorite?.id?.let {
+                    val wind = holfuyRepository.fetchHolfuyStationWeather(favorite?.id)
+                    val weather = metRepository.fetchNowCastObject(
+                        favorite.coordinates.latitude,
+                        favorite.coordinates.longitude
+                    )
+                    currentWeatherList.add(
+                        CurrentWeatherUiState(
+                            weather?.properties?.timeseries?.firstOrNull(),
+                            wind
+                        )
+                    )
+                }
             }
+
+            _multiCurrentWeatherUiState.value = MultiCurrentWeatherUiState(currentWeatherList)
         }
     }
 }

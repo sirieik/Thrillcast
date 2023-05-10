@@ -23,6 +23,11 @@ fun FavoritesScreen(
     context: Context
 ) {
     val favoriteUiState = favoriteViewModel.favoriteUiState.collectAsState()
+    weatherViewModel.retrieveFavoritesWeather(favorites = favoriteUiState.value.favoriteList)
+
+    val multiCurrentWeatherUiState = weatherViewModel.multiCurrentWeatherUiState.collectAsState()
+
+    val favoriteAndCurrentWeatherMap = favoriteUiState.value.favoriteList.zip(multiCurrentWeatherUiState.value.currentWeatherList)
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -57,16 +62,18 @@ fun FavoritesScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                items(favoriteUiState.value.favoriteList) {
+                //items(favoriteUiState.value.favoriteList) {
+                items(favoriteAndCurrentWeatherMap){
                     if (it != null) {
                         Text(
-                            text = it.name,
+                            text = it.first?.name ?: "",
                             style = MaterialTheme.typography.bodyMedium
                         )
                         NowWeatherCard(
-                            viewModel = weatherViewModel,
                             context = context,
-                            takeoff = it
+                            takeoff = it.first,
+                            wind = it.second.wind,
+                            weather = it.second.nowCastObject
                         )
                     }
                 }

@@ -60,14 +60,16 @@ fun MapScreenContent(
     val state = searchBarViewModel.state
     val takeoffsUiState = mapViewModel.takeoffsUiState.collectAsState()
 
-    val currentWeatherUiState = weatherViewModel.currentWeatherUiState.collectAsState()
-
     //Bruke denne til å legge inn lasteskjerm dersom kartet bruker tid
     var isMapLoaded by remember {mutableStateOf(false)}
 
     var selectedSearchItem by remember { mutableStateOf<Takeoff?>(null) }
 
-    val weatherMap = mutableMapOf<Takeoff, Wind>()
+    weatherViewModel.retrieveLocationsWind(takeoffsUiState.value.takeoffs)
+
+    val locationsWindUiState = weatherViewModel.locationsWindUiState.collectAsState()
+
+    val locationsAndWindMap = takeoffsUiState.value.takeoffs.zip(locationsWindUiState.value.windList)
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -143,13 +145,18 @@ fun MapScreenContent(
                     },
                     properties = MapProperties(mapType = MapType.TERRAIN)
                 ) {
-                    takeoffsUiState.value.takeoffs.forEach{ takeoff ->
+                    //takeoffsUiState.value.takeoffs.forEach{ takeoff ->
 
-                         val wind = weatherViewModel.retrieveWind(takeoff)
+                    locationsAndWindMap.forEach{
+
+                         val takeoff = it.first
+                         val wind = it.second
+
+                         //val wind = weatherViewModel.retrieveWind(takeoff)
                          Marker(
                             state = MarkerState(takeoff.coordinates),
                             title = takeoff.name,
-                            icon = MarkerIcon(wind, takeoff),
+                            icon = markerIcon(wind, takeoff),
                             onInfoWindowClick = {
                                 //Få inn hva som skjer når man trykker på infovindu m tekst
                                 //Tenker at det er mer praktisk å få opp infoskjerm etter å trykke på
@@ -284,7 +291,7 @@ fun TopBar(
     }
 }
 
-fun MarkerIcon(wind: Wind, takeoff: Takeoff): BitmapDescriptor {
+fun markerIcon(wind: Wind, takeoff: Takeoff): BitmapDescriptor {
     return if (isDegreeBetween((wind.direction?: 0.0).toDouble(), takeoff.greenStart, takeoff.greenStop)) {
         BitmapDescriptorFactory.fromResource(R.drawable.greendot)
     } else {

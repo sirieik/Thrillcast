@@ -22,6 +22,11 @@ fun NowPage(weatherViewModel: WeatherViewModel, context: Context) {
         weatherViewModel.retrieveForecastWeather(takeoff = it)
     }
 
+    weatherViewModel.retrieveCurrentWeather(takeoff = takeoffUiState.value.takeoff)
+
+    val currentWeatherUiState = weatherViewModel.currentWeatherUiState.collectAsState()
+
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -38,7 +43,8 @@ fun NowPage(weatherViewModel: WeatherViewModel, context: Context) {
                 item {
                     takeoffUiState.value.takeoff?.let {
                         NowWeatherCard(
-                            viewModel = weatherViewModel,
+                            weather = currentWeatherUiState.value.nowCastObject,
+                            wind = currentWeatherUiState.value.wind,
                             context = context,
                             takeoff = it
                         )
