@@ -20,13 +20,17 @@ class HolfuyRepository @Inject constructor() {
 
 
     //Her henter vi inn stasjonene fra Holfuy
+    /**
+     * Hei
+     * @param hallo
+     * @return List<Takeoff>
+     */
     suspend fun fetchTakeoffs(): List<Takeoff> {
         val stations = holfuyDataSource.fetchHolfuyStations()
 
         //Vi sorterer ut kun de takeofflokasjonene som er i Norge
         val stationsInNor = stations?.filter { it.location?.countryCode == "NO" }
 
-        //Initierer en mutableList for alle takeofflokasjonene
         val takeoffs: MutableList<Takeoff> = mutableListOf()
 
 

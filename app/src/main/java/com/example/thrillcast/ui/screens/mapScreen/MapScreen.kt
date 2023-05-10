@@ -38,7 +38,7 @@ fun MapScreen(
     weatherViewModel: WeatherViewModel,
     searchBarViewModel: SearchBarViewModel = viewModel(),
     favoriteViewModel: FavoriteViewModel,
-    navigateBack: () -> Unit,
+    onNavigate: () -> Unit,
     context: Context
 ) {
 
@@ -167,7 +167,7 @@ fun MapScreen(
             weatherViewModel = weatherViewModel,
             searchBarViewModel = searchBarViewModel,
             context = context,
-            navigateBack
+            onNavigate
         )
     }
 }

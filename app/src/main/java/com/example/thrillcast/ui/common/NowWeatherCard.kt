@@ -12,9 +12,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.thrillcast.R
+import com.example.thrillcast.data.datamodels.Wind
 import com.example.thrillcast.ui.viemodels.map.Takeoff
 import com.example.thrillcast.ui.viemodels.weather.WeatherViewModel
 
+/*
 @Composable
 fun NowWeatherCard(
     viewModel: WeatherViewModel,
@@ -59,6 +61,93 @@ fun NowWeatherCard(
                     WindDirectionWheel(
                         greenStart = takeoff.greenStart,
                         greenStop = takeoff.greenStop,
+                        windDirection = it,
+                    )
+                    Text(
+                        text = "$speed($gust) $unit",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            }
+            Column(
+                modifier = Modifier.weight(0.33f, true),
+                horizontalAlignment = Alignment.CenterHorizontally
+
+            ) {
+                Text(
+                    text = stringResource(id = R.string.now),
+                    style = MaterialTheme.typography.labelMedium,
+                    //TODO - dette gjør at det ikke fucker seg med flere linjer på favorite screen
+                    maxLines = 1
+                )
+                Text(
+                    text = "$temperature °C",
+                    style = MaterialTheme.typography.bodyLarge,
+                    maxLines = 1
+                )
+            }
+
+            if((symbolCode != null) && symbolCode.isNotEmpty()) {
+                Image(
+                    modifier = Modifier.weight(0.33f, true),
+                    alignment = Alignment.Center,
+                    painter = painterResource(
+                        id = context.resources.getIdentifier(
+                            symbolCode,
+                            "drawable",
+                            context.packageName
+                        )
+                    ),
+                    contentDescription = symbolCode
+                )
+            }
+        }
+    }
+}
+
+ */
+
+@Composable
+fun NowWeatherCard(
+    wind: Wind?,
+    weather: WeatherForecast?,
+    takeoff: Takeoff?,
+    context: Context
+) {
+
+    val symbolCode = weather?.data?.next_1_hours?.summary?.symbol_code
+
+    val unit = wind?.unit ?: ""
+    val speed = wind?.speed ?: 0.0
+    val gust = wind?.gust ?: 0.0
+    val temperature = weather?.data?.instant?.details?.air_temperature ?: 0
+
+    ElevatedCard(
+        modifier = Modifier
+            .height(125.dp)
+            .width(350.dp)
+    ) {
+
+        Row(
+            modifier = Modifier
+                .fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            /*ElevatedCard(
+                modifier = Modifier
+                    .aspectRatio(1f)
+                    .weight(0.33f, true)
+                    .fillMaxHeight()
+            ) {*/
+            Column(
+                modifier = Modifier.fillMaxHeight(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                wind?.direction?.let {
+                    WindDirectionWheel(
+                        greenStart = takeoff?.greenStart ?: 0,
+                        greenStop = takeoff?.greenStop ?: 0,
                         windDirection = it,
                     )
                     Text(

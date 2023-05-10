@@ -77,7 +77,16 @@ fun NavigationGraph(navController: NavHostController, context: Context) {
         composable(NavItem.map.route) {
             MapScreen(
                 //Navigasjon er nå kun til favorite screen
-                navigateBack = { navController.navigate("favorites") },
+                onNavigate = {
+                    navController.navigate("favorites") {
+                        navController.graph.startDestinationRoute?.let { route ->
+                            popUpTo(route) {
+                                saveState = true
+                            }
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    } },
                 context = context,
                 weatherViewModel = weatherViewModel,
                 favoriteViewModel = favoriteViewModel,
@@ -87,7 +96,16 @@ fun NavigationGraph(navController: NavHostController, context: Context) {
             FavoritesScreen(
                 weatherViewModel = weatherViewModel,
                 favoriteViewModel = favoriteViewModel,
-                onNavigate = {navController.navigate("map")},
+                navigateBack = {
+                    navController.navigate("map") {
+                        navController.graph.startDestinationRoute?.let { route ->
+                            popUpTo(route) {
+                                saveState = true
+                            }
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    } },
                 context = context
             )
         }
