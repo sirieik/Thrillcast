@@ -291,10 +291,14 @@ fun TopBar(
     }
 }
 
-fun markerIcon(wind: Wind, takeoff: Takeoff): BitmapDescriptor {
+fun MarkerIcon(wind: Wind, takeoff: Takeoff): BitmapDescriptor {
+   return BitmapDescriptorFactory.fromResource(MarkerIconResource(wind, takeoff))
+}
+
+fun MarkerIconResource(wind: Wind, takeoff: Takeoff): Int {
     return if (isDegreeBetween((wind.direction?: 0.0).toDouble(), takeoff.greenStart, takeoff.greenStop)) {
-        BitmapDescriptorFactory.fromResource(R.drawable.greendot)
+        R.drawable.greendot
     } else {
-        BitmapDescriptorFactory.fromResource(R.drawable.red_dot)
+        R.drawable.red_dot
     }
 }
