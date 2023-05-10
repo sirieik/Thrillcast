@@ -54,7 +54,6 @@ class HolfuyRepository @Inject constructor() {
                 )
             )
         }
-        Log.d("Map", "$takeoffs")
         return takeoffs
     }
 
