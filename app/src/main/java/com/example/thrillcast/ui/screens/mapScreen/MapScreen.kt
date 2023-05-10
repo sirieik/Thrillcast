@@ -62,6 +62,12 @@ fun MapScreen(
         sheetState = modalSheetState,
         sheetContent = {
 
+            //Hvis stedet er lagt til i favoritter er hjertet-ikonet filled, hvis ikke er det hult
+            var fillState by remember {
+                mutableStateOf(false)
+            }
+            fillState = favoriteUiState.value.favoriteList.contains(takeoffUiState.value.takeoff)
+
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -86,6 +92,7 @@ fun MapScreen(
                     }
                     IconButton(
                         onClick = {
+                            fillState = !fillState
                             if(!favoriteUiState.value.favoriteList.contains(takeoffUiState.value.takeoff)) {
                                 takeoffUiState.value.takeoff?.let {
                                     favoriteViewModel.addFavorite(
@@ -101,18 +108,15 @@ fun MapScreen(
                             }
                         }
                     ) {
-                        //Sjekke hvis stedet er i favoritter er hjertet ikonet filled, hvis ikke er det hult
-                        val isFavorite = favoriteUiState.value.favoriteList.contains(takeoffUiState.value.takeoff)
-                        val iconImageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder
-                        val iconOutlineTint = Color.Magenta
-                        val iconFillTint = if (isFavorite) Color.Magenta else Color.White
+                        val iconImageVector = if (fillState) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder
+
                         Icon(
                             imageVector = iconImageVector,
                             contentDescription = "Favorites button",
                             modifier = Modifier
                                 .padding(8.dp)
                                 .size(48.dp),
-                            tint = if (isFavorite) iconFillTint else iconOutlineTint
+                            tint = Color.Magenta
                         )
                     }
                     IconButton(
@@ -185,3 +189,6 @@ fun isDirectionValid(direction: Int, greenStart: Int, greenStop: Int): Boolean {
          (direction in greenStart .. 360 || direction in 0..greenStop)
     } else (direction in greenStart..greenStop)
 }
+
+
+
