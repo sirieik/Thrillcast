@@ -24,9 +24,9 @@ import com.example.thrillcast.ui.screens.mapScreen.MapScreenContent
 import com.example.thrillcast.ui.screens.mapScreen.SearchBarViewModel
 import com.example.thrillcast.ui.theme.Red
 import com.example.thrillcast.ui.theme.Silver
-import com.example.thrillcast.ui.viemodels.favorites.FavoriteViewModel
-import com.example.thrillcast.ui.viemodels.map.MapViewModel
-import com.example.thrillcast.ui.viemodels.weather.WeatherViewModel
+import com.example.thrillcast.ui.viewmodels.favorites.FavoriteViewModel
+import com.example.thrillcast.ui.viewmodels.map.MapViewModel
+import com.example.thrillcast.ui.viewmodels.weather.WeatherViewModel
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -170,24 +170,6 @@ fun MapScreen(
             onNavigate
         )
     }
-}
-
-fun isDegreeBetween(value: Double, min: Int, max: Int): Boolean {
-    val valueRadians = Math.toRadians(value)
-    val minRadians = Math.toRadians(min.toDouble())
-    val maxRadians = Math.toRadians(max.toDouble())
-
-    return if (minRadians <= maxRadians) {
-        valueRadians in minRadians..maxRadians
-    } else {
-        valueRadians >= minRadians || valueRadians <= maxRadians
-    }
-}
-
-fun isDirectionValid(direction: Int, greenStart: Int, greenStop: Int): Boolean {
-    return if(greenStart > greenStop) {
-         (direction in greenStart .. 360 || direction in 0..greenStop)
-    } else (direction in greenStart..greenStop)
 }
 
 

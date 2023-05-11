@@ -2,7 +2,7 @@ package com.example.thrillcast
 
 import com.example.thrillcast.data.datamodels.Wind
 import com.example.thrillcast.ui.screens.mapScreen.MarkerIconResource
-import com.example.thrillcast.ui.viemodels.map.Takeoff
+import com.example.thrillcast.ui.viewmodels.map.Takeoff
 import com.google.android.gms.maps.model.LatLng
 import org.junit.Test
 import org.junit.Assert.*

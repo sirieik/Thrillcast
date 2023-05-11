@@ -1,9 +1,9 @@
-package com.example.thrillcast.ui.viemodels.map
+package com.example.thrillcast.ui.viewmodels.map
 
 import com.example.thrillcast.data.repositories.HolfuyRepository
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.thrillcast.ui.viemodels.weather.TakeoffUiState
+import com.example.thrillcast.ui.viewmodels.weather.TakeoffUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

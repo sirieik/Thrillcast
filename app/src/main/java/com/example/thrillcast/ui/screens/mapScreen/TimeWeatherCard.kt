@@ -1,5 +1,4 @@
 import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -13,16 +12,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.thrillcast.R
+import com.example.thrillcast.data.datamodels.Wind
+import com.example.thrillcast.ui.common.WindCondition
 import com.example.thrillcast.ui.theme.FlightGreen
-import com.example.thrillcast.ui.theme.GreenDark
 import com.example.thrillcast.ui.theme.Red60
-import com.example.thrillcast.ui.viemodels.map.Takeoff
-import com.example.thrillcast.ui.viemodels.weather.WeatherViewModel
+import com.example.thrillcast.ui.viewmodels.weather.WeatherViewModel
 import java.time.ZonedDateTime
 
 @Composable
@@ -53,18 +50,18 @@ fun TimeWeatherCard(weatherViewModel: WeatherViewModel, context: Context, time: 
         var windDirection: Double? = null
         var windSpeed: Double? = null
 
-        if (today != null && today.isNotEmpty()) {
-
-                temperature = today[0].data?.instant?.details?.air_temperature ?: 0.0
-                symbolCode = today[0].data?.next_1_hours?.summary?.symbol_code
-                    ?: today[0].data?.next_6_hours?.summary?.symbol_code
-                            ?: ""
 
 
-                windDirection = today[0].data?.instant?.details?.wind_from_direction ?: 0.0
-                windSpeed = today[0].data?.instant?.details?.wind_speed ?: 0.0
+        temperature = today?.firstOrNull()?.data?.instant?.details?.air_temperature ?: 0.0
+        symbolCode = today?.firstOrNull()?.data?.next_1_hours?.summary?.symbol_code
+            ?: today?.firstOrNull()?.data?.next_6_hours?.summary?.symbol_code
+                    ?: ""
 
-        }
+
+        windDirection = today?.firstOrNull()?.data?.instant?.details?.wind_from_direction ?: 0.0
+        windSpeed = today?.firstOrNull()?.data?.instant?.details?.wind_speed ?: 0.0
+
+
 
 
 
@@ -81,12 +78,10 @@ fun TimeWeatherCard(weatherViewModel: WeatherViewModel, context: Context, time: 
 
                 //Here we set the color as green if the winddirection falls inside the holfuywheel
                 //If not we set it as red
-                backgroundColor =
-                if (windDirection?.let { isDegreeBetween(it, greenStart, greenStop) } == true) {
-                    FlightGreen
-                } else {
-                    Red60
-                }
+                backgroundColor = checkWindConditions(
+                    windDirection = windDirection, windSpeed = windSpeed,
+                    greenStart = greenStart, greenStop = greenStop
+                ).color
             ) {
                 Column(
                     verticalArrangement = Arrangement.Center,

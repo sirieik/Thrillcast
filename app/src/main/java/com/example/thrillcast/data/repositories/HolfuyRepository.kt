@@ -1,10 +1,9 @@
 
 package com.example.thrillcast.data.repositories
 
-import android.util.Log
 import com.example.thrillcast.data.datamodels.Wind
 import com.example.thrillcast.data.datasources.HolfuyDataSource
-import com.example.thrillcast.ui.viemodels.map.Takeoff
+import com.example.thrillcast.ui.viewmodels.map.Takeoff
 import com.google.android.gms.maps.model.LatLng
 import javax.inject.Inject
 import javax.inject.Singleton

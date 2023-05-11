@@ -23,17 +23,11 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thrillcast.R
-import com.example.thrillcast.ui.theme.GreenDark
-import com.example.thrillcast.ui.theme.GreenLight
-import com.example.thrillcast.ui.theme.Red
-import com.example.thrillcast.ui.theme.Yellow
-import com.example.thrillcast.ui.theme.White
 import com.example.thrillcast.ui.theme.Silver
-import com.example.thrillcast.ui.theme.LightBlue
 import com.example.thrillcast.ui.theme.DarkBlue
 import com.example.thrillcast.ui.theme.gruppo
-import com.example.thrillcast.ui.viemodels.map.MapViewModel
-import com.example.thrillcast.ui.viemodels.map.Takeoff
+import com.example.thrillcast.ui.viewmodels.map.MapViewModel
+import com.example.thrillcast.ui.viewmodels.map.Takeoff
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

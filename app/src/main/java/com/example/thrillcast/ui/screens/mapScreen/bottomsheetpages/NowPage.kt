@@ -2,15 +2,12 @@ import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.thrillcast.ui.common.cards.HeightWindCard
-import com.example.thrillcast.ui.viemodels.weather.WeatherViewModel
+import com.example.thrillcast.ui.screens.mapScreen.HeightWindCard
+import com.example.thrillcast.ui.viewmodels.weather.WeatherViewModel
 import java.time.ZonedDateTime
 
 @Composable
@@ -41,14 +38,19 @@ fun NowPage(weatherViewModel: WeatherViewModel, context: Context) {
                     .padding(4.dp)
             ) {
                 item {
-                    takeoffUiState.value.takeoff?.let {
-                        NowWeatherCard(
-                            weather = currentWeatherUiState.value.nowCastObject,
-                            wind = currentWeatherUiState.value.wind,
-                            context = context,
-                            takeoff = it
-                        )
-                    }
+
+                   NowWeatherCard(
+                       windDirection = currentWeatherUiState.value.wind?.direction ?: 0,
+                       speed = currentWeatherUiState.value.wind?.speed ?: 0.0,
+                       unit = currentWeatherUiState.value.wind?.unit ?: "m/s",
+                       gust = currentWeatherUiState.value.wind?.gust ?: 0.0,
+                       symbolCode = currentWeatherUiState.value.nowCastObject?.data?.next_1_hours?.summary?.symbol_code ?: "sleetshowersandthunder_polartwilight",
+                       temperature = currentWeatherUiState.value.nowCastObject?.data?.instant?.details?.air_temperature
+                           ?: 0.0,
+                       greenStart = takeoffUiState.value.takeoff?.greenStart ?: 0,
+                       greenStop = takeoffUiState.value.takeoff?.greenStop ?: 0,
+                       context = context
+                   )
                 }
                 val now = ZonedDateTime.now()
                     .withMinute(0)
@@ -68,5 +70,4 @@ fun NowPage(weatherViewModel: WeatherViewModel, context: Context) {
             HeightWindCard(weatherViewModel = weatherViewModel)
         }
     }
-
 }

@@ -1,4 +1,4 @@
-package com.example.thrillcast.ui.viemodels.map
+package com.example.thrillcast.ui.viewmodels.map
 
 open class MapUiState(
     val takeoffs: List<Takeoff>

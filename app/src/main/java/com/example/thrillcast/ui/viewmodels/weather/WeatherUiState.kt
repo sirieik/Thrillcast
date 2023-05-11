@@ -1,6 +1,6 @@
-package com.example.thrillcast.ui.viemodels.weather
+package com.example.thrillcast.ui.viewmodels.weather
 
-import com.example.thrillcast.ui.viemodels.map.Takeoff
+import com.example.thrillcast.ui.viewmodels.map.Takeoff
 import WeatherForecast
 import com.example.thrillcast.data.datamodels.Wind
 import com.example.thrillcast.data.repositories.WindyWinds
