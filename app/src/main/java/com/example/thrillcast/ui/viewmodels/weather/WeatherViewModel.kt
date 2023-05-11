@@ -1,4 +1,4 @@
-package com.example.thrillcast.ui.viemodels.weather
+package com.example.thrillcast.ui.viewmodels.weather
 
 import WeatherForecast
 import androidx.lifecycle.ViewModel
@@ -8,9 +8,8 @@ import com.example.thrillcast.data.repositories.HolfuyRepository
 import com.example.thrillcast.data.repositories.MetRepository
 import com.example.thrillcast.data.repositories.WindyRepository
 import com.example.thrillcast.data.repositories.WindyWinds
-import com.example.thrillcast.ui.viemodels.map.Takeoff
+import com.example.thrillcast.ui.viewmodels.map.Takeoff
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,9 +18,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WeatherViewModel @Inject constructor(
-    val holfuyRepository: HolfuyRepository,
-    val metRepository: MetRepository,
-    val windyRepository: WindyRepository
+    private val holfuyRepository: HolfuyRepository,
+    private val metRepository: MetRepository,
+    private val windyRepository: WindyRepository
     ) : ViewModel() {
 
     private val _currentWeatherUiState = MutableStateFlow(
@@ -73,19 +72,6 @@ class WeatherViewModel @Inject constructor(
     )
     val locationsWindUiState: StateFlow<LocationsWindUiState> = _locationsWindUiState.asStateFlow()
 
-
-
-    /*
-    Generelt anbefalt å ikke returnere data dra viewModel utenom UIStates, men her så trengs
-    dataen bare en gang og trenger ikke å oppdateres
-     */
-    fun retrieveWind(takeoff: Takeoff): Wind {
-        var stationWind: Wind? = null
-        viewModelScope.launch {
-            stationWind = holfuyRepository.fetchHolfuyStationWeather(takeoff.id)
-        }
-        return stationWind ?: Wind(0, 0.0, 0.0, 0.0, "m/s")
-    }
     fun retrieveCurrentWeather(takeoff: Takeoff?) {
         viewModelScope.launch {
             takeoff?.id?.let {
@@ -97,15 +83,6 @@ class WeatherViewModel @Inject constructor(
 
                 _currentWeatherUiState.value = CurrentWeatherUiState(wind = stationWind, nowCastObject = weather)
             }
-            /*
-            val nowWeather: WeatherForecast? =
-                try {
-                    metRepository.fetchNowCastObject(takeoff.coordinates.latitude, takeoff.coordinates.longitude)?.properties?.timeseries?.get(0)
-                } catch (e: Exception) {
-                    null
-                }
-            _currentWeatherUiState.value = CurrentWeatherUiState(wind = stationWind, nowCastObject = nowWeather)
-            */
         }
     }
 
@@ -131,7 +108,7 @@ class WeatherViewModel @Inject constructor(
 
     fun retrieveLocationsWind(locations: List<Takeoff>) {
         viewModelScope.launch {
-            var locationWinds = mutableListOf<Wind>()
+            val locationWinds = mutableListOf<Wind>()
             locations.forEach{ location ->
                 val wind = holfuyRepository.fetchHolfuyStationWeather(location.id)
                 locationWinds.add(wind ?: Wind(0,0.0,0.0,0.0,"m/s"))
@@ -142,11 +119,11 @@ class WeatherViewModel @Inject constructor(
 
     fun retrieveFavoritesWeather(favorites: List<Takeoff?>) {
         viewModelScope.launch {
-            var currentWeatherList = mutableListOf<CurrentWeatherUiState>()
+            val currentWeatherList = mutableListOf<CurrentWeatherUiState>()
 
             favorites.forEach { favorite ->
                 favorite?.id?.let {
-                    val wind = holfuyRepository.fetchHolfuyStationWeather(favorite?.id)
+                    val wind = holfuyRepository.fetchHolfuyStationWeather(favorite.id)
                     val weather = metRepository.fetchNowCastObject(
                         favorite.coordinates.latitude,
                         favorite.coordinates.longitude
@@ -159,7 +136,6 @@ class WeatherViewModel @Inject constructor(
                     )
                 }
             }
-
             _multiCurrentWeatherUiState.value = MultiCurrentWeatherUiState(currentWeatherList)
         }
     }

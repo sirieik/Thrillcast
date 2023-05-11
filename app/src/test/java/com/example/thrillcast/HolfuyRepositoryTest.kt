@@ -1,10 +1,6 @@
 package com.example.thrillcast
 
-import com.example.thrillcast.data.datamodels.Wind
 import com.example.thrillcast.data.repositories.HolfuyRepository
-import com.example.thrillcast.ui.screens.mapScreen.MarkerIconResource
-import com.example.thrillcast.ui.viemodels.map.Takeoff
-import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.Test

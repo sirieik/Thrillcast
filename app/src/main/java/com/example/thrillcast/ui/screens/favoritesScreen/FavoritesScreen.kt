@@ -11,8 +11,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.thrillcast.ui.viemodels.favorites.FavoriteViewModel
-import com.example.thrillcast.ui.viemodels.weather.WeatherViewModel
+import com.example.thrillcast.ui.viewmodels.favorites.FavoriteViewModel
+import com.example.thrillcast.ui.viewmodels.weather.WeatherViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,20 +62,24 @@ fun FavoritesScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                //items(favoriteUiState.value.favoriteList) {
                 items(favoriteAndCurrentWeatherMap){
-                    if (it != null) {
-                        Text(
-                            text = it.first?.name ?: "",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                        NowWeatherCard(
-                            context = context,
-                            takeoff = it.first,
-                            wind = it.second.wind,
-                            weather = it.second.nowCastObject
-                        )
-                    }
+
+                    Text(
+                        text = it.first?.name ?: "",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    NowWeatherCard(
+                        windDirection = it.second.wind?.direction ?: 0,
+                        speed = it.second.wind?.speed ?: 0.0,
+                        unit = it.second.wind?.unit ?: "m/s",
+                        gust = it.second.wind?.gust ?: 0.0,
+                        symbolCode = it.second.nowCastObject?.data?.next_1_hours?.summary?.symbol_code ?: "sleetshowersandthunder_polartwilight",
+                        temperature = it.second.nowCastObject?.data?.instant?.details?.air_temperature
+                            ?: 0.0,
+                        greenStart = it.first?.greenStart ?: 0,
+                        greenStop = it.first?.greenStop ?: 0,
+                        context = context
+                    )
                 }
             }
         }

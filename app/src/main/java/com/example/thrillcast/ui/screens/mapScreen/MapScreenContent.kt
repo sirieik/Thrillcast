@@ -15,25 +15,30 @@ import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import checkWindConditions
 import com.example.thrillcast.R
 import com.example.thrillcast.data.datamodels.Wind
+import com.example.thrillcast.ui.common.WindCondition
 import com.example.thrillcast.ui.theme.DarkBlue
 import com.example.thrillcast.ui.theme.Silver
-import com.example.thrillcast.ui.viemodels.map.MapViewModel
-import com.example.thrillcast.ui.viemodels.map.Takeoff
-import com.example.thrillcast.ui.viemodels.weather.WeatherViewModel
+import com.example.thrillcast.ui.viewmodels.map.MapViewModel
+import com.example.thrillcast.ui.viewmodels.map.Takeoff
+import com.example.thrillcast.ui.viewmodels.weather.WeatherViewModel
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.BitmapDescriptorFactory.*
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
@@ -59,9 +64,6 @@ fun MapScreenContent(
     }
     val state = searchBarViewModel.state
     val takeoffsUiState = mapViewModel.takeoffsUiState.collectAsState()
-
-    //Bruke denne til å legge inn lasteskjerm dersom kartet bruker tid
-    var isMapLoaded by remember {mutableStateOf(false)}
 
     var selectedSearchItem by remember { mutableStateOf<Takeoff?>(null) }
 
@@ -136,44 +138,32 @@ fun MapScreenContent(
                     .fillMaxSize()
                     .padding(paddingValues)
             ) {
+
                 GoogleMap(
                     modifier = Modifier.fillMaxSize(),
                     cameraPositionState = cameraPositionState,
-                    onMapLoaded = {
-                        //Her oppdaterer vi verdien til true dersom kartet er ferdig lastet inn
-                        isMapLoaded = true
-                    },
                     properties = MapProperties(mapType = MapType.TERRAIN)
                 ) {
-                    //takeoffsUiState.value.takeoffs.forEach{ takeoff ->
-
                     locationsAndWindMap.forEach{
 
                          val takeoff = it.first
                          val wind = it.second
 
-                         //val wind = weatherViewModel.retrieveWind(takeoff)
                          Marker(
                             state = MarkerState(takeoff.coordinates),
                             title = takeoff.name,
-                            icon = markerIcon(wind, takeoff),
+                            icon = defaultMarker(markerColor(wind, takeoff)),
                             onInfoWindowClick = {
-                                //Få inn hva som skjer når man trykker på infovindu m tekst
-                                //Tenker at det er mer praktisk å få opp infoskjerm etter å trykke på
-                                //"labelen" til markøren etter å trykke på den, i tilfelle man trykker på feil
-                                //markør. I og med at det kommer til å være en del markører
                                 cameraPositionState.position = CameraPosition.Builder()
                                     .target(takeoff.coordinates)
                                     .zoom(9f)
                                     .build()
-                                //selectedMarker = it
                                 coroutineScope.launch {
                                     if (modalSheetState.isVisible) {
                                         modalSheetState.hide()
                                     }
                                     else {
                                         weatherViewModel.updateChosenTakeoff(takeoff)
-                                        //weatherViewModel.retrieveStationWeather(takeoff)
                                         weatherViewModel.retrieveHeightWind(takeoff = takeoff)
                                         modalSheetState.animateTo(ModalBottomSheetValue.Expanded)
                                     }
@@ -200,46 +190,12 @@ fun MapScreenContent(
                                 }
                                 true
                             }
-                            //
-                        )
-                    }
-                }
-
-                //Lasteskjerm om kartet ikke lastes inn
-                if (!isMapLoaded) {
-                    androidx.compose.animation.AnimatedVisibility(
-                        modifier = Modifier,
-                        visible = !isMapLoaded,
-                        enter = EnterTransition.None,
-                        exit = fadeOut()
-                    ) {
-                        CircularProgressIndicator(
-                            modifier = Modifier
-                                //.background(MaterialTheme.colors.background)
-                                .wrapContentSize()
                         )
                     }
                 }
             }
         }
     )
-}
-
-fun canvasToBitmap(composable: Unit, context: Context): Bitmap {
-
-    val view =  ComposeView(context).apply{
-        setContent {
-            composable
-        }
-    }
-
-    val bitmap = Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888)
-
-    val canvas = Canvas(bitmap)
-
-    view.draw(canvas)
-
-    return bitmap
 }
 
 @Composable
@@ -300,5 +256,20 @@ fun MarkerIconResource(wind: Wind, takeoff: Takeoff): Int {
         R.drawable.greendot
     } else {
         R.drawable.red_dot
+    }
+}
+
+fun markerColor(wind: Wind, takeoff: Takeoff): Float {
+    return when(
+        checkWindConditions(
+            windSpeed = wind.speed,
+            windDirection = wind.direction?.toDouble()?: 0.0,
+            greenStart = takeoff.greenStart,
+            greenStop = takeoff.greenStop
+        )
+    ) {
+        WindCondition.GOOD -> HUE_GREEN
+        WindCondition.BAD -> HUE_RED
+        else -> HUE_YELLOW
     }
 }

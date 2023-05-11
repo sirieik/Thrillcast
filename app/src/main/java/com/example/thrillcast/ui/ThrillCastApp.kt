@@ -18,8 +18,8 @@ import com.example.thrillcast.ui.NavItem
 import com.example.thrillcast.ui.screens.mapScreen.DisclaimerDialog
 import com.example.thrillcast.ui.theme.GreenDark
 import com.example.thrillcast.ui.theme.GreenLight
-import com.example.thrillcast.ui.viemodels.favorites.FavoriteViewModel
-import com.example.thrillcast.ui.viemodels.weather.WeatherViewModel
+import com.example.thrillcast.ui.viewmodels.favorites.FavoriteViewModel
+import com.example.thrillcast.ui.viewmodels.weather.WeatherViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
