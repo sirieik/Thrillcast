@@ -236,6 +236,7 @@ fun TopBar(
     }
 }
 
+
 /**
  * Håndterer valg av ny takeoffspot fra kartet. Kaller på viewmodel for å hente de nødvendige dataene
  * for fremstilling av værdata. Utvider bottomsheeten med værdata.
@@ -270,6 +271,7 @@ suspend fun handleTakeoffSelection(
     // Animer bottomsheet til utvidet tilstand
     modalSheetState.animateTo(ModalBottomSheetValue.Expanded)
 }
+*/
 
 /**
  * Returnerer fargeverdien for markøren basert på vindforholdene og området for den grønne sonen

@@ -36,14 +36,14 @@ fun DisclaimerDialog() {
             },
             text = {
                 Text(
-                    text =  "The app is for informational purposes only and " +
-                            "shouldn't be the only source for decision-making. " +
-                            "Paragliding is dangerous, and users should exercise caution "  +
-                            "and use their judgment based on the provided information. " +
-                            "The app doesn't provide any warranties and isn't liable for damages " +
-                            "or injuries resulting from its use. " +
+                    text = "The app is for reference purposes only. " +
+                           "Users should exercise caution and use their " +
+                            "judgment based on the provided information. " +
+                    "The app provides no warranties and disclaims liability for damages " +
+                    "or injuries resulting from its use. " +
                             "Users accept the risks associated with paragliding and " +
-                            "assume responsibility for their actions.",
+                            "assume responsibility for their actions."
+                    ,
 
 
                     textAlign = TextAlign.Center,
