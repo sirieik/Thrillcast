@@ -73,6 +73,8 @@ fun MapScreenContent(
 
     val locationsAndWindMap = takeoffsUiState.value.takeoffs.zip(locationsWindUiState.value.windList)
 
+    val selectedLocationUiState = mapViewModel.selectedTakeoffUiState.collectAsState()
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
 
@@ -99,10 +101,12 @@ fun MapScreenContent(
                                 if (modalSheetState.isVisible) {
                                     modalSheetState.hide()
                                 } else {
-                                    weatherViewModel.updateChosenTakeoff(selectedSearchItem!!)
-                                    //weatherViewModel.retrieveStationWeather(takeoff)
-                                    weatherViewModel.retrieveHeightWind(selectedSearchItem!!)
-                                    modalSheetState.animateTo(ModalBottomSheetValue.Expanded)
+                                    handleTakeoffSelection(
+                                        takeoff,
+                                        mapViewModel,
+                                        weatherViewModel,
+                                        modalSheetState
+                                    )
                                 }
                             }
                         }
@@ -120,11 +124,12 @@ fun MapScreenContent(
                                 if (modalSheetState.isVisible) {
                                     modalSheetState.hide()
                                 } else {
-
-                                    weatherViewModel.updateChosenTakeoff(selectedSearchItem!!)
-                                    //weatherViewModel.retrieveStationWeather(takeoff)
-                                    weatherViewModel.retrieveHeightWind(selectedSearchItem!!)
-                                    modalSheetState.animateTo(ModalBottomSheetValue.Expanded)
+                                    handleTakeoffSelection(
+                                        takeoff,
+                                        mapViewModel,
+                                        weatherViewModel,
+                                        modalSheetState
+                                    )
                                 }
                             }
                         }
@@ -152,24 +157,7 @@ fun MapScreenContent(
                          Marker(
                             state = MarkerState(takeoff.coordinates),
                             title = takeoff.name,
-                            icon = defaultMarker(markerColor(wind, takeoff)),
-                            onInfoWindowClick = {
-                                cameraPositionState.position = CameraPosition.Builder()
-                                    .target(takeoff.coordinates)
-                                    .zoom(9f)
-                                    .build()
-                                coroutineScope.launch {
-                                    if (modalSheetState.isVisible) {
-                                        modalSheetState.hide()
-                                    }
-                                    else {
-                                        weatherViewModel.updateChosenTakeoff(takeoff)
-                                        weatherViewModel.retrieveHeightWind(takeoff = takeoff)
-                                        modalSheetState.animateTo(ModalBottomSheetValue.Expanded)
-                                    }
-                                }
-                            },
-                             //Bottomsheet kommer med en gang man trykker
+                            icon = defaultMarker(markerColor(wind = wind, greenStart = takeoff.greenStart, greenStop = takeoff.greenStop)),
                             onClick =  {
 
                                 cameraPositionState.position = CameraPosition.Builder()
@@ -182,10 +170,12 @@ fun MapScreenContent(
                                         modalSheetState.hide()
                                     }
                                     else {
-                                        weatherViewModel.updateChosenTakeoff(takeoff)
-                                        //weatherViewModel.retrieveStationWeather(takeoff)
-                                        weatherViewModel.retrieveHeightWind(takeoff = takeoff)
-                                        modalSheetState.animateTo(ModalBottomSheetValue.Expanded)
+                                        handleTakeoffSelection(
+                                            takeoff,
+                                            mapViewModel,
+                                            weatherViewModel,
+                                            modalSheetState
+                                        )
                                     }
                                 }
                                 true
@@ -197,7 +187,6 @@ fun MapScreenContent(
         }
     )
 }
-
 @Composable
 fun TopBar(
     onSearchIconClick: () -> Unit,
@@ -247,25 +236,57 @@ fun TopBar(
     }
 }
 
-fun MarkerIcon(wind: Wind, takeoff: Takeoff): BitmapDescriptor {
-   return BitmapDescriptorFactory.fromResource(MarkerIconResource(wind, takeoff))
+/**
+ * Håndterer valg av ny takeoffspot fra kartet. Kaller på viewmodel for å hente de nødvendige dataene
+ * for fremstilling av værdata. Utvider bottomsheeten med værdata.
+ *
+ * @param takeoff Den valgte takeoff-spoten.
+ * @param mapViewModel ViewModelen ansvarlig for kartrelaterte operasjoner.
+ * @param weatherViewModel ViewModelen ansvarlig for værrelaterte operasjoner.
+ * @param modalSheetState Tilstanden til bottomsheet.
+ */
+@OptIn(ExperimentalMaterialApi::class)
+suspend fun handleTakeoffSelection(
+    takeoff: Takeoff,
+    mapViewModel: MapViewModel,
+    weatherViewModel: WeatherViewModel,
+    modalSheetState: ModalBottomSheetState
+) {
+    // Oppdater valgt takeoff-spot i kartets ViewModel
+    mapViewModel.updateChosenTakeoff(takeoff)
+
+    // Oppdater valgt takeoff-spot i vær-ViewModelen
+    weatherViewModel.updateChosenTakeoff(takeoff)
+
+    // Hent fremtidig vær data a for den valgte takeoff-spoten
+    weatherViewModel.retrieveForecastWeather(takeoff)
+
+    // Hent nåværende værdata for den valgte takeoff-spoten
+    weatherViewModel.retrieveCurrentWeather(takeoff)
+
+    // Hent høydevind-data for den valgte takeoff-spoten
+    weatherViewModel.retrieveHeightWind(takeoff)
+
+    // Animer bottomsheet til utvidet tilstand
+    modalSheetState.animateTo(ModalBottomSheetValue.Expanded)
 }
 
-fun MarkerIconResource(wind: Wind, takeoff: Takeoff): Int {
-    return if (isDegreeBetween((wind.direction?: 0.0).toDouble(), takeoff.greenStart, takeoff.greenStop)) {
-        R.drawable.greendot
-    } else {
-        R.drawable.red_dot
-    }
-}
-
-fun markerColor(wind: Wind, takeoff: Takeoff): Float {
+/**
+ * Returnerer fargeverdien for markøren basert på vindforholdene og området for den grønne sonen
+ * i vindretningssirkelen for takeoff-lokasjonen.
+ *
+ * @param wind Vinddata for lokasjonen.
+ * @param greenStart Startverdien for den grønne sonen i vindretningssirkelen.
+ * @param greenStop Sluttverdien for den grønne sonen i vindretningssirkelen.
+ * @return Fargeverdien for markøren som en float, grønn hvis bra, rød hvis dårlig og gul hvis ok.
+ */
+fun markerColor(wind: Wind, greenStart: Int, greenStop: Int): Float {
     return when(
         checkWindConditions(
             windSpeed = wind.speed,
             windDirection = wind.direction?.toDouble()?: 0.0,
-            greenStart = takeoff.greenStart,
-            greenStop = takeoff.greenStop
+            greenStart = greenStart,
+            greenStop = greenStop
         )
     ) {
         WindCondition.GOOD -> HUE_GREEN

@@ -1,5 +1,6 @@
 import android.content.Context
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.material3.ElevatedCard
@@ -38,13 +39,21 @@ fun NowWeatherCard(
     temperature: Double,
     greenStart: Int,
     greenStop: Int,
-    context: Context
+    context: Context,
+    onClick: (() -> Unit)? = null //Denne skal være for å navigere til valgt lokasjon fra favorittskjermen
 ) {
+
+    val cardModifier = if (onClick != null) {
+        Modifier.clickable { onClick() }
+    } else {
+        Modifier
+    }
 
     ElevatedCard(
         modifier = Modifier
             .height(125.dp)
             .width(350.dp)
+            .then(cardModifier)
     ) {
 
         Row(

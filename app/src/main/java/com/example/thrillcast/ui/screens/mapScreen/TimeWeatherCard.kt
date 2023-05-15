@@ -22,9 +22,31 @@ import com.example.thrillcast.ui.theme.Red60
 import com.example.thrillcast.ui.viewmodels.weather.WeatherViewModel
 import java.time.ZonedDateTime
 
+/**
+ * Composable funksjon som viser informasjon om været for et gitt tidspunkt i et card layout.
+ * Card-et viser også om vindforholdene er gode for paragliding ved å vise enten grønn(bra),
+ * gul(ok) eller rød(dårlig).
+ *
+ * @param context Konteksten som brukes til å hente ressurser.
+ * @param time Strengen som viser tidspunktet på kortet.
+ * @param greenStart Startverdien for den grønne sonen i vindretningssirkelen.
+ * @param greenStop Sluttverdien for den grønne sonen i vindretningssirkelen.
+ * @param symbolCode Symbolkoden som brukes til å hente tilhørende drawable-ressurs.
+ * @param temperature Temperaturen som vises på kortet.
+ * @param windDirection Vindretningen i grader.
+ * @param windSpeed Vindhastigheten.
+ */
 @Composable
-fun TimeWeatherCard(weatherViewModel: WeatherViewModel, context: Context, time: ZonedDateTime) {
-    //fun TimeWeatherCard(temperature: , windDirection, windSpeed, symbolCode)
+fun TimeWeatherCard(
+    context: Context,
+    time: String,
+    greenStart: Int,
+    greenStop: Int,
+    symbolCode: String,
+    temperature: Double,
+    windDirection: Double,
+    windSpeed: Double,
+) {
     ElevatedCard(
         modifier = Modifier
             .height(125.dp)
@@ -32,52 +54,15 @@ fun TimeWeatherCard(weatherViewModel: WeatherViewModel, context: Context, time: 
             .clip(RoundedCornerShape(4.dp))
             .padding(4.dp)
     ) {
-
-        val weatherUiState = weatherViewModel.forecastWeatherUiState.collectAsState()
-        val takeoffUiState = weatherViewModel.takeoffUiState.collectAsState()
-
-        val greenStart = takeoffUiState.value.takeoff?.greenStart ?: 0
-        val greenStop = takeoffUiState.value.takeoff?.greenStop ?: 0
-
-        val today = weatherUiState.value.locationForecast?.filter {
-            it.time?.toLocalDateTime() == time.toLocalDateTime()
-        }
-
-        var symbolCode: String? = null
-
-        var temperature: Double? = null
-
-        var windDirection: Double? = null
-        var windSpeed: Double? = null
-
-
-
-        temperature = today?.firstOrNull()?.data?.instant?.details?.air_temperature ?: 0.0
-        symbolCode = today?.firstOrNull()?.data?.next_1_hours?.summary?.symbol_code
-            ?: today?.firstOrNull()?.data?.next_6_hours?.summary?.symbol_code
-                    ?: ""
-
-
-        windDirection = today?.firstOrNull()?.data?.instant?.details?.wind_from_direction ?: 0.0
-        windSpeed = today?.firstOrNull()?.data?.instant?.details?.wind_speed ?: 0.0
-
-
-
-
-
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-
             Card(
                 modifier = Modifier
                     .aspectRatio(1f)
                     .weight(0.33f, true)
                     .fillMaxSize()
                     .padding(6.dp),
-
-                //Here we set the color as green if the winddirection falls inside the holfuywheel
-                //If not we set it as red
                 backgroundColor = checkWindConditions(
                     windDirection = windDirection, windSpeed = windSpeed,
                     greenStart = greenStart, greenStop = greenStop
@@ -86,26 +71,18 @@ fun TimeWeatherCard(weatherViewModel: WeatherViewModel, context: Context, time: 
                 Column(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally,
-
-
-
                 ) {
-                    if (windDirection != null) {
-                        Image(
-                            painter = painterResource(id = R.drawable.windarrow),
-                            contentDescription = "wind direction",
-                            modifier = Modifier
-                                .size(32.dp)
-                                .rotate((windDirection + 90).toFloat())//Jeg trodde at -90, men kan
-
-                        )
-                    }
-
+                    Image(
+                        painter = painterResource(id = R.drawable.windarrow),
+                        contentDescription = "wind direction",
+                        modifier = Modifier
+                            .size(32.dp)
+                            .rotate((windDirection + 90).toFloat())//Jeg trodde at -90, men kan
+                    )
                     Text(
                         text = "$windSpeed m/s",
                         style = MaterialTheme.typography.bodyMedium
                     )
-
                 }
             }
             Column(
@@ -114,7 +91,7 @@ fun TimeWeatherCard(weatherViewModel: WeatherViewModel, context: Context, time: 
 
             ) {
                 Text(
-                    text = "${time.hour}:${time.minute}0",
+                    text = time,
                     style = MaterialTheme.typography.labelMedium
                 )
                 Text(
@@ -123,20 +100,18 @@ fun TimeWeatherCard(weatherViewModel: WeatherViewModel, context: Context, time: 
                     maxLines = 1
                 )
             }
-            if(symbolCode != null && symbolCode.isNotEmpty()) {
-                Image(
-                    modifier = Modifier.weight(0.33f, true),
-                    alignment = Alignment.Center,
-                    painter = painterResource(
-                        id = context.resources.getIdentifier(
-                            symbolCode,
-                            "drawable",
-                            context.packageName
-                        )
-                    ),
-                    contentDescription = symbolCode
-                )
-            }
+            Image(
+                modifier = Modifier.weight(0.33f, true),
+                alignment = Alignment.Center,
+                painter = painterResource(
+                    id = context.resources.getIdentifier(
+                        symbolCode,
+                        "drawable",
+                        context.packageName
+                    )
+                ),
+                contentDescription = symbolCode
+            )
         }
     }
 }

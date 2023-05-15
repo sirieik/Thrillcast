@@ -34,11 +34,12 @@ import java.util.*
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MapScreen(
-    mapViewModel: MapViewModel = viewModel(),
+    mapViewModel: MapViewModel,
     weatherViewModel: WeatherViewModel,
     searchBarViewModel: SearchBarViewModel = viewModel(),
     favoriteViewModel: FavoriteViewModel,
     onNavigate: () -> Unit,
+    bottomSheetViewModel: BottomSheetViewModel,
     context: Context
 ) {
 
@@ -46,6 +47,7 @@ fun MapScreen(
     val favoriteUiState = favoriteViewModel.favoriteUiState.collectAsState()
 
     val coroutineScope = rememberCoroutineScope()
+
     val modalSheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
         confirmStateChange = { it != ModalBottomSheetValue.HalfExpanded },
@@ -120,7 +122,12 @@ fun MapScreen(
                         )
                     }
                     IconButton(
-                        onClick = { coroutineScope.launch { modalSheetState.hide() } },
+                        onClick = {
+                            coroutineScope.launch {
+                                modalSheetState.hide()
+                                mapViewModel.updateChosenTakeoff(null)
+                            }
+                        },
                         modifier = Modifier
                             .weight(0.2f, true)
                             .padding(10.dp)
@@ -157,17 +164,19 @@ fun MapScreen(
                     }
                 }
             }
-
+            LaunchedEffect(bottomSheetViewModel.bottomSheetState.value) {
+                modalSheetState.animateTo(bottomSheetViewModel.bottomSheetState.value)
+            }
         }
     ) {
         MapScreenContent(
             coroutineScope = coroutineScope,
-            modalSheetState,
+            modalSheetState = modalSheetState,
             mapViewModel = mapViewModel,
             weatherViewModel = weatherViewModel,
             searchBarViewModel = searchBarViewModel,
             context = context,
-            onNavigate
+            onNavigate = onNavigate
         )
     }
 }

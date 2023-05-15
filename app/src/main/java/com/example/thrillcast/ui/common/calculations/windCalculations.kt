@@ -1,5 +1,14 @@
 import com.example.thrillcast.ui.common.WindCondition
 
+/**
+ * Sjekker vindforholdene basert på vindretning og vindhastighet, i forhold til et gitt vinkelområde.
+ *
+ * @param windDirection Vindretningen, i grader. Kan være null.
+ * @param windSpeed Vindhastigheten. Kan være null.
+ * @param greenStart Startpunktet for det grønne vinkelområdet, i grader.
+ * @param greenStop Stoppunktet for det grønne vinkelområdet, i grader.
+ * @return En [WindCondition]-verdi som representerer vindforholdene.
+ */
 fun checkWindConditions(windDirection: Double?, windSpeed: Double?, greenStart: Int, greenStop: Int): WindCondition {
     return if (isDegreeBetween(windDirection ?: 0.0, greenStart, greenStop) && (windSpeed ?: 0.0) in 3.0..5.0) {
         WindCondition.GOOD
@@ -10,6 +19,14 @@ fun checkWindConditions(windDirection: Double?, windSpeed: Double?, greenStart: 
     }
 }
 
+/**
+ * Sjekker om en vinkelverdi er innenfor et gitt område.
+ *
+ * @param value Vinkelverdien som skal sjekkes, i grader.
+ * @param min Minimumsgrensen for vinkelområdet, i grader.
+ * @param max Maksimumsgrensen for vinkelområdet, i grader.
+ * @return `true` hvis `value` er innenfor vinkelområdet, ellers `false`.
+ */
 fun isDegreeBetween(value: Double, min: Int, max: Int): Boolean {
     val valueRadians = Math.toRadians(value)
     val minRadians = Math.toRadians(min.toDouble())
@@ -20,10 +37,4 @@ fun isDegreeBetween(value: Double, min: Int, max: Int): Boolean {
     } else {
         valueRadians >= minRadians || valueRadians <= maxRadians
     }
-}
-
-fun isDirectionValid(direction: Int, greenStart: Int, greenStop: Int): Boolean {
-    return if(greenStart > greenStop) {
-        (direction in greenStart .. 360 || direction in 0..greenStop)
-    } else (direction in greenStart..greenStop)
 }

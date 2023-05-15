@@ -2,27 +2,23 @@ import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.thrillcast.ui.screens.mapScreen.HeightWindCard
 import com.example.thrillcast.ui.viewmodels.weather.WeatherViewModel
+import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.ZonedDateTime
 
 @Composable
 fun NowPage(weatherViewModel: WeatherViewModel, context: Context) {
 
     val takeoffUiState = weatherViewModel.takeoffUiState.collectAsState()
-
-    takeoffUiState.value.takeoff?.let {
-        weatherViewModel.retrieveForecastWeather(takeoff = it)
-    }
-
-    weatherViewModel.retrieveCurrentWeather(takeoff = takeoffUiState.value.takeoff)
-
     val currentWeatherUiState = weatherViewModel.currentWeatherUiState.collectAsState()
-
+    val forecastWeatherUiState = weatherViewModel.forecastWeatherUiState.collectAsState()
 
     LazyColumn(
         modifier = Modifier
@@ -52,20 +48,28 @@ fun NowPage(weatherViewModel: WeatherViewModel, context: Context) {
                        context = context
                    )
                 }
-                val now = ZonedDateTime.now()
-                    .withMinute(0)
-                    .withSecond(0)
-                    .withNano(0)
-                    .withFixedOffsetZone()
-
-                val cardcount = (23 - now.hour)
-
-                items(cardcount){
-                    TimeWeatherCard(weatherViewModel = weatherViewModel, context = context, time = now.plusHours((it + 1).toLong()))
+                forecastWeatherUiState.value.locationForecast?.let {forecastList ->
+                    items(
+                        forecastList.filter {
+                            it.time?.toLocalDate() == LocalDate.now() && it.time?.toLocalDateTime()!! > LocalDateTime.now()
+                        }
+                    ) {
+                        TimeWeatherCard(
+                            context = context,
+                            time = "${it.time?.hour ?: 99}:${it.time?.minute ?: 9}0",
+                            greenStart = takeoffUiState.value.takeoff?.greenStart ?: 0,
+                            greenStop = takeoffUiState.value.takeoff?.greenStop ?: 0,
+                            symbolCode = it.data?.next_1_hours?.summary?.symbol_code
+                                ?: it.data?.next_6_hours?.summary?.symbol_code
+                                ?: "sleetshowersandthunder_polartwilight",
+                            temperature = it.data?.instant?.details?.air_temperature ?: 0.0,
+                            windDirection = it.data?.instant?.details?.wind_from_direction ?: 0.0,
+                            windSpeed = it.data?.instant?.details?.wind_speed ?: 0.0
+                        )
+                    }
                 }
             }
         }
-
         item {
             HeightWindCard(weatherViewModel = weatherViewModel)
         }
