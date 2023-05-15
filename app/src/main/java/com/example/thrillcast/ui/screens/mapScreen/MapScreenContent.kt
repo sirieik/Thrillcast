@@ -246,7 +246,7 @@ fun TopBar(
         }
     }
 }
-
+/*
 fun MarkerIcon(wind: Wind, takeoff: Takeoff): BitmapDescriptor {
    return BitmapDescriptorFactory.fromResource(MarkerIconResource(wind, takeoff))
 }
@@ -258,6 +258,7 @@ fun MarkerIconResource(wind: Wind, takeoff: Takeoff): Int {
         R.drawable.red_dot
     }
 }
+*/
 
 fun markerColor(wind: Wind, takeoff: Takeoff): Float {
     return when(
