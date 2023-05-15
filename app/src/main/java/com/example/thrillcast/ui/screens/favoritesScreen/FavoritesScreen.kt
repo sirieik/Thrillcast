@@ -3,6 +3,9 @@ import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetState
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
@@ -11,15 +14,21 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.thrillcast.ui.screens.mapScreen.handleTakeoffSelection
 import com.example.thrillcast.ui.viewmodels.favorites.FavoriteViewModel
+import com.example.thrillcast.ui.viewmodels.map.MapViewModel
 import com.example.thrillcast.ui.viewmodels.weather.WeatherViewModel
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 fun FavoritesScreen(
     favoriteViewModel: FavoriteViewModel,
     weatherViewModel: WeatherViewModel,
+    mapViewModel: MapViewModel,
     navigateBack: () -> Unit,
+    bottomSheetViewModel: BottomSheetViewModel,
     context: Context
 ) {
     val favoriteUiState = favoriteViewModel.favoriteUiState.collectAsState()
@@ -78,7 +87,19 @@ fun FavoritesScreen(
                             ?: 0.0,
                         greenStart = it.first?.greenStart ?: 0,
                         greenStop = it.first?.greenStop ?: 0,
-                        context = context
+                        context = context,
+                        onClick = {
+
+
+                            mapViewModel.updateChosenTakeoff(takeoff = it.first)
+                            it.first?.let { takeoff -> weatherViewModel.retrieveCurrentWeather(takeoff) }
+                            it.first?.let { takeoff -> weatherViewModel.retrieveForecastWeather(takeoff) }
+                            it.first?.let { takeoff ->  weatherViewModel.retrieveHeightWind(takeoff)}
+
+                            bottomSheetViewModel.expandBottomSheet()
+
+                            navigateBack()
+                        }
                     )
                 }
             }

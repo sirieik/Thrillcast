@@ -10,6 +10,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Slider
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.ElevatedButton
@@ -354,7 +355,7 @@ fun HeightWindCard(weatherViewModel: WeatherViewModel){
                         }
                     ) {
                         Icon(
-                            Icons.Default.KeyboardArrowUp,
+                            Icons.Default.Add,
                             contentDescription = "Increase height"
                         )
                     }
@@ -382,7 +383,7 @@ fun HeightWindCard(weatherViewModel: WeatherViewModel){
                         }
                     ) {
                         Icon(
-                            Icons.Default.KeyboardArrowDown,
+                            painterResource(id = R.drawable.minus_sign),
                             contentDescription = "Decrease height"
                         )
                     }

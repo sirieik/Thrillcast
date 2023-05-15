@@ -72,7 +72,7 @@ class WeatherViewModel @Inject constructor(
     )
     val locationsWindUiState: StateFlow<LocationsWindUiState> = _locationsWindUiState.asStateFlow()
 
-    fun retrieveCurrentWeather(takeoff: Takeoff?) {
+    fun retrieveCurrentWeather(takeoff: Takeoff) {
         viewModelScope.launch {
             takeoff?.id?.let {
                 val stationWind: Wind? = holfuyRepository.fetchHolfuyStationWeather(takeoff.id)
