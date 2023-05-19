@@ -12,8 +12,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.thrillcast.R
-import com.example.thrillcast.data.datamodels.Wind
-import com.example.thrillcast.ui.viewmodels.map.Takeoff
+import com.example.thrillcast.ui.common.WindDirectionWheel
 
 /**
  * Composable funksjon som viser informasjon om gjeldende vær i et card layout.
@@ -55,7 +54,6 @@ fun NowWeatherCard(
             .width(350.dp)
             .then(cardModifier)
     ) {
-
         Row(
             modifier = Modifier
                 .fillMaxSize(),

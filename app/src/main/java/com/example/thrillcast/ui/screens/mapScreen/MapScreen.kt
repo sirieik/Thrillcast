@@ -29,6 +29,7 @@ import com.example.thrillcast.ui.viewmodels.map.MapViewModel
 import com.example.thrillcast.ui.viewmodels.weather.WeatherViewModel
 import kotlinx.coroutines.launch
 import java.util.*
+import androidx.compose.material3.MaterialTheme
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @OptIn(ExperimentalMaterialApi::class)
@@ -83,7 +84,7 @@ fun MapScreen(
                     takeoffUiState.value.takeoff?.let {
                         Text(
                             text = it.name,
-                            style = MaterialTheme.typography.subtitle1.copy(fontWeight = FontWeight.W900),
+                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.W900),
                             fontSize = 18.sp,
                             modifier = Modifier
                                 .padding(top = 8.dp)
@@ -148,9 +149,17 @@ fun MapScreen(
                             onClick = { tabState = index },
                             text = {
                                 Text(
-                                    text = title, maxLines = 1, overflow = TextOverflow.Ellipsis, fontSize = 20.sp, color = Silver
+                                    text = title,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    fontSize = 20.sp,
+                                    style = MaterialTheme.typography.titleMedium.copy(
+                                        fontWeight = if (tabState == index) FontWeight.Bold else FontWeight.Normal
+                                    ),
+                                    color = Silver
                                 )
-                            }
+                            },
+                            enabled = tabState != index
                         )
                     }
                 }

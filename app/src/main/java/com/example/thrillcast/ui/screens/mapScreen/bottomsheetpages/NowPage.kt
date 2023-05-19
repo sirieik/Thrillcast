@@ -19,6 +19,7 @@ fun NowPage(weatherViewModel: WeatherViewModel, context: Context) {
     val takeoffUiState = weatherViewModel.takeoffUiState.collectAsState()
     val currentWeatherUiState = weatherViewModel.currentWeatherUiState.collectAsState()
     val forecastWeatherUiState = weatherViewModel.forecastWeatherUiState.collectAsState()
+    val heightWindUiState = weatherViewModel.heightWindUiState.collectAsState()
 
     LazyColumn(
         modifier = Modifier
@@ -48,30 +49,36 @@ fun NowPage(weatherViewModel: WeatherViewModel, context: Context) {
                        context = context
                    )
                 }
+                //Legg inn "ikke tilgjengelig" i stedet for dummydata
                 forecastWeatherUiState.value.locationForecast?.let {forecastList ->
                     items(
                         forecastList.filter {
                             it.time?.toLocalDate() == LocalDate.now() && it.time?.toLocalDateTime()!! > LocalDateTime.now()
                         }
                     ) {
-                        TimeWeatherCard(
-                            context = context,
-                            time = "${it.time?.hour ?: 99}:${it.time?.minute ?: 9}0",
-                            greenStart = takeoffUiState.value.takeoff?.greenStart ?: 0,
-                            greenStop = takeoffUiState.value.takeoff?.greenStop ?: 0,
-                            symbolCode = it.data?.next_1_hours?.summary?.symbol_code
-                                ?: it.data?.next_6_hours?.summary?.symbol_code
-                                ?: "sleetshowersandthunder_polartwilight",
-                            temperature = it.data?.instant?.details?.air_temperature ?: 0.0,
-                            windDirection = it.data?.instant?.details?.wind_from_direction ?: 0.0,
-                            windSpeed = it.data?.instant?.details?.wind_speed ?: 0.0
-                        )
+
+                            TimeWeatherCard(
+                                context = context,
+                                time = "${it.time?.hour ?: 99}:${it.time?.minute ?: 9}0",
+                                greenStart = takeoffUiState.value.takeoff?.greenStart ?: 0,
+                                greenStop = takeoffUiState.value.takeoff?.greenStop ?: 0,
+                                symbolCode = it.data?.next_1_hours?.summary?.symbol_code
+                                    ?: it.data?.next_6_hours?.summary?.symbol_code
+                                    ?: "sleetshowersandthunder_polartwilight",
+                                temperature = it.data?.instant?.details?.air_temperature ?: 0.0,
+                                windDirection = it.data?.instant?.details?.wind_from_direction
+                                    ?: 0.0,
+                                windSpeed = it.data?.instant?.details?.wind_speed ?: 0.0
+                            )
                     }
                 }
             }
         }
         item {
-            HeightWindCard(weatherViewModel = weatherViewModel)
+            HeightWindCard(
+                heightList = listOf("600", "900", "1500", "2000"),
+                windyWindsList = heightWindUiState.value.windyWindsList?.take(7) ?: emptyList()
+            )
         }
     }
 }
