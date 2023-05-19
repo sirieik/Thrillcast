@@ -48,6 +48,7 @@ fun FuturePage(weatherViewModel: WeatherViewModel, context : Context) {
         itemsIndexed(buttonDays) { index, day ->
             val isSelected = index == selectedButtonIndex
             ElevatedButton(
+                modifier = Modifier.padding(6.dp),
                 onClick = {
                     selectedButtonIndex = index
                 },
