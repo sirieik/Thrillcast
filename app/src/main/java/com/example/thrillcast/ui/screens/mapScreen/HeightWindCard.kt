@@ -11,8 +11,6 @@ import androidx.compose.material.Slider
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ElevatedCard
@@ -27,38 +25,38 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thrillcast.R
+import com.example.thrillcast.data.repositories.WindyWinds
+import com.example.thrillcast.ui.theme.DarkerYellow
 import com.example.thrillcast.ui.theme.Yellow
-import com.example.thrillcast.ui.viewmodels.weather.WeatherViewModel
 import java.util.*
 import kotlin.math.roundToInt
 
 /**
- * En sammensatt komponent som viser høydevindinformasjon.
+ * Composable som viser vinddata for forskjellige høyder.
  *
- * @param weatherViewModel ViewModel som inneholder høydevind-data.
+ * @param heightList En liste over strenger som representerer forskjellige høyder.
+ * @param windyWindsList En liste over WindyWinds-objekter som representerer vinddata på forskjellige tidspunkter.
+ *
+ * Denne komponenten lar brukeren velge en tid, representert av knapper. Den valgte knappen vil
+ * endre farge for å indikere at den er valgt. Vinddata for det valgte tidspunktet brukes deretter til
+ * å vise vindretning og hastighet for en bestemt høyde.
+ *
+ * Høyden kan velges ved hjelp av en vertikal Slider. Vinddata for den valgte høyden
+ * vises på skjermen. Vindretningen vises som et bilde av en pil som roterer
+ * basert på vindretningsdata. Vindhastigheten vises som tekst under vindretningsbildet.
+ *
  */
 
-
-//send inn uistates?
 @Composable
-fun HeightWindCard(weatherViewModel: WeatherViewModel){
-
-    // Henter heightWindUIstate, som inneholder data vi trenger for høydevind.
-    val heightWindUiState = weatherViewModel.heightWindUiState.collectAsState()
-
-    // Henter listen over høydevinddata, eller en tom liste hvis den er null.
-    val windDataList = heightWindUiState.value.windyWindsList?.take(7) ?: emptyList()
-
-    // Liste med høyder som skal vises.
-    val heights = listOf("600", "900", "1500", "2000")
+fun HeightWindCard(heightList: List<String>, windyWindsList: List<WindyWinds>){
 
     var selectedHeightIndex by remember { mutableStateOf(0) }
     var selectedButtonIndex by remember { mutableStateOf(0) }
 
     // Henter vindretning og -hastighet for valgt høyde og klokkeslett.
-    val windDirection = windDataList.getOrNull(selectedButtonIndex)
+    val windDirection = windyWindsList.getOrNull(selectedButtonIndex)
         ?.getWindDirectionForHeight(selectedHeightIndex)
-    val windSpeed = windDataList.getOrNull(selectedButtonIndex)
+    val windSpeed = windyWindsList.getOrNull(selectedButtonIndex)
         ?.getWindSpeedForHeight(selectedHeightIndex)
 
     ElevatedCard(
@@ -84,15 +82,15 @@ fun HeightWindCard(weatherViewModel: WeatherViewModel){
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.Top
             ) {
-                itemsIndexed(windDataList) { index, it ->
+                itemsIndexed(windyWindsList) { index, it ->
                     val isSelected = index == selectedButtonIndex
                     ElevatedButton(
                         modifier = Modifier.padding(6.dp),
                         onClick = {
                             selectedButtonIndex = index
                         },
-                        colors = ButtonDefaults.buttonColors(Yellow),
-                        shape = RoundedCornerShape(10.dp)
+                        colors = if (isSelected) ButtonDefaults.buttonColors(DarkerYellow) else ButtonDefaults.buttonColors(Yellow),
+                        shape = RoundedCornerShape(10.dp),
                     ) {
                         Text(
                             text = "${Date(it.time).hours}:00",
@@ -118,7 +116,7 @@ fun HeightWindCard(weatherViewModel: WeatherViewModel){
                     Text(text = stringResource(id = R.string.height))
                     IconButton(
                         onClick = {
-                            if (selectedHeightIndex < heights.size - 1) {
+                            if (selectedHeightIndex < heightList.size - 1) {
                                 selectedHeightIndex ++
                             }
                         }
@@ -141,8 +139,8 @@ fun HeightWindCard(weatherViewModel: WeatherViewModel){
                         onValueChangeFinished = {
 
                         },
-                        valueRange = 0f..(heights.size - 1).toFloat(),
-                        steps = heights.size - 2
+                        valueRange = 0f..(heightList.size - 1).toFloat(),
+                        steps = heightList.size - 2
                     )
                     IconButton(
                         onClick = {
@@ -157,7 +155,7 @@ fun HeightWindCard(weatherViewModel: WeatherViewModel){
                         )
                     }
                     Spacer(modifier = Modifier.height(12.dp))
-                    Text(text = "${heights[selectedHeightIndex]} moh")
+                    Text(text = "${heightList[selectedHeightIndex]} moh")
                 }
 
                 Column(
@@ -172,7 +170,8 @@ fun HeightWindCard(weatherViewModel: WeatherViewModel){
                             painter = painterResource(id = R.drawable.windarrow),
                             contentDescription = "wind direction",
                             modifier = Modifier
-                                .size(100.dp)
+                                .fillMaxWidth()
+                                //.size(100.dp)
                                 .rotate((windDirection + 90.0).toFloat())
                         )
                     }

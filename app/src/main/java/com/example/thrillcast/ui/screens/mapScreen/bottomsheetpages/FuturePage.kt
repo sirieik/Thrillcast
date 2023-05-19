@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.thrillcast.ui.theme.DarkerYellow
 import com.example.thrillcast.ui.theme.Yellow
 import com.example.thrillcast.ui.viewmodels.weather.WeatherViewModel
 import java.time.LocalDate
@@ -22,14 +23,6 @@ import java.time.LocalDate
 fun FuturePage(weatherViewModel: WeatherViewModel, context : Context) {
 
     val takeoffUiState = weatherViewModel.takeoffUiState.collectAsState()
-
-    /*
-    takeoffUiState.value.takeoff?.let {
-        weatherViewModel.retrieveForecastWeather(takeoff = it)
-    }
-
-     */
-
     val weatherUiState = weatherViewModel.forecastWeatherUiState.collectAsState()
 
     val buttonDays = listOf(
@@ -53,7 +46,7 @@ fun FuturePage(weatherViewModel: WeatherViewModel, context : Context) {
                     selectedButtonIndex = index
                 },
                 shape = RoundedCornerShape(10.dp),
-                colors = ButtonDefaults.buttonColors(Yellow),
+                colors = if (isSelected) ButtonDefaults.buttonColors(DarkerYellow) else ButtonDefaults.buttonColors(Yellow),
 
             ) {
                 Text(

@@ -22,3 +22,5 @@ val White = Color(0xFFF2EBEE)
 val Silver = Color(0xFFD8D4CF)
 val LightBlue = Color(0xFF020B87)
 val DarkBlue = Color(0xFF1C19A5)
+
+val DarkerYellow = Color(0xFFCCA402)

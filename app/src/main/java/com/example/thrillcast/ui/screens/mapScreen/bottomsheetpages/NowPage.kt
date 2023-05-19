@@ -19,6 +19,7 @@ fun NowPage(weatherViewModel: WeatherViewModel, context: Context) {
     val takeoffUiState = weatherViewModel.takeoffUiState.collectAsState()
     val currentWeatherUiState = weatherViewModel.currentWeatherUiState.collectAsState()
     val forecastWeatherUiState = weatherViewModel.forecastWeatherUiState.collectAsState()
+    val heightWindUiState = weatherViewModel.heightWindUiState.collectAsState()
 
     LazyColumn(
         modifier = Modifier
@@ -74,7 +75,10 @@ fun NowPage(weatherViewModel: WeatherViewModel, context: Context) {
             }
         }
         item {
-            HeightWindCard(weatherViewModel = weatherViewModel)
+            HeightWindCard(
+                heightList = listOf("600", "900", "1500", "2000"),
+                windyWindsList = heightWindUiState.value.windyWindsList?.take(7) ?: emptyList()
+            )
         }
     }
 }
