@@ -271,7 +271,7 @@ suspend fun handleTakeoffSelection(
     // Animer bottomsheet til utvidet tilstand
     modalSheetState.animateTo(ModalBottomSheetValue.Expanded)
 }
-*/
+
 
 /**
  * Returnerer fargeverdien for markøren basert på vindforholdene og området for den grønne sonen
