@@ -273,6 +273,9 @@ fun HeightWindCard(weatherViewModel: WeatherViewModel){
  *
  * @param weatherViewModel ViewModel som inneholder høydevind-data.
  */
+
+
+//send inn uistates?
 @Composable
 fun HeightWindCard(weatherViewModel: WeatherViewModel){
 

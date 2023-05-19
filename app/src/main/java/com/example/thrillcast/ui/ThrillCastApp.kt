@@ -46,7 +46,6 @@ fun NavigationGraph(navController: NavHostController, context: Context) {
     val mapViewModel: MapViewModel = hiltViewModel()
     val bottomSheetViewModel: BottomSheetViewModel = viewModel()
 
-
     NavHost(navController, startDestination = "map") {
         composable("map") {
             MapScreen(
