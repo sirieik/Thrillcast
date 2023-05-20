@@ -1,17 +1,13 @@
-
-
-//import androidx.compose.material.icons.Icons
-//import androidx.compose.ui.Alignment
-//import androidx.compose.ui.Modifier
-//import androidx.compose.ui.graphics.Color
-
-import android.annotation.SuppressLint
+package com.example.thrillcast.ui.screens.mapScreen
+import BottomSheetViewModel
+import InfoPage
 import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,8 +16,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.thrillcast.ui.screens.mapScreen.MapScreenContent
-import com.example.thrillcast.ui.screens.mapScreen.SearchBarViewModel
+import com.example.thrillcast.ui.screens.mapScreen.bottomsheetpages.FuturePage
+import com.example.thrillcast.ui.screens.mapScreen.bottomsheetpages.TodayPage
 import com.example.thrillcast.ui.theme.Red
 import com.example.thrillcast.ui.theme.Silver
 import com.example.thrillcast.ui.viewmodels.favorites.FavoriteViewModel
@@ -29,11 +25,7 @@ import com.example.thrillcast.ui.viewmodels.map.MapViewModel
 import com.example.thrillcast.ui.viewmodels.weather.WeatherViewModel
 import kotlinx.coroutines.launch
 import java.util.*
-import androidx.compose.material3.MaterialTheme
-import com.example.thrillcast.ui.screens.mapScreen.bottomsheetpages.FuturePage
-import com.example.thrillcast.ui.screens.mapScreen.bottomsheetpages.TodayPage
 
-@SuppressLint("StateFlowValueCalledInComposition")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MapScreen(
@@ -48,6 +40,7 @@ fun MapScreen(
 
     val takeoffUiState = weatherViewModel.takeoffUiState.collectAsState()
     val favoriteUiState = favoriteViewModel.favoriteUiState.collectAsState()
+    val bottomSheetUiState = bottomSheetViewModel.bottomSheetUiState.collectAsState()
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -175,8 +168,8 @@ fun MapScreen(
                     }
                 }
             }
-            LaunchedEffect(bottomSheetViewModel.bottomSheetState.value) {
-                modalSheetState.animateTo(bottomSheetViewModel.bottomSheetState.value)
+            LaunchedEffect(bottomSheetUiState.value) {
+                modalSheetState.animateTo(bottomSheetUiState.value)
             }
         }
     ) {
