@@ -7,7 +7,6 @@ import androidx.compose.material.Text
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -15,12 +14,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.thrillcast.R
-import com.example.thrillcast.data.datamodels.Wind
-import com.example.thrillcast.ui.common.WindCondition
-import com.example.thrillcast.ui.theme.FlightGreen
-import com.example.thrillcast.ui.theme.Red60
-import com.example.thrillcast.ui.viewmodels.weather.WeatherViewModel
-import java.time.ZonedDateTime
+import com.example.thrillcast.ui.common.calculations.checkWindConditions
 
 /**
  * Composable funksjon som viser informasjon om været for et gitt tidspunkt i et card layout.

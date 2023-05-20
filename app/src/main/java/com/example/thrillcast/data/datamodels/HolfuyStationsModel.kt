@@ -1,14 +1,14 @@
 package com.example.thrillcast.data.datamodels
-//Dette er dataklassene vi trenger for å parse responsen fra Holfuy-APIet med alle stasjonene deres
+//Dette er dataklassene vi trenger for å parse responsen fra holfuyAPIet med alle stasjonene deres
 
 /**
  * Representerer en liste over værstasjoner som er hentet fra Holfuy-APIet.
  *
- * @property holfuyStationList En liste over com.example.thrillcast.data.datamodels.HolfuyStations-objekter.
+ * @property holfuyStationsList En liste over com.example.thrillcast.data.datamodels.com.example.thrillcast.data.datamodels.HolfuyStations-objekter.
  * @property stationCnt Antall værstasjoner.
  */
 data class StationList(
-    val holfuyStationList: List<HolfuyStation>?,
+    val holfuyStationsList: List<HolfuyStations>?,
     val stationCnt: Int?
 )
 
@@ -21,7 +21,7 @@ data class StationList(
  * @property name Navnet på værstasjonen.
  * @property type Typen til værstasjonen.
  */
-data class HolfuyStation(
+data class HolfuyStations(
     val directionZones: DirectionZones?,
     val id: Int?,
     val location: Location?,

@@ -13,7 +13,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * DataSource for å hente og parse værdata fra APIet til Meteorologisk Institutt.
+ * En singleton dataSource som er ansvarlig for å hente og parse
+ * værdata fra APIet til Meteorologisk Institutt. Den håndterer også feil ved API-kall.
  * Bruker Ktor for å både hente og gjøre JSON-data om til objekter.
  */
 @Singleton

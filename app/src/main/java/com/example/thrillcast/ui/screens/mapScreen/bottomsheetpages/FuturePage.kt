@@ -1,3 +1,6 @@
+package com.example.thrillcast.ui.screens.mapScreen.bottomsheetpages
+
+import TimeWeatherCard
 import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -19,6 +22,28 @@ import com.example.thrillcast.ui.theme.Yellow
 import com.example.thrillcast.ui.viewmodels.weather.WeatherViewModel
 import java.time.LocalDate
 
+/**
+ * @Composable funksjon som representerer FuturePage-skjermen i bottomSheetet på kartskjermen.
+ *
+ * Denne skjermen presenterer værprognosen for de neste 7 dagene, og lar brukeren veksle
+ * mellom forskjellige dager og se den tilgjengelige værdataen for hver dag i detalj.
+ *
+ * @param weatherViewModel En ViewModel som gir vær- og takeoff-tilstandene for visningen.
+ * @param context Android Context av kalleren.
+ *
+ * Brukergrensesnittets tilstand for avgang og vær samles som State-instanser
+ * fra ViewModel, for automatisk å rekomponere visningen når disse tilstandene endrer seg.
+ *
+ * En LazyRow brukes for å vise listen over de neste 7 dagene øverst på skjermen. Hver dag
+ * er representert med en ElevatedButton, og den valgte dagen er fremhevet med en mørkere farge.
+ *
+ * Værprognosen for den valgte dagen vises i en LazyColumn, med hvert element som representerer
+ * værforholdene for en bestemt tid. Hvert element er representert av et TimeWeatherCard,
+ * som viser detaljerte værforhold som værsymbol, temperatur, vindretning og vindhastighet.
+ *
+ * Når brukeren velger en annen dag, oppdateres den valgte dagen og værprognosen for den dagen automatisk
+ * på grunn av tilstandsendringer i ViewModel.
+ */
 @Composable
 fun FuturePage(weatherViewModel: WeatherViewModel, context : Context) {
 
@@ -76,7 +101,6 @@ fun FuturePage(weatherViewModel: WeatherViewModel, context : Context) {
                     windDirection = it.data?.instant?.details?.wind_from_direction ?: 0.0,
                     windSpeed = it.data?.instant?.details?.wind_speed ?: 0.0
                 )
-
             }
         }
     }

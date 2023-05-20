@@ -13,7 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.thrillcast.ui.screens.favoritesScreen.FavoritesScreen
-import com.example.thrillcast.ui.screens.mapScreen.DisclaimerDialog
+import com.example.thrillcast.ui.common.DisclaimerDialog
 import com.example.thrillcast.ui.viewmodels.favorites.FavoriteViewModel
 import com.example.thrillcast.ui.viewmodels.map.MapViewModel
 import com.example.thrillcast.ui.viewmodels.weather.WeatherViewModel

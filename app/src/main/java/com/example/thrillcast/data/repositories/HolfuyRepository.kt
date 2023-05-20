@@ -1,7 +1,6 @@
 
 package com.example.thrillcast.data.repositories
 
-import android.util.Log
 import com.example.thrillcast.data.datamodels.Wind
 import com.example.thrillcast.data.datasources.HolfuyDataSource
 import com.example.thrillcast.ui.viewmodels.map.Takeoff
@@ -10,19 +9,22 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * En singleton repository-klasse som er ansvarlig for kommunikasjon med HolfuyDataSource.
+ * En singleton repository-klasse som er ansvarlig for kommunikasjon mellom HolfuyDataSource og ViewModels.
+ * Den sorterer også ut den dataen vi trenger.
  *
  * @property holfuyDataSource Et HolfuyDataSource-objekt injisert i konstruktøren.
- * Dette objektet brukes for å hente data fra Holfuy datakilden.
+ * Dette objektet brukes for å hente data fra HolfuyDataSource.
  *
- * @constructor Oppretter en instans av HolfuyRepository.
+ * @constructor Initialiserer en HolfuyRepository instans med en injisert HolfuyDataSource.
  */
 @Singleton
 class HolfuyRepository @Inject constructor(private val holfuyDataSource: HolfuyDataSource) {
 
+
     /**
      * Henter en liste av takeoff-stasjoner fra Holfuy datakilden, filtrerer for bare de som
-     * er lokalisert i Norge, og gjør dem om til Takeoff-objekter med kun den informasjonen vi trenger.
+     * er lokalisert i Norge og har verdier for grønt område i vindhjulet, og gjør dem om til
+     * Takeoff-objekter som inneholder den informasjonen vi trenger videre.
      *
      * Hvis et stasjonsfelt er null, vil det bli erstattet med en standardverdi.
      *
@@ -32,8 +34,9 @@ class HolfuyRepository @Inject constructor(private val holfuyDataSource: HolfuyD
     suspend fun fetchTakeoffs(): List<Takeoff> {
         val stations = holfuyDataSource.fetchHolfuyStations()
 
-        /*
-        return stations?.filter { it.location?.countryCode == "NO" }.run {
+        return stations?.filter {
+            it.location?.countryCode == "NO" && !(it.directionZones?.green?.start == 0 && it.directionZones.green.stop == 0)
+        }.run {
             this?.map {
                 Takeoff(
                     id = it.id ?: 0,
@@ -48,39 +51,6 @@ class HolfuyRepository @Inject constructor(private val holfuyDataSource: HolfuyD
                 )
             } ?: emptyList()
         }
-
-         */
-
-        //Vi sorterer ut kun de takeofflokasjonene som er i Norge
-        val stationsInNor = stations?.filter { it.location?.countryCode == "NO" }
-
-        val takeoffs: MutableList<Takeoff> = mutableListOf()
-
-        //Her oppretter vi Takeoff-objekter for hver lokasjon i listen med kun norske stasjoner
-        //og legger de til i listen over.
-        stationsInNor?.forEach {
-            val name = it.name ?: "IFI"
-            val latLng = LatLng(
-                it.location?.latitude ?: 58.88083,
-                it.location?.longitude ?: 9.01861
-            )
-
-            val id = it.id ?: 0
-            val greenStart = it.directionZones?.green?.start ?: 0
-            val greenStop = it.directionZones?.green?.stop ?: 0
-            val moh = it.location?.altitude ?: 0
-            takeoffs.add(
-                Takeoff(
-                    id = id,
-                    name = name,
-                    coordinates = latLng,
-                    greenStart = greenStart,
-                    greenStop = greenStop,
-                    moh = moh
-                )
-            )
-        }
-        return takeoffs
     }
 
     /**
@@ -96,41 +66,3 @@ class HolfuyRepository @Inject constructor(private val holfuyDataSource: HolfuyD
         return holfObject?.wind
     }
 }
-
-/*
-        //Vi sorterer ut kun de takeofflokasjonene som er i Norge
-        val stationsInNor = stations?.filter { it.location?.countryCode == "NO" }
-
-        val takeoffs: MutableList<Takeoff> = mutableListOf()
-
-
-        //Her oppretter vi Takeoff-objekter for hver lokasjon i listen med kun norske stasjoner
-        //og legger de til i listen over.
-        stationsInNor?.forEach {
-            val name = it.name ?: "IFI"
-            val latLng = LatLng(
-                it.location?.latitude ?: 58.88083,
-                it.location?.longitude ?: 9.01861
-            )
-
-            val id = it.id ?: 0
-            val greenStart = it.directionZones?.green?.start ?: 0
-            val greenStop = it.directionZones?.green?.stop ?: 0
-            val moh = it.location?.altitude ?: 0
-            takeoffs.add(
-                Takeoff(
-                    id = id,
-                    name = name,
-                    coordinates = latLng,
-                    greenStart = greenStart,
-                    greenStop = greenStop,
-                    moh = moh
-                )
-            )
-        }
-        return takeoffs
-
-
-    }
-
-         */

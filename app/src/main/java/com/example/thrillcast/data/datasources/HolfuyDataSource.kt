@@ -1,8 +1,7 @@
 package com.example.thrillcast.data.datasources
 
-import android.util.Log
 import com.example.thrillcast.data.datamodels.HolfuyObject
-import com.example.thrillcast.data.datamodels.HolfuyStation
+import com.example.thrillcast.data.datamodels.HolfuyStations
 import com.example.thrillcast.data.datamodels.StationList
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -10,14 +9,13 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.serialization.gson.*
 import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
- * DataSource for å hente og parse værdata fra Holfuy-APIet.
+ * En singleton dataSource som er ansvarlig for å hente og parse
+ * værdata fra APIet til Holfuy. Den håndterer også feil ved API-kall.
  * Bruker Ktor for å både hente og gjøre JSON-data om til objekter.
  */
-@Singleton
-class HolfuyDataSource @Inject constructor() {
+class HolfuyDataSource @Inject constructor(){
 
     //Holfuy APInøkkel
     private val apiKey = "zFIU9XHEarYLxHN"
@@ -52,12 +50,12 @@ class HolfuyDataSource @Inject constructor() {
     /**
      * Henter en liste over alle Holfuy-stasjoner med tilhørende informasjon.
      *
-     * @return Liste over HolfuyStations som inneholder informasjon om hver stasjon,
+     * @return Liste over com.example.thrillcast.data.datamodels.HolfuyStations som inneholder informasjon om hver stasjon,
      *         eller null hvis feil oppstår.
      */
-    suspend fun fetchHolfuyStations(): List<HolfuyStation>? {
+    suspend fun fetchHolfuyStations(): List<HolfuyStations>? {
         return try {
-            client.get("https://api.holfuy.com/stations/stations.json").body<StationList>().holfuyStationList
+            client.get("https://api.holfuy.com/stations/stations.json").body<StationList>().holfuyStationsList
         } catch (e: Exception) {
             null
         }

@@ -30,6 +30,8 @@ import com.example.thrillcast.ui.viewmodels.weather.WeatherViewModel
 import kotlinx.coroutines.launch
 import java.util.*
 import androidx.compose.material3.MaterialTheme
+import com.example.thrillcast.ui.screens.mapScreen.bottomsheetpages.FuturePage
+import com.example.thrillcast.ui.screens.mapScreen.bottomsheetpages.TodayPage
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @OptIn(ExperimentalMaterialApi::class)
@@ -168,7 +170,7 @@ fun MapScreen(
                 ) {
                     when (tabState) {
                         0 -> InfoPage(weatherViewModel = weatherViewModel)
-                        1 -> NowPage(weatherViewModel = weatherViewModel, context = context)
+                        1 -> TodayPage(weatherViewModel = weatherViewModel, context = context)
                         else -> FuturePage(weatherViewModel = weatherViewModel, context = context)// it may need changes
                     }
                 }
