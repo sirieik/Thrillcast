@@ -1,7 +1,7 @@
 package com.example.thrillcast.ui.viewmodels.weather
 
 import com.example.thrillcast.ui.viewmodels.map.Takeoff
-import WeatherForecast
+import com.example.thrillcast.data.datamodels.WeatherForecast
 import com.example.thrillcast.data.datamodels.Wind
 import com.example.thrillcast.data.repositories.WindyWinds
 

@@ -1,3 +1,5 @@
+package com.example.thrillcast.ui.common.calculations
+
 import com.example.thrillcast.ui.common.WindCondition
 
 /**

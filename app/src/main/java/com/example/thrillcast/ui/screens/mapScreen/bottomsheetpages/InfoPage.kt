@@ -13,6 +13,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thrillcast.ui.viewmodels.weather.WeatherViewModel
 
+/**
+ * @Composable funksjon som representerer InfoPage-skjermen i appen.
+ *
+ * Denne skjermen presenterer informasjon om den minste sertifiseringen som kreves,
+ * koordinatene og høyde over havet (MOH) for takeoff-lokasjonen.
+ *
+ * @param weatherViewModel En ViewModel som gir takeoff-tilstanden for visningen.
+ *
+ * Brukergrensesnittets tilstand for takeoff samles som en State-instans
+ * fra ViewModel.
+ *
+ * Informasjonen er presentert inne i et ElevatedCard, med hver bit av informasjon
+ * vist som et separat Text-komponent. Hvert Text-komponent har fet skrift for tittelen,
+ * og normal skrift for den faktiske informasjonen.
+ *
+ * Hvis det ikke er noen MOH-verdi tilgjengelig (dvs. MOH-verdien er 0), vil MOH-informasjonen
+ * ikke bli vist.
+ */
 @Composable
 fun InfoPage(weatherViewModel: WeatherViewModel) {
 
@@ -43,17 +61,19 @@ fun InfoPage(weatherViewModel: WeatherViewModel) {
                 modifier = Modifier.padding(8.dp)
             )
         }
-        takeoffUiState.value.takeoff?.moh?.let {
-            Text(
-                text = buildAnnotatedString {
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append("MOH: ")
-                    }
-                    append("$it")
-                },
-                fontSize = 22.sp,
-                modifier = Modifier.padding(8.dp)
-            )
+        takeoffUiState.value.takeoff?.moh?.let {moh ->
+            if(moh != 0) {
+                Text(
+                    text = buildAnnotatedString {
+                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                            append("MOH: ")
+                        }
+                        append("$moh")
+                    },
+                    fontSize = 22.sp,
+                    modifier = Modifier.padding(8.dp)
+                )
+            }
         }
     }
 }

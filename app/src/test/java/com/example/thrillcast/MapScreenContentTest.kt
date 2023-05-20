@@ -1,6 +1,6 @@
 package com.example.thrillcast
 
-import checkWindConditions
+import com.example.thrillcast.ui.common.calculations.checkWindConditions
 import com.example.thrillcast.ui.common.WindCondition
 import org.junit.Test
 import org.junit.Assert.*
@@ -9,17 +9,17 @@ class MapScreenContentTest {
 
     /*test1
 fun MarkerIcon(wind: Wind, takeoff: Takeoff): BitmapDescriptor {
-    return if (isDegreeBetween((wind.direction?: 0.0).toDouble(), takeoff.greenStart, takeoff.greenStop)) {
+    return if (com.example.thrillcast.ui.common.calculations.isDegreeBetween((wind.direction?: 0.0).toDouble(), takeoff.greenStart, takeoff.greenStop)) {
         BitmapDescriptorFactory.fromResource(R.drawable.greendot)
     } else {
         BitmapDescriptorFactory.fromResource(R.drawable.red_dot)
     }
 }
 //ny test
-fun checkWindConditions(windDirection: Double?, windSpeed: Double?, greenStart: Int, greenStop: Int): WindCondition {
-    return if (isDegreeBetween(windDirection ?: 0.0, greenStart, greenStop) && (windSpeed ?: 0.0) in 3.0..5.0) {
+fun com.example.thrillcast.ui.common.calculations.checkWindConditions(windDirection: Double?, windSpeed: Double?, greenStart: Int, greenStop: Int): WindCondition {
+    return if (com.example.thrillcast.ui.common.calculations.isDegreeBetween(windDirection ?: 0.0, greenStart, greenStop) && (windSpeed ?: 0.0) in 3.0..5.0) {
         WindCondition.GOOD
-    } else if (isDegreeBetween(windDirection ?: 0.0, greenStart, greenStop) && (windSpeed ?: 0.0) in 2.0..6.0) {
+    } else if (com.example.thrillcast.ui.common.calculations.isDegreeBetween(windDirection ?: 0.0, greenStart, greenStop) && (windSpeed ?: 0.0) in 2.0..6.0) {
         WindCondition.OKAY
     } else {
         WindCondition.BAD

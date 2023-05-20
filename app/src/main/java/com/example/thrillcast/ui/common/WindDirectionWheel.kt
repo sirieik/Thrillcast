@@ -17,7 +17,7 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 /**
- * En Composable-funksjon som tegner en sirkulær vindretningsindikator med et uthevet grønt område.
+ * @Composable funksjon som tegner en sirkulær vindretningsindikator med et uthevet grønt område.
  * Det grønne området viser hvilken retning man ønsker vinden fra for å kunne lette fra bakken.
  *
  * @param greenStart Startvinkelen (i grader) for den uthevede (grønne) sektoren på hjulet, med 0 på toppen og går med klokken.

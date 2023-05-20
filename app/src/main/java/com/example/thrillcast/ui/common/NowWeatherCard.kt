@@ -1,3 +1,6 @@
+package com.example.thrillcast.ui.common
+
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -12,10 +15,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.thrillcast.R
-import com.example.thrillcast.ui.common.WindDirectionWheel
 
 /**
- * Composable funksjon som viser informasjon om gjeldende vær i et card layout.
+ * @Composable funksjon som viser informasjon om gjeldende vær i et card layout.
  *
  * @param windDirection Vindretningen i grader.
  * @param speed Vindhastigheten.
@@ -28,6 +30,7 @@ import com.example.thrillcast.ui.common.WindDirectionWheel
  * @param context Context som brukes til å hente ressurser.
  */
 
+@SuppressLint("DiscouragedApi")
 @Composable
 fun NowWeatherCard(
     windDirection: Int,
