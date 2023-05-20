@@ -8,12 +8,12 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 class BottomSheetViewModel : ViewModel() {
-    private val _bottomSheetState = MutableStateFlow(ModalBottomSheetValue.Hidden)
-    val bottomSheetState: StateFlow<ModalBottomSheetValue> = _bottomSheetState
+    private val _bottomSheetUiState = MutableStateFlow(ModalBottomSheetValue.Hidden)
+    val bottomSheetUiState: StateFlow<ModalBottomSheetValue> = _bottomSheetUiState
 
     fun expandBottomSheet() {
         viewModelScope.launch {
-            _bottomSheetState.emit(ModalBottomSheetValue.Expanded)
+            _bottomSheetUiState.emit(ModalBottomSheetValue.Expanded)
         }
     }
 }
