@@ -1,9 +1,8 @@
 package com.example.thrillcast.data.repositories
-import MetObject
-import WeatherForecast
+import com.example.thrillcast.data.datamodels.MetObject
+import com.example.thrillcast.data.datamodels.WeatherForecast
 import com.example.thrillcast.data.datasources.MetDataSource
 
-import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
 

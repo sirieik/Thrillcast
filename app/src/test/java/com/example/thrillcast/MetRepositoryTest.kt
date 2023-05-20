@@ -24,7 +24,7 @@ class MetRepositoryTest {
         Assert.assertTrue(!tomorrow.isNullOrEmpty())
     }
     /*
-    data class Details (
+    data class com.example.thrillcast.data.datamodels.Details (
     var air_temperature : Double?,
     var wind_speed : Double?
         )

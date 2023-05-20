@@ -12,10 +12,7 @@ import kotlin.math.sqrt
 //tar ut det vi trenger og sender videre til ViewModels
 
 @Singleton
-class WindyRepository @Inject constructor() {
-
-    //Setter opp et WindyDataSource-objekt for å gjøre kall
-    private val windyDataSource: WindyDataSource = WindyDataSource()
+class WindyRepository @Inject constructor(private val windyDataSource: WindyDataSource) {
 
     //Henter data fra Windy for angitt lokasjon med lat og lon, returnerer en liste med WindyWinds.
     //WindyWinds er et objekt vi har laget selv for å samle all værdata for de

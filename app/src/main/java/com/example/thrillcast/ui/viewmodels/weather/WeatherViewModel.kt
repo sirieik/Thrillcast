@@ -1,6 +1,6 @@
 package com.example.thrillcast.ui.viewmodels.weather
 
-import WeatherForecast
+import com.example.thrillcast.data.datamodels.WeatherForecast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.thrillcast.data.datamodels.Wind
