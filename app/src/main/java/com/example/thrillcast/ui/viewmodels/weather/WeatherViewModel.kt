@@ -8,7 +8,7 @@ import com.example.thrillcast.data.repositories.HolfuyRepository
 import com.example.thrillcast.data.repositories.MetRepository
 import com.example.thrillcast.data.repositories.WindyRepository
 import com.example.thrillcast.data.repositories.WindyWinds
-import com.example.thrillcast.ui.viewmodels.map.Takeoff
+import com.example.thrillcast.ui.common.Takeoff
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,6 +16,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * En ViewModel-klasse for å håndtere og oppdatere værdata for forskjellige steder.
+ *
+ * @param holfuyRepository Injisert repository for å hente data fra Holfuy-API.
+ * @param metRepository Injisert repository for å hente data fra MET-API.
+ * @param windyRepository Injisert repository for å hente data fra Windy-API.
+ */
 @HiltViewModel
 class WeatherViewModel @Inject constructor(
     private val holfuyRepository: HolfuyRepository,
@@ -72,9 +79,14 @@ class WeatherViewModel @Inject constructor(
     )
     val locationsWindUiState: StateFlow<LocationsWindUiState> = _locationsWindUiState.asStateFlow()
 
+    /**
+     * Henter nåværende værdata for et gitt takeoff-sted ved hjelp av Holfuy og MET-APIene.
+     *
+     * @param takeoff Takeoff-stedet der været skal hentes.
+     */
     fun retrieveCurrentWeather(takeoff: Takeoff) {
         viewModelScope.launch {
-            takeoff?.id?.let {
+            takeoff.id.let {
                 val stationWind: Wind? = holfuyRepository.fetchHolfuyStationWeather(takeoff.id)
                 val weather = metRepository.fetchNowCastObject(
                     takeoff.coordinates.latitude,
@@ -86,6 +98,11 @@ class WeatherViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Henter værprognose for et gitt takeoff-sted ved hjelp av MET-API.
+     *
+     * @param takeoff Takeoff-stedet der værprognosen skal hentes.
+     */
     fun retrieveForecastWeather(takeoff: Takeoff) {
         viewModelScope.launch {
             val locationForecast: List<WeatherForecast>? = metRepository.fetchLocationForecast(takeoff.coordinates.latitude, takeoff.coordinates.longitude)
@@ -93,6 +110,11 @@ class WeatherViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Henter høydevind-data for et gitt takeoff-sted ved hjelp av Windy-API.
+     *
+     * @param takeoff Takeoff-stedet der høydevinden skal hentes.
+     */
     fun retrieveHeightWind(takeoff: Takeoff) {
         viewModelScope.launch {
             val windyWinds: List<WindyWinds> = windyRepository.fetchWindyWindsList(takeoff.coordinates.latitude, takeoff.coordinates.longitude)
@@ -100,12 +122,22 @@ class WeatherViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Oppdaterer valgt takeoff-sted i ViewModel.
+     *
+     * @param takeoff Takeoff-stedet som er valgt.
+     */
     fun updateChosenTakeoff(takeoff: Takeoff) {
         viewModelScope.launch {
             _takeoffUiState.value = TakeoffUiState(takeoff = takeoff)
         }
     }
 
+    /**
+     * Henter vinddata for en liste med takeoff-steder ved hjelp av Holfuy-API.
+     *
+     * @param locations Listen med takeoff-steder.
+     */
     fun retrieveLocationsWind(locations: List<Takeoff>) {
         viewModelScope.launch {
             val locationWinds = mutableListOf<Wind>()
@@ -117,6 +149,11 @@ class WeatherViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Henter værdata for en liste med favorittsteder ved hjelp av Holfuy og MET-APIene.
+     *
+     * @param favorites Listen med favorittsteder.
+     */
     fun retrieveFavoritesWeather(favorites: List<Takeoff?>) {
         viewModelScope.launch {
             val currentWeatherList = mutableListOf<CurrentWeatherUiState>()

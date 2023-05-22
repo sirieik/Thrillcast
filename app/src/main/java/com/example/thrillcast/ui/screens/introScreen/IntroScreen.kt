@@ -91,7 +91,7 @@ fun IntroScreen(videoUri: Uri) {
         ) {
 
             Button(onClick = {
-                //ThrillCastApp()
+                //com.example.thrillcast.ui.ThrillCastApp()
             },
                 colors = ButtonDefaults.buttonColors(Color.White),
                 modifier = Modifier.fillMaxWidth()) {
