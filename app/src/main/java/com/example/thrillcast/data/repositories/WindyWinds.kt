@@ -1,7 +1,7 @@
 package com.example.thrillcast.data.repositories
 
 /**
- * Dataklasse som representerer Windy-vindinformasjon for ulike høyder.
+ * Dataklasse som representerer Windy-vindinformasjon(vindhastighet og -retning) for ulike høyder.
  * Laget for å sortere data fra Windy-APIet
  *
  * @param time Tidspunktet for vindinformasjonen.

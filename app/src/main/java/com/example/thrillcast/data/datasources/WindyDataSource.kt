@@ -8,8 +8,16 @@ import io.ktor.client.request.*
 import io.ktor.content.*
 import io.ktor.http.*
 import io.ktor.serialization.gson.*
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class WindyDataSource {
+/**
+ * En singleton dataSource som er ansvarlig for å hente og parse
+ * værdata fra APIet til Windy. Den håndterer også feil ved API-kall.
+ * Bruker Ktor for å både hente og gjøre JSON-data om til objekter.
+ */
+@Singleton
+class WindyDataSource @Inject constructor() {
 
     //Windy API key
     private val apiKey = "ZNn24b3G6rq28A1xMOmRFHJ6YYmzv45C"
@@ -24,11 +32,16 @@ class WindyDataSource {
         }
     }
 
-    //Her henter vi vinddata for angitt punkt i koordinater, lat og lon.
+    /**
+     * Henter WindyObject for de angitte koordinatene (breddegrad og lengdegrad).
+     *
+     * @param lat Breddegraden til punktet.
+     * @param lon Lengdegraden til punktet.
+     * @return Et [WindyObject] som representerer vinddataene for det angitte punktet.
+     */
     suspend fun fetchWindyObject(lat : Double, lon : Double): WindyObject? {
 
         /*
-
         Dette er body-en vi sender med i post requesten til windy.
         Her legger vi ved koordinatene vi tar i parameterene til funksjonen,
         "model : iconEU" dekker Europa og omkransende områder
@@ -36,7 +49,6 @@ class WindyDataSource {
         "levels : ["950h", "900h", "850h", "800h"]" henter inn høydevindstyrke- og retning
          for omtrentlig hver 500. meter
         "key" tar imot nøkkelen til APIet
-
          */
 
         val stringBody =

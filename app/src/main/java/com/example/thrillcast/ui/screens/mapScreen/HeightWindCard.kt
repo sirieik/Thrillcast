@@ -44,7 +44,7 @@ import kotlin.math.roundToInt
  * Høyden kan velges ved hjelp av en vertikal Slider. Vinddata for den valgte høyden
  * vises på skjermen. Vindretningen vises som et bilde av en pil som roterer
  * basert på vindretningsdata. Vindhastigheten vises som tekst under vindretningsbildet.
- *
+
  */
 
 @Composable
@@ -118,6 +118,7 @@ fun HeightWindCard(heightList: List<String>, windyWindsList: List<WindyWinds>){
                 ) {
                     Text(text = stringResource(id = R.string.height), style = androidx.compose.material3.MaterialTheme.typography.labelMedium, fontSize = 25.sp)
                     IconButton(
+                        modifier = Modifier.padding(6.dp),
                         onClick = {
                             if (selectedHeightIndex < heightList.size - 1) {
                                 selectedHeightIndex ++
@@ -130,7 +131,6 @@ fun HeightWindCard(heightList: List<String>, windyWindsList: List<WindyWinds>){
                         )
                     }
                     Slider(
-
                         modifier = Modifier
                             .rotate(degrees = -90f)
                             .padding(20.dp),
@@ -146,6 +146,7 @@ fun HeightWindCard(heightList: List<String>, windyWindsList: List<WindyWinds>){
                         steps = heightList.size - 2
                     )
                     IconButton(
+                        modifier = Modifier.padding(6.dp),
                         onClick = {
                             if (selectedHeightIndex > 0) {
                                 selectedHeightIndex --
@@ -174,7 +175,6 @@ fun HeightWindCard(heightList: List<String>, windyWindsList: List<WindyWinds>){
                             contentDescription = "wind direction",
                             modifier = Modifier
                                 .fillMaxWidth()
-                                //.size(100.dp)
                                 .rotate((windDirection + 90.0).toFloat())
                         )
                     }
