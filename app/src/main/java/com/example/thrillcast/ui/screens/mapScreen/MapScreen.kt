@@ -91,7 +91,7 @@ fun MapScreen(
                     takeoffUiState.value.takeoff?.let {
                         Text(
                             text = it.name,
-                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.W900),
+                            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.W900),
                             fontSize = 18.sp,
                             modifier = Modifier
                                 .padding(top = 8.dp)
@@ -136,6 +136,7 @@ fun MapScreen(
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis,
                                     fontSize = 20.sp,
+                                    fontWeight = FontWeight.Bold,
                                     style = MaterialTheme.typography.titleMedium.copy(
                                         fontWeight = if (tabState == index) FontWeight.Bold else FontWeight.Normal
                                     ),
