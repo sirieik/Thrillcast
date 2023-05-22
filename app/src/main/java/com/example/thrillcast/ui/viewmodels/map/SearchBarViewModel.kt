@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 
 class SearchBarViewModel: ViewModel() {
     var state by mutableStateOf(SearchBarState())
-
     fun onAction(userAction: UserAction) {
         when(userAction) {
             UserAction.CloseActionClicked -> {

@@ -60,7 +60,7 @@ fun NowWeatherCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(
-                modifier = Modifier.fillMaxHeight(),
+                modifier = Modifier.weight(1f),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
 
@@ -71,13 +71,17 @@ fun NowWeatherCard(
                 )
                 Text(
                     text = "$speed($gust) $unit",
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.labelSmall
                 )
 
             }
+            
+            Spacer(modifier = Modifier.width(16.dp))
+
             Column(
-                modifier = Modifier.weight(0.33f, true),
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier = Modifier.weight(1f),
+                horizontalAlignment = Alignment.CenterHorizontally,
+
 
             ) {
                 Text(
@@ -91,8 +95,11 @@ fun NowWeatherCard(
                     maxLines = 1
                 )
             }
+
+            Spacer(modifier = Modifier.width(16.dp))
+
             Image(
-                modifier = Modifier.weight(0.33f, true),
+                modifier = Modifier.weight(1f),
                 alignment = Alignment.Center,
                 painter = painterResource(
                     id = context.resources.getIdentifier(

@@ -26,6 +26,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -49,7 +50,7 @@ fun SearchBar(
     var searchInput by remember { mutableStateOf("") }
     val hideKeyboard = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
-
+    var isTakeoffSelected by remember { mutableStateOf(false) }
     val uiState = mapViewModel.takeoffsUiState.collectAsState()
 
     Column{
@@ -75,8 +76,8 @@ fun SearchBar(
                     Text(
                         text = stringResource(id = R.string.find_takeoff),
                         color = Silver,
-                        style = MaterialTheme.typography.labelSmall,
-                        fontSize = 12.sp
+                        style = MaterialTheme.typography.labelMedium,
+                        fontSize = 15.sp
                     )
                 },
                 singleLine = true,
@@ -145,8 +146,9 @@ fun SearchBar(
                                         searchInput = ""
                                         hideKeyboard.clearFocus()
                                         onTakeoffSelected(takeoff)
+                                        isTakeoffSelected = true
                                     },
-                                    style = TextStyle(fontSize = 20.sp, color = DarkBlue, fontFamily = gruppo),
+                                    style = TextStyle(fontSize = 20.sp, color = DarkBlue, fontFamily = gruppo, fontWeight = FontWeight.ExtraBold),
                                     modifier = Modifier.padding(start = 3.dp)
                                 )
                             }
@@ -155,5 +157,15 @@ fun SearchBar(
                 }
             }
         }
+    }
+    if (isTakeoffSelected) {
+        TopBar(
+            onSearchIconClick = {
+                isTakeoffSelected = false
+            },
+            onNavigate = onNavigate,
+            mapViewModel = mapViewModel,
+            onTakeoffSelected = onTakeoffSelected
+        )
     }
 }

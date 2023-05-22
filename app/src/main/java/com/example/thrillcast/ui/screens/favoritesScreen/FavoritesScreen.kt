@@ -38,7 +38,8 @@ fun FavoritesScreen(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             Row(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(
                     onClick = navigateBack
@@ -51,8 +52,10 @@ fun FavoritesScreen(
 
                 Text(
                     text = "Favorites",
-                    modifier = Modifier.align(Alignment.CenterVertically),
-                    style = MaterialTheme.typography.headlineLarge
+                    modifier = Modifier
+                        .weight(1f)
+                        .align(Alignment.CenterVertically),
+                    style = MaterialTheme.typography.titleLarge
                 )
             }
         },

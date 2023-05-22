@@ -14,6 +14,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.thrillcast.R
 import com.example.thrillcast.data.datamodels.Wind
 import com.example.thrillcast.ui.common.WindCondition
@@ -52,16 +53,16 @@ fun TimeWeatherCard(
             .height(125.dp)
             .width(350.dp)
             .clip(RoundedCornerShape(4.dp))
-            .padding(4.dp)
+            .padding(8.dp)
     ) {
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
         ) {
             Card(
                 modifier = Modifier
                     .aspectRatio(1f)
-                    .weight(0.33f, true)
-                    .fillMaxSize()
+                    .weight(1f)
                     .padding(6.dp),
                 backgroundColor = checkWindConditions(
                     windDirection = windDirection, windSpeed = windSpeed,
@@ -71,24 +72,28 @@ fun TimeWeatherCard(
                 Column(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(8.dp)
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.windarrow),
                         contentDescription = "wind direction",
                         modifier = Modifier
                             .size(32.dp)
-                            .rotate((windDirection + 90).toFloat())//Jeg trodde at -90, men kan
+                            .rotate((windDirection + 90).toFloat())
                     )
                     Text(
                         text = "$windSpeed m/s",
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontSize = 20.sp
                     )
                 }
             }
-            Column(
-                modifier = Modifier.weight(0.33f, true),
-                horizontalAlignment = Alignment.CenterHorizontally
 
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Column(
+                modifier = Modifier.weight(1f),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
                     text = time,
@@ -100,8 +105,11 @@ fun TimeWeatherCard(
                     maxLines = 1
                 )
             }
+
+            Spacer(modifier = Modifier.width(16.dp))
+
             Image(
-                modifier = Modifier.weight(0.33f, true),
+                modifier = Modifier.weight(1f),
                 alignment = Alignment.Center,
                 painter = painterResource(
                     id = context.resources.getIdentifier(
@@ -115,3 +123,4 @@ fun TimeWeatherCard(
         }
     }
 }
+

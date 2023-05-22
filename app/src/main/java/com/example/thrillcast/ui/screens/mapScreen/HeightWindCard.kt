@@ -70,11 +70,14 @@ fun HeightWindCard(heightList: List<String>, windyWindsList: List<WindyWinds>){
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Spacer(modifier = Modifier.height(10.dp))
             Text(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally),
                 text = "Height wind",
-                fontSize = 20.sp
+                style = androidx.compose.material3.MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                fontSize = 30.sp
             )
             LazyRow(
                 modifier = Modifier,
@@ -94,7 +97,7 @@ fun HeightWindCard(heightList: List<String>, windyWindsList: List<WindyWinds>){
                     ) {
                         Text(
                             text = "${Date(it.time).hours}:00",
-                            style = MaterialTheme.typography.body1.copy(
+                            style = androidx.compose.material3.MaterialTheme.typography.labelMedium.copy(
                                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                             )
                         )
@@ -113,7 +116,7 @@ fun HeightWindCard(heightList: List<String>, windyWindsList: List<WindyWinds>){
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(text = stringResource(id = R.string.height))
+                    Text(text = stringResource(id = R.string.height), style = androidx.compose.material3.MaterialTheme.typography.labelMedium, fontSize = 25.sp)
                     IconButton(
                         onClick = {
                             if (selectedHeightIndex < heightList.size - 1) {
@@ -155,7 +158,7 @@ fun HeightWindCard(heightList: List<String>, windyWindsList: List<WindyWinds>){
                         )
                     }
                     Spacer(modifier = Modifier.height(12.dp))
-                    Text(text = "${heightList[selectedHeightIndex]} moh")
+                    Text(text = "${heightList[selectedHeightIndex]} moh", style = androidx.compose.material3.MaterialTheme.typography.bodySmall)
                 }
 
                 Column(
@@ -176,7 +179,8 @@ fun HeightWindCard(heightList: List<String>, windyWindsList: List<WindyWinds>){
                         )
                     }
                     Text(
-                        text = "${roundDouble(windSpeed ?: 0.0)} m/s"
+                        text = "${roundDouble(windSpeed ?: 0.0)} m/s",
+                        style = androidx.compose.material3.MaterialTheme.typography.bodySmall
                     )
                 }
             }

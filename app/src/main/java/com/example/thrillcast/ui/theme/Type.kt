@@ -15,7 +15,7 @@ val goldman = FontFamily(
     Font(R.font.goldman_regular)
 )
 val gruppo = FontFamily(
-    Font(R.font.goldman_regular)
+    Font(R.font.gruppo_regular)
 )
 val montserrat = FontFamily(
     Font(R.font.montserrat_extralight)
@@ -36,43 +36,55 @@ val Typography = Typography(
     headlineLarge = TextStyle(
         fontFamily = goldman,
         fontWeight = FontWeight.Bold,
-        fontSize = 20.sp,
-        //lineHeight = 28.sp,
-        //letterSpacing = 0.sp
+        fontSize = 30.sp,
     ),
+
+    titleLarge = TextStyle(
+        fontFamily = goldman,
+        fontWeight = FontWeight.Normal,
+        fontSize = 30.sp
+    ),
+
     titleSmall = TextStyle(
         fontFamily = gruppo,
-        fontWeight = FontWeight.Normal,
-        fontSize = 60.sp,
+        fontWeight = FontWeight.Bold,
+        fontSize = 20.sp,
     ),
     titleMedium = TextStyle(
         fontFamily = gruppo,
         fontWeight = FontWeight.SemiBold,
-        fontSize = 30.sp
+        fontSize = 40.sp
     ),
+
     labelSmall = TextStyle(
-        fontFamily = montserrat,
-        fontWeight = FontWeight.Normal,
-        fontSize = 60.sp,
+        fontFamily = gruppo,
+        fontWeight = FontWeight.ExtraBold,
+        fontSize = 20.sp,
+    ),
+    labelMedium = TextStyle(
+        fontFamily = gruppo,
+        fontWeight = FontWeight.Bold,
+        fontSize = 30.sp,
+    ),
+    labelLarge = TextStyle(
+        fontFamily = gruppo,
+        fontWeight = FontWeight.Bold,
+        fontSize = 40.sp,
     ),
     bodySmall = TextStyle(
         fontFamily = montserrat,
         fontWeight = FontWeight.SemiBold,
-        fontSize = 15.sp
+        fontSize = 20.sp
     ),
     bodyMedium = TextStyle(
         fontFamily = montserrat,
         fontWeight = FontWeight.SemiBold,
-        fontSize = 20.sp
+        fontSize = 30.sp
     ),
     bodyLarge = TextStyle(
         fontFamily = montserrat,
         fontWeight = FontWeight.SemiBold,
         fontSize = 40.sp
     ),
-    labelMedium = TextStyle(
-        fontFamily = montserrat,
-        fontWeight = FontWeight.Bold,
-        fontSize = 30.sp,
-    )
+
 )
