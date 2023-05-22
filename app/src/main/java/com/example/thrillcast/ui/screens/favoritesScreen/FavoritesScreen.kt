@@ -60,29 +60,7 @@ fun FavoritesScreen(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconButton(
-                    onClick = navigateBack
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = "Back Icon",
-                    )
-                }
-
-                Text(
-                    text = "Favorites",
-                    modifier = Modifier
-                        .weight(1f)
-                        .align(Alignment.CenterVertically),
-                    style = MaterialTheme.typography.titleLarge
-                )
-            }
             FavoritesTopBar(navigateBack)
-
         },
         content = { paddingValues ->
 

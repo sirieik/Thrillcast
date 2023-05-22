@@ -13,14 +13,12 @@ import androidx.lifecycle.ViewModel
 class SearchBarViewModel: ViewModel() {
     var state by mutableStateOf(SearchBarState())
 
-
     /**
      * Denne funksjonen håndterer brukerens handlinger og oppdaterer tilstanden til søkefeltet tilsvarende.
      *
      * @param userAction Brukerens handling som enten er å klikke på søkeikonet og åpne søkefeltet
      * eller å lukke det.
      */
-
     fun onAction(userAction: UserAction) {
         state = when(userAction) {
             UserAction.CloseActionClicked -> {
