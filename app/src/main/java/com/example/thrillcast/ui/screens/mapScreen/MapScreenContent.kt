@@ -26,7 +26,9 @@ import com.example.thrillcast.ui.common.WindCondition
 import com.example.thrillcast.ui.theme.DarkBlue
 import com.example.thrillcast.ui.theme.Silver
 import com.example.thrillcast.ui.viewmodels.map.MapViewModel
-import com.example.thrillcast.ui.viewmodels.map.Takeoff
+import com.example.thrillcast.ui.viewmodels.map.SearchBarViewModel
+import com.example.thrillcast.ui.common.Takeoff
+import com.example.thrillcast.ui.viewmodels.map.UserAction
 import com.example.thrillcast.ui.viewmodels.weather.WeatherViewModel
 import com.google.android.gms.maps.model.BitmapDescriptorFactory.*
 import com.google.android.gms.maps.model.CameraPosition
@@ -61,8 +63,6 @@ fun MapScreenContent(
     val locationsWindUiState = weatherViewModel.locationsWindUiState.collectAsState()
 
     val locationsAndWindMap = takeoffsUiState.value.takeoffs.zip(locationsWindUiState.value.windList)
-
-    val selectedLocationUiState = mapViewModel.selectedTakeoffUiState.collectAsState()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -242,8 +242,6 @@ suspend fun handleTakeoffSelection(
     weatherViewModel: WeatherViewModel,
     modalSheetState: ModalBottomSheetState
 ) {
-    // Oppdater valgt takeoff-spot i kartets ViewModel
-    mapViewModel.updateChosenTakeoff(takeoff)
 
     // Oppdater valgt takeoff-spot i vær-ViewModelen
     weatherViewModel.updateChosenTakeoff(takeoff)

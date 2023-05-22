@@ -1,5 +1,5 @@
 package com.example.thrillcast.ui.screens.mapScreen
-import BottomSheetViewModel
+import com.example.thrillcast.ui.viewmodels.BottomSheetViewModel
 import InfoPage
 import android.content.Context
 import androidx.compose.foundation.layout.*
@@ -22,10 +22,23 @@ import com.example.thrillcast.ui.theme.Red
 import com.example.thrillcast.ui.theme.Silver
 import com.example.thrillcast.ui.viewmodels.favorites.FavoriteViewModel
 import com.example.thrillcast.ui.viewmodels.map.MapViewModel
+import com.example.thrillcast.ui.viewmodels.map.SearchBarViewModel
 import com.example.thrillcast.ui.viewmodels.weather.WeatherViewModel
 import kotlinx.coroutines.launch
 import java.util.*
 
+/**
+ * @Composable funksjon som lager en kartskjerm med en modal bottom sheet med tre pages
+ * for informasjon, dagens vær og fremtidig vær for valgt takeoff.
+ *
+ * @param mapViewModel ViewModel som gir data til kartet.
+ * @param weatherViewModel ViewModel som gir værdata.
+ * @param searchBarViewModel ViewModel som gir søkefunksjonalitet for appen.
+ * @param favoriteViewModel ViewModel som gir funksjonalitet for å merke lokasjoner som favoritt.
+ * @param onNavigate Funksjon som skal utføres når en navigasjonshendelse oppstår.
+ * @param bottomSheetViewModel ViewModel som gir data for bunnskjemaet.
+ * @param context Konteksten hvor denne komponenten opererer.
+ */
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MapScreen(
@@ -61,10 +74,7 @@ fun MapScreen(
         sheetContent = {
 
             //Hvis stedet er lagt til i favoritter er hjertet-ikonet filled, hvis ikke er det hult
-            var fillState by remember {
-                mutableStateOf(false)
-            }
-            fillState = favoriteUiState.value.favoriteList.contains(takeoffUiState.value.takeoff)
+            favoriteViewModel.isFavorite(takeoff = takeoffUiState.value.takeoff)
 
             Column(
                 modifier = Modifier
@@ -88,40 +98,16 @@ fun MapScreen(
                             color = Color.Black
                         )
                     }
-                    IconButton(
-                        onClick = {
-                            fillState = !fillState
-                            if(!favoriteUiState.value.favoriteList.contains(takeoffUiState.value.takeoff)) {
-                                takeoffUiState.value.takeoff?.let {
-                                    favoriteViewModel.addFavorite(
-                                        it
-                                    )
-                                }
-                            } else {
-                                takeoffUiState.value.takeoff?.let {
-                                    favoriteViewModel.removeFavorite(
-                                        it
-                                    )
-                                }
-                            }
+                    FavoriteButton(
+                        isFavorite = favoriteUiState.value.isFavorite,
+                        onToggleFavorite = {
+                            takeoffUiState.value.takeoff?.let { favoriteViewModel.toggleFavorite(it) }
                         }
-                    ) {
-                        val iconImageVector = if (fillState) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder
-
-                        Icon(
-                            imageVector = iconImageVector,
-                            contentDescription = "Favorites button",
-                            modifier = Modifier
-                                .padding(8.dp)
-                                .size(48.dp),
-                            tint = Color.Magenta
-                        )
-                    }
+                    )
                     IconButton(
                         onClick = {
                             coroutineScope.launch {
                                 modalSheetState.hide()
-                                mapViewModel.updateChosenTakeoff(null)
                             }
                         },
                         modifier = Modifier
@@ -164,10 +150,14 @@ fun MapScreen(
                     when (tabState) {
                         0 -> InfoPage(weatherViewModel = weatherViewModel)
                         1 -> TodayPage(weatherViewModel = weatherViewModel, context = context)
-                        else -> FuturePage(weatherViewModel = weatherViewModel, context = context)// it may need changes
+                        else -> FuturePage(weatherViewModel = weatherViewModel, context = context)
                     }
                 }
             }
+
+            //Denne gjør slik at bottomsheeten endrer seg når verdien i bottomsheetuistate
+            //endrer seg i bottomsheetViewModel.
+            //Den lar bottomsheeten utvide seg når man velger en lokasjon på favorittskjermen.
             LaunchedEffect(bottomSheetUiState.value) {
                 modalSheetState.animateTo(bottomSheetUiState.value)
             }
@@ -185,5 +175,31 @@ fun MapScreen(
     }
 }
 
+/**
+ * @Composable funksjon som lager en FavoriteButton. Denne knappen vil endre og den
+ * favorittstatusen til en plassering når den klikkes.
+ *
+ * @param isFavorite Den nåværende favorittstatusen til plasseringen. Hvis true, vil knappen vise som "favorisert".
+ * @param onToggleFavorite Funksjonen som skal utføres når favorittknappen blir klikket.
+ */
+@Composable
+fun FavoriteButton(
+    isFavorite: Boolean,
+    onToggleFavorite: () -> Unit
+) {
+    IconButton(
+        onClick = onToggleFavorite
+    ) {
+        val iconImageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder
 
+        Icon(
+            imageVector = iconImageVector,
+            contentDescription = "Favorites button",
+            modifier = Modifier
+                .padding(8.dp)
+                .size(48.dp),
+            tint = Color.Magenta
+        )
+    }
+}
 

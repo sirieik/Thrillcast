@@ -1,5 +1,5 @@
 package com.example.thrillcast.ui.screens.favoritesScreen
-import BottomSheetViewModel
+import com.example.thrillcast.ui.viewmodels.BottomSheetViewModel
 import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -90,9 +90,6 @@ fun FavoritesScreen(
                             greenStop = it.first?.greenStop ?: 0,
                             context = context,
                             onClick = {
-
-                                // Oppdater valgt takeoff-spot i kartets ViewModel
-                                mapViewModel.updateChosenTakeoff(it.first)
 
                                 // Oppdater valgt takeoff-spot i vær-ViewModelen
                                 weatherViewModel.updateChosenTakeoff(it.first!!)
