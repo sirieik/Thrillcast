@@ -49,8 +49,6 @@ fun DisclaimerDialog() {
                             "Users accept the risks associated with paragliding and " +
                             "assume responsibility for their actions."
                     ,
-
-
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.bodySmall
                 )

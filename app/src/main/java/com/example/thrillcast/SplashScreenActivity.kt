@@ -13,11 +13,13 @@ class SplashScreenActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
 
-        Handler().postDelayed({
-            val i = Intent(this@SplashScreenActivity, MainActivity::class.java)
-            startActivity(i)
-            finish()
-        }, 3000) // wait for 3 seconds
-
+        Handler().postDelayed(
+            {
+                val i = Intent(this@SplashScreenActivity, MainActivity::class.java)
+                startActivity(i)
+                finish()
+            },
+            3000
+        ) // wait for 3 seconds
     }
 }

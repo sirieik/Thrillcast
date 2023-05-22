@@ -11,6 +11,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -71,6 +72,7 @@ fun MapScreen(
 
     ModalBottomSheetLayout(
         sheetState = modalSheetState,
+        sheetElevation = 16.dp,
         sheetContent = {
 
             //Hvis stedet er lagt til i favoritter er hjertet-ikonet filled, hvis ikke er det hult
@@ -79,7 +81,7 @@ fun MapScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(400.dp)
+                    .heightIn(max = LocalConfiguration.current.screenHeightDp.dp / 1.7f)
             ) {
                 Row(
                     modifier = Modifier
