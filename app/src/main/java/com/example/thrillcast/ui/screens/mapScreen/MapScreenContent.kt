@@ -1,6 +1,5 @@
 package com.example.thrillcast.ui.screens.mapScreen
 
-import android.content.Context
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -17,17 +16,16 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.thrillcast.ui.common.calculations.checkWindConditions
 import com.example.thrillcast.data.datamodels.Wind
+import com.example.thrillcast.ui.common.Takeoff
 import com.example.thrillcast.ui.common.WindCondition
+import com.example.thrillcast.ui.common.calculations.checkWindConditions
 import com.example.thrillcast.ui.theme.DarkBlue
 import com.example.thrillcast.ui.theme.Silver
 import com.example.thrillcast.ui.viewmodels.map.MapViewModel
 import com.example.thrillcast.ui.viewmodels.map.SearchBarViewModel
-import com.example.thrillcast.ui.common.Takeoff
 import com.example.thrillcast.ui.viewmodels.map.UserAction
 import com.example.thrillcast.ui.viewmodels.weather.WeatherViewModel
 import com.google.android.gms.maps.model.BitmapDescriptorFactory.*
@@ -45,7 +43,6 @@ fun MapScreenContent(
     mapViewModel: MapViewModel,
     weatherViewModel: WeatherViewModel,
     searchBarViewModel: SearchBarViewModel,
-    context: Context,
     onNavigate: () -> Unit
 ) {
 
@@ -92,7 +89,6 @@ fun MapScreenContent(
                                 } else {
                                     handleTakeoffSelection(
                                         takeoff,
-                                        mapViewModel,
                                         weatherViewModel,
                                         modalSheetState
                                     )
@@ -105,23 +101,7 @@ fun MapScreenContent(
                         onSearchIconClick = {
                             searchBarViewModel.onAction(UserAction.SearchIconClicked)
                         },
-                        onNavigate,
-                        mapViewModel,
-                        onTakeoffSelected = { takeoff ->
-                            selectedSearchItem = takeoff
-                            coroutineScope.launch {
-                                if (modalSheetState.isVisible) {
-                                    modalSheetState.hide()
-                                } else {
-                                    handleTakeoffSelection(
-                                        takeoff,
-                                        mapViewModel,
-                                        weatherViewModel,
-                                        modalSheetState
-                                    )
-                                }
-                            }
-                        }
+                        onNavigate
                     )
                 }
             }
@@ -161,7 +141,6 @@ fun MapScreenContent(
                                     else {
                                         handleTakeoffSelection(
                                             takeoff,
-                                            mapViewModel,
                                             weatherViewModel,
                                             modalSheetState
                                         )
@@ -180,13 +159,7 @@ fun MapScreenContent(
 fun TopBar(
     onSearchIconClick: () -> Unit,
     onNavigate: () -> Unit,
-    mapViewModel: MapViewModel,
-    onTakeoffSelected: (Takeoff) -> Unit
 ) {
-    var searchInput by remember { mutableStateOf("") }
-    val hideKeyboard = LocalFocusManager.current
-
-    val uiState = mapViewModel.takeoffsUiState.collectAsState()
 
     Row(
         modifier = Modifier
@@ -231,14 +204,12 @@ fun TopBar(
  * for fremstilling av værdata. Utvider bottomsheeten med værdata.
  *
  * @param takeoff Den valgte takeoff-spoten.
- * @param mapViewModel ViewModelen ansvarlig for kartrelaterte operasjoner.
  * @param weatherViewModel ViewModelen ansvarlig for værrelaterte operasjoner.
  * @param modalSheetState Tilstanden til bottomsheet.
  */
 @OptIn(ExperimentalMaterialApi::class)
 suspend fun handleTakeoffSelection(
     takeoff: Takeoff,
-    mapViewModel: MapViewModel,
     weatherViewModel: WeatherViewModel,
     modalSheetState: ModalBottomSheetState
 ) {
