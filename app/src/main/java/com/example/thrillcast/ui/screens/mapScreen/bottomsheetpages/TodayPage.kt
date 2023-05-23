@@ -1,6 +1,6 @@
 package com.example.thrillcast.ui.screens.mapScreen.bottomsheetpages
 
-import TimeWeatherCard
+import com.example.thrillcast.ui.screens.mapScreen.TimeWeatherCard
 import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn

@@ -1,7 +1,6 @@
 package com.example.thrillcast.ui.screens.mapScreen
 
 
-import android.content.Context
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -18,10 +17,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.thrillcast.ui.common.calculations.checkWindConditions
 import com.example.thrillcast.data.datamodels.Wind
 import com.example.thrillcast.ui.common.Takeoff
 import com.example.thrillcast.ui.common.WindCondition
@@ -79,27 +75,25 @@ fun MapScreenContent(
                         onCloseIconClick = {
                             searchBarViewModel.onAction(UserAction.CloseActionClicked)
                         },
-                        onNavigate,
-                        mapViewModel,
-                        onTakeoffSelected = { takeoff ->
-                            selectedSearchItem = takeoff
-                            cameraPositionState.position = CameraPosition.Builder()
-                                .target(selectedSearchItem!!.coordinates)
-                                .zoom(9f)
-                                .build()
-                            coroutineScope.launch {
-                                if (modalSheetState.isVisible) {
-                                    modalSheetState.hide()
-                                } else {
-                                    handleTakeoffSelection(
-                                        takeoff,
-                                        weatherViewModel,
-                                        modalSheetState
-                                    )
-                                }
+                        mapViewModel
+                    ) { takeoff ->
+                        selectedSearchItem = takeoff
+                        cameraPositionState.position = CameraPosition.Builder()
+                            .target(selectedSearchItem!!.coordinates)
+                            .zoom(9f)
+                            .build()
+                        coroutineScope.launch {
+                            if (modalSheetState.isVisible) {
+                                modalSheetState.hide()
+                            } else {
+                                handleTakeoffSelection(
+                                    takeoff,
+                                    weatherViewModel,
+                                    modalSheetState
+                                )
                             }
                         }
-                    )
+                    }
                 } else {
                     TopBar(
                         onSearchIconClick = {

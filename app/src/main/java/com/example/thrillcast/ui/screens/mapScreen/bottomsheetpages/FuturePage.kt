@@ -1,6 +1,6 @@
 package com.example.thrillcast.ui.screens.mapScreen.bottomsheetpages
 
-import TimeWeatherCard
+import com.example.thrillcast.ui.screens.mapScreen.TimeWeatherCard
 import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
@@ -39,7 +38,7 @@ import java.time.LocalDate
  * er representert med en ElevatedButton, og den valgte dagen er fremhevet med en mørkere farge.
  *
  * Værprognosen for den valgte dagen vises i en LazyColumn, med hvert element som representerer
- * værforholdene for en bestemt tid. Hvert element er representert av et TimeWeatherCard,
+ * værforholdene for en bestemt tid. Hvert element er representert av et com.example.thrillcast.ui.screens.mapScreen.TimeWeatherCard,
  * som viser detaljerte værforhold som værsymbol, temperatur, vindretning og vindhastighet.
  *
  * Når brukeren velger en annen dag, oppdateres den valgte dagen og værprognosen for den dagen automatisk

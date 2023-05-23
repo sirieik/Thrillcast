@@ -1,6 +1,6 @@
 package com.example.thrillcast.ui.screens.mapScreen
 import com.example.thrillcast.ui.viewmodels.BottomSheetViewModel
-import InfoPage
+import com.example.thrillcast.ui.screens.mapScreen.bottomsheetpages.InfoPage
 import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
