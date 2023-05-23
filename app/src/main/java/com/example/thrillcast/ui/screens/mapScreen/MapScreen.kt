@@ -202,26 +202,6 @@ fun MapScreen(
  * @param isFavorite Den nåværende favorittstatusen til plasseringen. Hvis true, vil knappen vise som "favorisert".
  * @param onToggleFavorite Funksjonen som skal utføres når favorittknappen blir klikket.
  */
-/*@Composable
-fun FavoriteButton(
-    isFavorite: Boolean,
-    onToggleFavorite: () -> Unit
-) {
-    IconButton(
-        onClick = onToggleFavorite
-    ) {
-        val iconImageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder
-
-        Icon(
-            imageVector = iconImageVector,
-            contentDescription = "Favorites button",
-            modifier = Modifier
-                //.padding(8.dp)
-                .size(48.dp),
-            tint = Color.Magenta
-        )
-    }
-}*/
 
 @Composable
 fun FavoriteButton(

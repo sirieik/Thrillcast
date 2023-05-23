@@ -36,57 +36,6 @@ import com.example.thrillcast.ui.viewmodels.weather.WeatherViewModel
  * Hvis det ikke er noen MOH-verdi tilgjengelig (dvs. MOH-verdien er 0), vil MOH-informasjonen
  * ikke bli vist.
  */
-/*@Composable
-fun InfoPage(weatherViewModel: WeatherViewModel) {
-
-    val minCertificate = "PP2/SP2"
-    val takeoffUiState = weatherViewModel.takeoffUiState.collectAsState()
-    ElevatedCard(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Text(
-            text = buildAnnotatedString {
-                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                    append("Minimum certification:")
-                }
-                append(" $minCertificate")
-            },
-            fontSize = 22.sp,
-            fontFamily = montserrat,
-            modifier = Modifier.padding(8.dp)
-        )
-
-        takeoffUiState.value.takeoff?.coordinates?.let {
-            Text(
-                text = buildAnnotatedString {
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append("Coordinate:")
-                    }
-                    append(" ${it.latitude}, ${it.longitude}")
-                },
-                fontSize = 22.sp,
-                fontFamily = montserrat,
-                modifier = Modifier.padding(8.dp)
-            )
-        }
-
-        takeoffUiState.value.takeoff?.moh?.let { moh ->
-            if (moh != 0) {
-                Text(
-                    text = buildAnnotatedString {
-                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                            append("MOH:")
-                        }
-                        append(" $moh")
-                    },
-                    fontSize = 22.sp,
-                    fontFamily = montserrat,
-                    modifier = Modifier.padding(8.dp)
-                )
-            }
-        }
-    }
-}*/
 
 @Composable
 fun InfoPage(weatherViewModel: WeatherViewModel) {
