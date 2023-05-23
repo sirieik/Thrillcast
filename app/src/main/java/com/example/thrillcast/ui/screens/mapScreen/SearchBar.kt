@@ -159,4 +159,12 @@ fun SearchBar(
             }
         }
     }
+    if (isTakeoffSelected) {
+        TopBar(
+            onSearchIconClick = {
+                isTakeoffSelected = false
+            },
+            onNavigate = onNavigate
+        )
+    }
 }

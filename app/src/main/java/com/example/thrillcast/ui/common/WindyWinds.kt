@@ -1,4 +1,4 @@
-package com.example.thrillcast.data.repositories
+package com.example.thrillcast.ui.common
 
 /**
  * Dataklasse som representerer Windy-vindinformasjon(vindhastighet og -retning) for ulike høyder.

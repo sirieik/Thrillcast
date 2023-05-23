@@ -3,7 +3,7 @@ package com.example.thrillcast.ui.viewmodels.weather
 import com.example.thrillcast.ui.common.Takeoff
 import com.example.thrillcast.data.datamodels.WeatherForecast
 import com.example.thrillcast.data.datamodels.Wind
-import com.example.thrillcast.data.repositories.WindyWinds
+import com.example.thrillcast.ui.common.WindyWinds
 
 
 /**
