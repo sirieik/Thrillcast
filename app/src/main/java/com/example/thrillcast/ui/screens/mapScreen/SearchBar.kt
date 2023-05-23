@@ -5,12 +5,15 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
+import androidx.compose.material3.CardDefaults.shape
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,11 +32,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thrillcast.R
+import com.example.thrillcast.ui.common.Takeoff
 import com.example.thrillcast.ui.theme.Silver
 import com.example.thrillcast.ui.theme.DarkBlue
 import com.example.thrillcast.ui.theme.gruppo
+import com.example.thrillcast.ui.theme.montserrat
 import com.example.thrillcast.ui.viewmodels.map.MapViewModel
-import com.example.thrillcast.ui.common.Takeoff
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,7 +50,7 @@ fun SearchBar(
     var searchInput by remember { mutableStateOf("") }
     val hideKeyboard = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
-    var isTakeoffSelected by remember { mutableStateOf(false) }
+
     val uiState = mapViewModel.takeoffsUiState.collectAsState()
 
     Column{
@@ -72,7 +76,7 @@ fun SearchBar(
                     Text(
                         text = stringResource(id = R.string.find_takeoff),
                         color = Silver,
-                        style = MaterialTheme.typography.labelMedium,
+                        style = MaterialTheme.typography.bodySmall,
                         fontSize = 15.sp
                     )
                 },
@@ -83,7 +87,8 @@ fun SearchBar(
                     Icon(
                         imageVector = Icons.Filled.Search,
                         contentDescription = "Search Icon",
-                        tint = Silver
+                        tint = Silver,
+                        modifier = Modifier.size(30.dp)
                     )
                 },
                 trailingIcon = {
@@ -99,7 +104,8 @@ fun SearchBar(
                         Icon(
                             imageVector = Icons.Filled.Close,
                             contentDescription = "Close Icon",
-                            tint = Silver
+                            tint = Silver,
+                            modifier = Modifier.size(30.dp)
                         )
                     }
                 },
@@ -142,9 +148,8 @@ fun SearchBar(
                                         searchInput = ""
                                         hideKeyboard.clearFocus()
                                         onTakeoffSelected(takeoff)
-                                        isTakeoffSelected = true
                                     },
-                                    style = TextStyle(fontSize = 20.sp, color = DarkBlue, fontFamily = gruppo, fontWeight = FontWeight.ExtraBold),
+                                    style = TextStyle(fontSize = 20.sp, color = DarkBlue, fontFamily = montserrat, fontWeight = FontWeight.SemiBold),
                                     modifier = Modifier.padding(start = 3.dp)
                                 )
                             }

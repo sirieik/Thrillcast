@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.thrillcast.ui.theme.DarkerYellow
 import com.example.thrillcast.ui.theme.Yellow
 import com.example.thrillcast.ui.viewmodels.weather.WeatherViewModel
@@ -70,21 +71,23 @@ fun FuturePage(weatherViewModel: WeatherViewModel, context : Context) {
                 onClick = {
                     selectedButtonIndex = index
                 },
-                shape = RoundedCornerShape(10.dp),
+                shape = RoundedCornerShape(8.dp),
                 colors = if (isSelected) ButtonDefaults.buttonColors(DarkerYellow) else ButtonDefaults.buttonColors(Yellow),
 
             ) {
                 Text(
                     text = day.dayOfWeek.name.take(3),
-                    style = MaterialTheme.typography.body1.copy(
-                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                    style = androidx.compose.material3.MaterialTheme.typography.bodySmall.copy(
+                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.SemiBold,
+                        fontSize = 15.sp
                     )
                 )
             }
         }
     }
     LazyColumn(modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         weatherUiState.value.locationForecast?.let { forecastList ->
             items(forecastList.filter { it.time?.toLocalDate() == buttonDays[selectedButtonIndex] }) { it ->

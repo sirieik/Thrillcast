@@ -18,7 +18,11 @@ val gruppo = FontFamily(
     Font(R.font.gruppo_regular)
 )
 val montserrat = FontFamily(
-    Font(R.font.montserrat_extralight)
+    Font(R.font.montserrat_regular),
+    Font(R.font.montserrat_extralight, FontWeight.ExtraLight),
+    Font(R.font.montserrat_bold, FontWeight.Bold),
+    Font(R.font.montserrat_extrabold, FontWeight.ExtraBold),
+    Font(R.font.montserrat_semibold, FontWeight.SemiBold)
 )
 
 val Typography = Typography(
@@ -47,33 +51,28 @@ val Typography = Typography(
 
     titleSmall = TextStyle(
         fontFamily = gruppo,
-        fontWeight = FontWeight.Bold,
         fontSize = 20.sp,
     ),
     titleMedium = TextStyle(
         fontFamily = gruppo,
-        fontWeight = FontWeight.SemiBold,
-        fontSize = 40.sp
+        fontSize = 30.sp
     ),
 
     labelSmall = TextStyle(
         fontFamily = gruppo,
-        fontWeight = FontWeight.ExtraBold,
         fontSize = 20.sp,
     ),
     labelMedium = TextStyle(
         fontFamily = gruppo,
-        fontWeight = FontWeight.Bold,
         fontSize = 30.sp,
     ),
     labelLarge = TextStyle(
         fontFamily = gruppo,
-        fontWeight = FontWeight.Bold,
         fontSize = 40.sp,
     ),
     bodySmall = TextStyle(
         fontFamily = montserrat,
-        fontWeight = FontWeight.SemiBold,
+        fontWeight = FontWeight.Normal,
         fontSize = 20.sp
     ),
     bodyMedium = TextStyle(

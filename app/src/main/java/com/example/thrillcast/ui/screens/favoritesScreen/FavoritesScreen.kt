@@ -141,7 +141,8 @@ fun FavoritesTopBar(navigateBack: () -> Unit) {
             Icon(
                 imageVector = Icons.Filled.ArrowBack,
                 contentDescription = "Back Icon",
-                tint = Silver
+                tint = Silver,
+                modifier = Modifier.size(30.dp)
             )
         }
 

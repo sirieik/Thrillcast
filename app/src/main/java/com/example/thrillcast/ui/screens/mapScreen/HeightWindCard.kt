@@ -10,14 +10,13 @@ import androidx.compose.material.Slider
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.Icon
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -29,6 +28,7 @@ import com.example.thrillcast.ui.theme.DarkerYellow
 import com.example.thrillcast.ui.theme.Yellow
 import java.util.*
 import kotlin.math.roundToInt
+import androidx.compose.material.Card
 
 /**
  * Composable som viser vinddata for forskjellige høyder.
@@ -47,8 +47,7 @@ import kotlin.math.roundToInt
  */
 
 @Composable
-fun HeightWindCard(heightList: List<String>, windyWindsList: List<WindyWinds>){
-
+fun HeightWindCard(heightList: List<String>, windyWindsList: List<WindyWinds>) {
     var selectedHeightIndex by remember { mutableStateOf(0) }
     var selectedButtonIndex by remember { mutableStateOf(0) }
 
@@ -58,12 +57,14 @@ fun HeightWindCard(heightList: List<String>, windyWindsList: List<WindyWinds>){
     val windSpeed = windyWindsList.getOrNull(selectedButtonIndex)
         ?.getWindSpeedForHeight(selectedHeightIndex)
 
-    ElevatedCard(
+    Card(
         modifier = Modifier
             .aspectRatio(1f)
             .fillMaxSize()
             .padding(6.dp),
-        shape = RoundedCornerShape(6.dp)
+        backgroundColor = Color(0xFF93B3F3), // Sett ønsket bakgrunnsfarge her
+        shape = RoundedCornerShape(8.dp), // Sett ønsket hjørneradius her
+        elevation = 4.dp // Sett ønsket heving her
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -78,13 +79,13 @@ fun HeightWindCard(heightList: List<String>, windyWindsList: List<WindyWinds>){
                 fontWeight = FontWeight.Bold,
                 fontSize = 30.sp
             )
+
             LazyRow(
-                modifier = Modifier,
                 contentPadding = PaddingValues(6.dp),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.Top
             ) {
-                itemsIndexed(windyWindsList) { index, it ->
+                itemsIndexed(windyWindsList){ index, it ->
                     val isSelected = index == selectedButtonIndex
                     ElevatedButton(
                         modifier = Modifier.padding(6.dp),
@@ -92,78 +93,88 @@ fun HeightWindCard(heightList: List<String>, windyWindsList: List<WindyWinds>){
                             selectedButtonIndex = index
                         },
                         colors = if (isSelected) ButtonDefaults.buttonColors(DarkerYellow) else ButtonDefaults.buttonColors(Yellow),
-                        shape = RoundedCornerShape(10.dp),
+                        shape = RoundedCornerShape(8.dp),
                     ) {
                         Text(
                             text = "${Date(it.time).hours}:00",
-                            style = androidx.compose.material3.MaterialTheme.typography.labelMedium.copy(
-                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                            style = androidx.compose.material3.MaterialTheme.typography.bodySmall.copy(
+                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.SemiBold,
+                                fontSize = 15.sp
                             )
                         )
                     }
                 }
             }
+
             Row(
                 modifier = Modifier
                     .fillMaxSize()
-                    .weight(0.6f)
+                    .weight(0.6f),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(
                     modifier = Modifier
-                        .weight(0.3f, true)
+                        .weight(0.3f)
                         .fillMaxHeight(),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(text = stringResource(id = R.string.height), style = androidx.compose.material3.MaterialTheme.typography.labelMedium, fontSize = 25.sp)
+                    Text(
+                        text = stringResource(id = R.string.height),
+                        style = androidx.compose.material3.MaterialTheme.typography.bodyMedium,
+                        fontSize = 25.sp, fontWeight = FontWeight.Normal
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
                     IconButton(
-                        modifier = Modifier.padding(6.dp),
                         onClick = {
                             if (selectedHeightIndex < heightList.size - 1) {
-                                selectedHeightIndex ++
+                                selectedHeightIndex++
                             }
-                        }
+                        },
+                        modifier = Modifier.size(30.dp)
                     ) {
                         Icon(
-                            Icons.Default.Add,
-                            contentDescription = "Increase height"
+                            painterResource(id = R.drawable.add),
+                            contentDescription = "Increase height",
+                            modifier = Modifier.size(30.dp)
                         )
                     }
                     Slider(
                         modifier = Modifier
                             .rotate(degrees = -90f)
                             .padding(20.dp),
-
                         value = selectedHeightIndex.toFloat(),
                         onValueChange = {
                             selectedHeightIndex = it.toInt()
                         },
                         onValueChangeFinished = {
-
                         },
                         valueRange = 0f..(heightList.size - 1).toFloat(),
                         steps = heightList.size - 2
                     )
                     IconButton(
-                        modifier = Modifier.padding(6.dp),
                         onClick = {
                             if (selectedHeightIndex > 0) {
-                                selectedHeightIndex --
+                                selectedHeightIndex--
                             }
-                        }
+                        },
                     ) {
                         Icon(
-                            painterResource(id = R.drawable.minus_sign),
-                            contentDescription = "Decrease height"
+                            painterResource(id = R.drawable.minus),
+                            contentDescription = "Decrease height",
+                            modifier = Modifier.size(30.dp)
                         )
                     }
                     Spacer(modifier = Modifier.height(12.dp))
-                    Text(text = "${heightList[selectedHeightIndex]} moh", style = androidx.compose.material3.MaterialTheme.typography.bodySmall)
+                    Text(
+                        text = "${heightList[selectedHeightIndex]} moh",
+                        style = androidx.compose.material3.MaterialTheme.typography.bodySmall
+                    )
                 }
 
                 Column(
                     modifier = Modifier
-                        .weight(0.7f, true)
+                        .weight(0.7f)
                         .fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
@@ -186,6 +197,7 @@ fun HeightWindCard(heightList: List<String>, windyWindsList: List<WindyWinds>){
         }
     }
 }
+
 
 /**
  * Runder av et desimaltall til to desimaler.
