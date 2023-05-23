@@ -172,7 +172,6 @@ fun MapScreen(
             mapViewModel = mapViewModel,
             weatherViewModel = weatherViewModel,
             searchBarViewModel = searchBarViewModel,
-            context = context,
             onNavigate = onNavigate
         )
     }

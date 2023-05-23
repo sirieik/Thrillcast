@@ -159,9 +159,7 @@ fun SearchBar(
             onSearchIconClick = {
                 isTakeoffSelected = false
             },
-            onNavigate = onNavigate,
-            mapViewModel = mapViewModel,
-            onTakeoffSelected = onTakeoffSelected
+            onNavigate = onNavigate
         )
     }
 }
