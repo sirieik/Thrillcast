@@ -175,19 +175,21 @@ fun TopBar(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         IconButton(
-            onClick = onNavigate
+            onClick = onNavigate,
+
         ) {
             Icon(
                 imageVector = Icons.Filled.Favorite,
                 contentDescription = "Favorite Icon",
-                tint = Silver
+                tint = Silver,
+                modifier = Modifier.size(30.dp)
+                //modifier = Modifier.size(48.dp).padding(8.dp)
             )
         }
 
         Text(
-            text = "Paragliding", style = MaterialTheme.typography.titleSmall,
+            text = "Paragliding", style = MaterialTheme.typography.titleMedium,
             color = Silver,
-            fontSize = 30.sp,
         )
 
         IconButton(
@@ -196,7 +198,8 @@ fun TopBar(
             Icon(
                 imageVector = Icons.Filled.Search,
                 contentDescription = "Search Icon",
-                tint = Silver
+                tint = Silver,
+                modifier = Modifier.size(30.dp)
             )
         }
     }

@@ -2,6 +2,7 @@ package com.example.thrillcast.ui.screens.mapScreen
 import com.example.thrillcast.ui.viewmodels.BottomSheetViewModel
 import InfoPage
 import android.content.Context
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -9,6 +10,7 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
@@ -64,7 +66,7 @@ fun MapScreen(
         skipHalfExpanded = true
     )
 
-    val tabList = listOf("Info", "Today", "Future")
+    val tabList = listOf("INFO", "TODAY", "FUTURE")
 
     var tabState by remember {
         mutableStateOf(1)
@@ -77,92 +79,107 @@ fun MapScreen(
 
             //Hvis stedet er lagt til i favoritter er hjertet-ikonet filled, hvis ikke er det hult
             favoriteViewModel.isFavorite(takeoff = takeoffUiState.value.takeoff)
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(max = LocalConfiguration.current.screenHeightDp.dp / 1.7f)
+            Surface(
+                //modifier = Modifier.fillMaxSize(),
+                color = Silver
             ) {
-                Row(
+
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(0.1f, true)
+                        .heightIn(max = LocalConfiguration.current.screenHeightDp.dp / 1.7f * 1.2f),
                 ) {
-                    takeoffUiState.value.takeoff?.let {
-                        Text(
-                            text = it.name,
-                            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.W900),
-                            fontSize = 18.sp,
-                            modifier = Modifier
-                                .padding(top = 8.dp)
-                                .padding(start = 20.dp)
-                                .weight(0.8f, true),
-                            color = Color.Black
-                        )
-                    }
-                    FavoriteButton(
-                        isFavorite = favoriteUiState.value.isFavorite,
-                        onToggleFavorite = {
-                            takeoffUiState.value.takeoff?.let { favoriteViewModel.toggleFavorite(it) }
-                        }
-                    )
-                    IconButton(
-                        onClick = {
-                            coroutineScope.launch {
-                                modalSheetState.hide()
-                            }
-                        },
+                    Row(
                         modifier = Modifier
-                            .weight(0.2f, true)
-                            .padding(10.dp)
+                            .fillMaxWidth()
+                            .weight(0.1f, true)
+                            .background(Color.White),
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Icon(
-                            imageVector = Icons.Filled.Close,
-                            contentDescription = "Close info sheet"
-                        )
-                    }
-                }
-                TabRow(
-                    selectedTabIndex = tabState,
-                    backgroundColor = Red
-                ) {
-                    tabList.forEachIndexed { index, title ->
-                        Tab(
-                            selected = tabState == index,
-                            onClick = { tabState = index },
-                            text = {
-                                Text(
-                                    text = title,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                    fontSize = 20.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    style = MaterialTheme.typography.titleMedium.copy(
-                                        fontWeight = if (tabState == index) FontWeight.Bold else FontWeight.Normal
-                                    ),
-                                    color = Silver
-                                )
+                        takeoffUiState.value.takeoff?.let {
+                            Text(
+                                text = it.name,
+                                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
+                                fontSize = 24.sp,
+                                //maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier
+                                    //.width(IntrinsicSize.Max)
+                                    .padding(start = 20.dp),
+                                color = Color.Black
+                            )
+                        }
+                        Spacer(modifier = Modifier.weight(0.8f))
+                        FavoriteButton(
+                            isFavorite = favoriteUiState.value.isFavorite,
+                            onToggleFavorite = {
+                                takeoffUiState.value.takeoff?.let {
+                                    favoriteViewModel.toggleFavorite(
+                                        it
+                                    )
+                                }
                             },
-                            enabled = tabState != index
                         )
+                        IconButton(
+                            onClick = {
+                                coroutineScope.launch {
+                                    modalSheetState.hide()
+                                }
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Close,
+                                contentDescription = "Close info sheet",
+                                modifier = Modifier.size(30.dp)
+                            )
+                        }
                     }
-                }
-                Column(
-                    modifier = Modifier.weight(0.7f)
-                ) {
-                    when (tabState) {
-                        0 -> InfoPage(weatherViewModel = weatherViewModel)
-                        1 -> TodayPage(weatherViewModel = weatherViewModel, context = context)
-                        else -> FuturePage(weatherViewModel = weatherViewModel, context = context)
-                    }
-                }
-            }
 
-            //Denne gjør slik at bottomsheeten endrer seg når verdien i bottomsheetuistate
-            //endrer seg i bottomsheetViewModel.
-            //Den lar bottomsheeten utvide seg når man velger en lokasjon på favorittskjermen.
-            LaunchedEffect(bottomSheetUiState.value) {
-                modalSheetState.animateTo(bottomSheetUiState.value)
+                    TabRow(
+                        selectedTabIndex = tabState,
+                        backgroundColor = Red
+                    ) {
+                        tabList.forEachIndexed { index, title ->
+                            Tab(
+                                selected = tabState == index,
+                                onClick = { tabState = index },
+                                text = {
+                                    Text(
+                                        text = title,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                        fontSize = 20.sp,
+                                        //fontWeight = FontWeight.SemiBold,
+                                        style = MaterialTheme.typography.bodyMedium.copy(
+                                            fontWeight = if (tabState == index) FontWeight.SemiBold else FontWeight.Normal
+                                        ),
+                                        color = Silver
+                                    )
+                                },
+                                enabled = tabState != index
+                            )
+                        }
+                    }
+                    Column(
+                        modifier = Modifier.weight(0.7f)
+                    ) {
+                        when (tabState) {
+                            0 -> InfoPage(weatherViewModel = weatherViewModel)
+                            1 -> TodayPage(weatherViewModel = weatherViewModel, context = context)
+                            else -> FuturePage(
+                                weatherViewModel = weatherViewModel,
+                                context = context
+                            )
+                        }
+                    }
+                }
+
+                //Denne gjør slik at bottomsheeten endrer seg når verdien i bottomsheetuistate
+                //endrer seg i bottomsheetViewModel.
+                //Den lar bottomsheeten utvide seg når man velger en lokasjon på favorittskjermen.
+                LaunchedEffect(bottomSheetUiState.value) {
+                    modalSheetState.animateTo(bottomSheetUiState.value)
+                }
             }
         }
     ) {
@@ -172,7 +189,7 @@ fun MapScreen(
             mapViewModel = mapViewModel,
             weatherViewModel = weatherViewModel,
             searchBarViewModel = searchBarViewModel,
-            context = context,
+            //context = context,
             onNavigate = onNavigate
         )
     }
@@ -185,7 +202,7 @@ fun MapScreen(
  * @param isFavorite Den nåværende favorittstatusen til plasseringen. Hvis true, vil knappen vise som "favorisert".
  * @param onToggleFavorite Funksjonen som skal utføres når favorittknappen blir klikket.
  */
-@Composable
+/*@Composable
 fun FavoriteButton(
     isFavorite: Boolean,
     onToggleFavorite: () -> Unit
@@ -199,10 +216,34 @@ fun FavoriteButton(
             imageVector = iconImageVector,
             contentDescription = "Favorites button",
             modifier = Modifier
-                .padding(8.dp)
+                //.padding(8.dp)
                 .size(48.dp),
             tint = Color.Magenta
         )
     }
+}*/
+
+@Composable
+fun FavoriteButton(
+    isFavorite: Boolean,
+    onToggleFavorite: () -> Unit
+) {
+    val favoriteIcon = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder
+
+    IconButton(
+        onClick = { onToggleFavorite() },
+        modifier = Modifier.size(48.dp),
+        content = {
+            Box(contentAlignment = Alignment.Center) {
+                Icon(
+                    imageVector = favoriteIcon,
+                    contentDescription = "Favorites button",
+                    tint = Color.Magenta,
+                    modifier = Modifier
+                        .size(30.dp)
+                )
+            }
+        }
+    )
 }
 

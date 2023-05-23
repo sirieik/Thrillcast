@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Text
 import androidx.compose.material3.Button
@@ -16,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 
 
 /**
@@ -37,7 +39,7 @@ fun DisclaimerDialog() {
                 ) {
                     Text(
                         text = "DISCLAIMER:",
-                        style = MaterialTheme.typography.titleMedium,
+                        style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.ExtraBold
                     )
                 }
@@ -53,7 +55,8 @@ fun DisclaimerDialog() {
                             "assume responsibility for their actions."
                     ,
                     textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.bodySmall
+                    style = MaterialTheme.typography.bodySmall,
+                    fontWeight = FontWeight.Normal
                 )
             },
             buttons = {
@@ -63,9 +66,13 @@ fun DisclaimerDialog() {
                 ) {
                     Button(
                         onClick = { dialogState.value = false },
-                        modifier = Modifier.padding(10.dp)
+                        modifier = Modifier.padding(8.dp),
+                        shape = RoundedCornerShape(8.dp)
                     ) {
-                        Text(text = "Accept")
+                        Text(text = "Accept",
+                            style = MaterialTheme.typography.bodySmall,
+                            fontSize = 15.sp
+                        )
                     }
                 }
             }

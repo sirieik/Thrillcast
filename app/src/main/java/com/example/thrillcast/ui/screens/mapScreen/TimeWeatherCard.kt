@@ -1,6 +1,8 @@
 import android.content.Context
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Text
@@ -11,7 +13,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thrillcast.R
@@ -31,7 +36,7 @@ import com.example.thrillcast.ui.common.calculations.checkWindConditions
  * @param windDirection Vindretningen i grader.
  * @param windSpeed Vindhastigheten.
  */
-@Composable
+/*@Composable
 fun TimeWeatherCard(
     context: Context,
     time: String,
@@ -46,12 +51,12 @@ fun TimeWeatherCard(
         modifier = Modifier
             .height(125.dp)
             .width(350.dp)
-            .clip(RoundedCornerShape(4.dp))
-            .padding(8.dp)
+            //.clip(RoundedCornerShape(4.dp))
+            //.padding(8.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxSize()
         ) {
             Card(
                 modifier = Modifier
@@ -68,6 +73,7 @@ fun TimeWeatherCard(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.padding(8.dp)
                 ) {
+                    Spacer(modifier = Modifier.height(10.dp))
                     Image(
                         painter = painterResource(id = R.drawable.windarrow),
                         contentDescription = "wind direction",
@@ -77,25 +83,30 @@ fun TimeWeatherCard(
                     )
                     Text(
                         text = "$windSpeed m/s",
-                        style = MaterialTheme.typography.bodyMedium,
+                        style = MaterialTheme.typography.bodySmall,
+                        fontWeight = FontWeight.SemiBold,
                         fontSize = 20.sp
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.width(10.dp))
 
             Column(
                 modifier = Modifier.weight(1f),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                Spacer(modifier = Modifier.height(20.dp))
                 Text(
                     text = time,
-                    style = MaterialTheme.typography.labelMedium
+                    style = MaterialTheme.typography.bodySmall,
+                    fontWeight = FontWeight.Normal,
                 )
                 Text(
                     text = "$temperature°C",
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 30.sp,
                     maxLines = 1
                 )
             }
@@ -116,5 +127,104 @@ fun TimeWeatherCard(
             )
         }
     }
-}
+}*/
 
+@Composable
+fun TimeWeatherCard(
+    context: Context,
+    time: String,
+    greenStart: Int,
+    greenStop: Int,
+    symbolCode: String,
+    temperature: Double,
+    windDirection: Double,
+    windSpeed: Double,
+) {
+    val windConditionColor = checkWindConditions(
+        windDirection = windDirection, windSpeed = windSpeed,
+        greenStart = greenStart, greenStop = greenStop
+    ).color
+    Card(
+        modifier = Modifier
+            .height(140.dp)
+            .width(370.dp)
+            .padding(3.dp)
+            .border(8.dp, windConditionColor, shape = RoundedCornerShape(8.dp)),
+        backgroundColor = Color(0xFF93B3F3),
+        /*backgroundColor = checkWindConditions(
+            windDirection = windDirection, windSpeed = windSpeed,
+            greenStart = greenStart, greenStop = greenStop
+        ).color,*/
+        elevation = 4.dp,
+        shape = RoundedCornerShape(8.dp),
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(8.dp)
+                    .fillMaxHeight(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Spacer(modifier = Modifier.height(10.dp))
+                Image(
+                    painter = painterResource(id = R.drawable.windarrow),
+                    contentDescription = "wind direction",
+                    modifier = Modifier.size(32.dp).rotate((windDirection + 90).toFloat())
+                )
+                Text(
+                    text = "$windSpeed m/s",
+                    style = MaterialTheme.typography.bodySmall,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 20.sp
+                )
+            }
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Column(
+                modifier = Modifier.weight(1f),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                //Spacer(modifier = Modifier.height(17.dp))
+                Text(
+                    text = time,
+                    style = MaterialTheme.typography.bodySmall,
+                    fontWeight = FontWeight.Normal,
+                )
+                Text(
+                    text = "$temperature°C",
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 30.sp,
+                    maxLines = 1
+                )
+            }
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Box(
+                modifier = Modifier.weight(1f),
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    modifier = Modifier
+                        .size(64.dp),
+                    alignment = Alignment.Center,
+                    painter = painterResource(
+                        id = context.resources.getIdentifier(
+                            symbolCode,
+                            "drawable",
+                            context.packageName
+                        )
+                    ),
+                    contentDescription = symbolCode
+                )
+            }
+        }
+    }
+}
