@@ -45,7 +45,7 @@ fun SearchBar(
     var searchInput by remember { mutableStateOf("") }
     val hideKeyboard = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
-
+    var isTakeoffSelected by remember { mutableStateOf(false) }
     val uiState = mapViewModel.takeoffsUiState.collectAsState()
 
     Column{
@@ -143,6 +143,7 @@ fun SearchBar(
                                         searchInput = ""
                                         hideKeyboard.clearFocus()
                                         onTakeoffSelected(takeoff)
+                                        isTakeoffSelected = true
                                     },
                                     style = TextStyle(fontSize = 20.sp, color = DarkBlue, fontFamily = montserrat, fontWeight = FontWeight.SemiBold),
                                     modifier = Modifier.padding(start = 3.dp)
@@ -153,5 +154,11 @@ fun SearchBar(
                 }
             }
         }
+    }
+    if (isTakeoffSelected) {
+        TopBar(
+            onSearchIconClick = { /* handle search icon click */ },
+            onNavigate = { /* handle navigate action */ }
+        )
     }
 }
