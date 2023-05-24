@@ -2,6 +2,7 @@ package com.example.thrillcast.ui.screens.mapScreen
 
 import android.content.Context
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -47,40 +48,41 @@ fun TimeWeatherCard(
     windSpeed: Double,
 ) {
     val windConditionColor = checkWindConditions(
-        windDirection = windDirection, windSpeed = windSpeed,
-        greenStart = greenStart, greenStop = greenStop
+    windDirection = windDirection, windSpeed = windSpeed,
+    greenStart = greenStart, greenStop = greenStop
     ).color
     Card(
         modifier = Modifier
             .height(140.dp)
             .width(370.dp)
-            .padding(3.dp)
-            .border(8.dp, windConditionColor, shape = RoundedCornerShape(8.dp)),
+            .padding(3.dp),
         backgroundColor = Color(0xFF93B3F3),
-        /*backgroundColor = checkWindConditions(
-            windDirection = windDirection, windSpeed = windSpeed,
-            greenStart = greenStart, greenStop = greenStop
-        ).color,*/
         elevation = 4.dp,
-        shape = RoundedCornerShape(8.dp),
+        shape = RoundedCornerShape(8.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxSize()
         ) {
+            Spacer(modifier = Modifier.width(15.dp))
             Column(
                 modifier = Modifier
-                    .weight(1f)
+                    .weight(1.25f)
                     .padding(8.dp)
-                    .fillMaxHeight(),
+                    .fillMaxHeight()
+                    .aspectRatio(1f)
+                    .background(windConditionColor, shape = RoundedCornerShape(8.dp)),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Spacer(modifier = Modifier.height(10.dp))
+                verticalArrangement = Arrangement.Center,
+
+
+            ){
                 Image(
                     painter = painterResource(id = R.drawable.windarrow),
                     contentDescription = "wind direction",
-                    modifier = Modifier.size(32.dp).rotate((windDirection + 90).toFloat())
+                    modifier = Modifier
+                        .size(32.dp)
+                        .rotate((windDirection + 90).toFloat())
                 )
                 Text(
                     text = "$windSpeed m/s",
@@ -89,18 +91,16 @@ fun TimeWeatherCard(
                     fontSize = 20.sp
                 )
             }
-
             Spacer(modifier = Modifier.width(16.dp))
 
             Column(
                 modifier = Modifier.weight(1f),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                //Spacer(modifier = Modifier.height(17.dp))
                 Text(
                     text = time,
                     style = MaterialTheme.typography.bodySmall,
-                    fontWeight = FontWeight.Normal,
+                    fontWeight = FontWeight.Normal
                 )
                 Text(
                     text = "$temperature°C",
@@ -118,8 +118,7 @@ fun TimeWeatherCard(
                 contentAlignment = Alignment.Center
             ) {
                 Image(
-                    modifier = Modifier
-                        .size(64.dp),
+                    modifier = Modifier.size(64.dp),
                     alignment = Alignment.Center,
                     painter = painterResource(
                         id = context.resources.getIdentifier(

@@ -17,7 +17,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.thrillcast.ui.theme.montserrat
+import com.example.thrillcast.ui.common.calculations.checkWindConditions
+import com.example.thrillcast.ui.theme.*
 import com.example.thrillcast.ui.viewmodels.weather.WeatherViewModel
 
 /**
@@ -65,6 +66,7 @@ fun InfoPage(weatherViewModel: WeatherViewModel) {
                 fontSize = 18.sp,
                 fontFamily = montserrat,
                 fontWeight = FontWeight.Medium,
+                modifier = Modifier.padding(top = 4.dp)
             )
 
             takeoffUiState.value.takeoff?.coordinates?.let { coordinates ->
@@ -78,6 +80,7 @@ fun InfoPage(weatherViewModel: WeatherViewModel) {
                     fontSize = 18.sp,
                     fontFamily = montserrat,
                     fontWeight = FontWeight.Medium,
+                    modifier = Modifier.padding(top = 4.dp)
                 )
             }
 
@@ -93,6 +96,7 @@ fun InfoPage(weatherViewModel: WeatherViewModel) {
                         fontSize = 18.sp,
                         fontFamily = montserrat,
                         fontWeight = FontWeight.Medium,
+                        modifier = Modifier.padding(top = 4.dp)
                     )
                 }
             }

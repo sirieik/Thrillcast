@@ -80,26 +80,24 @@ fun MapScreen(
             //Hvis stedet er lagt til i favoritter er hjertet-ikonet filled, hvis ikke er det hult
             favoriteViewModel.isFavorite(takeoff = takeoffUiState.value.takeoff)
             Surface(
-                //modifier = Modifier.fillMaxSize(),
-                color = Silver
+                color = Color.White
             ) {
 
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .heightIn(max = LocalConfiguration.current.screenHeightDp.dp / 1.7f * 1.2f),
+                        .heightIn(max = LocalConfiguration.current.screenHeightDp.dp / 1.7f * 1.25f),
                 ) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .weight(0.1f, true)
-                            .background(Color.White),
+                            .weight(0.1f, true),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         takeoffUiState.value.takeoff?.let {
                             Text(
                                 text = it.name,
-                                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
+                                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold),
                                 fontSize = 24.sp,
                                 //maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
@@ -149,7 +147,6 @@ fun MapScreen(
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis,
                                         fontSize = 20.sp,
-                                        //fontWeight = FontWeight.SemiBold,
                                         style = MaterialTheme.typography.bodyMedium.copy(
                                             fontWeight = if (tabState == index) FontWeight.SemiBold else FontWeight.Normal
                                         ),

@@ -183,7 +183,7 @@ fun HeightWindCard(heightList: List<String>, windyWindsList: List<WindyWinds>) {
                             painter = painterResource(id = R.drawable.windarrow),
                             contentDescription = "wind direction",
                             modifier = Modifier
-                                .fillMaxWidth()
+                                .size(140.dp)
                                 .rotate((windDirection + 90.0).toFloat())
                         )
                     }
