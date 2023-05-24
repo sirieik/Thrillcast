@@ -2,6 +2,7 @@ package com.example.thrillcast.ui.screens.mapScreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -135,17 +136,20 @@ fun SearchBar(
                             .fillMaxWidth()
                             .background(Silver)
                             .border(1.dp, color = DarkBlue, shape = RectangleShape)
-                            .height(60.dp),
+                            .height(60.dp)
+                            .clickable {
+                                searchInput = ""
+                                hideKeyboard.clearFocus()
+                                onTakeoffSelected(takeoff)
+                                searchBarViewModel.onAction(UserAction.CloseActionClicked)
+                            },
                         content = {
-                            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.CenterStart) {
-                                ClickableText(
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.CenterStart
+                            ) {
+                                Text(
                                     text = AnnotatedString(takeoff.name),
-                                    onClick = {
-                                        searchInput = ""
-                                        hideKeyboard.clearFocus()
-                                        onTakeoffSelected(takeoff)
-                                        searchBarViewModel.onAction(UserAction.CloseActionClicked)
-                                    },
                                     style = TextStyle(fontSize = 20.sp, color = DarkBlue, fontFamily = montserrat, fontWeight = FontWeight.SemiBold),
                                     modifier = Modifier.padding(start = 3.dp)
                                 )
