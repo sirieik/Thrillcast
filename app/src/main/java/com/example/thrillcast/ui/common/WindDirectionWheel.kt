@@ -38,8 +38,8 @@ fun WindDirectionWheel(
 ) {
 
     //Disse er konstanter for en gitt state av denne Composablen.
-    val greenStartAngle = (greenStart).toFloat()
-    val greenStopAngle = (greenStop).toFloat()
+    val greenStartAngle = (greenStart - 90).toFloat()
+    val greenStopAngle = (greenStop - 90).toFloat()
     val windDirectionRadians = Math.toRadians((windDirection - 90).toDouble())
     val vectorX = cos(windDirectionRadians).toFloat()
     val vectorY = sin(windDirectionRadians).toFloat()
