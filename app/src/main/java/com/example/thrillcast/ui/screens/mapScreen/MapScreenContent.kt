@@ -75,7 +75,8 @@ fun MapScreenContent(
                         onCloseIconClick = {
                             searchBarViewModel.onAction(UserAction.CloseActionClicked)
                         },
-                        mapViewModel
+                        mapViewModel,
+                        searchBarViewModel
                     ) { takeoff ->
                         selectedSearchItem = takeoff
                         cameraPositionState.position = CameraPosition.Builder()

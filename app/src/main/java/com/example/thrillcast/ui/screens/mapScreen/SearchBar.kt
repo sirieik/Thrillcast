@@ -34,18 +34,20 @@ import com.example.thrillcast.ui.theme.Silver
 import com.example.thrillcast.ui.theme.DarkBlue
 import com.example.thrillcast.ui.theme.montserrat
 import com.example.thrillcast.ui.viewmodels.map.MapViewModel
+import com.example.thrillcast.ui.viewmodels.map.SearchBarViewModel
+import com.example.thrillcast.ui.viewmodels.map.UserAction
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBar(
     onCloseIconClick: () -> Unit,
     mapViewModel: MapViewModel,
+    searchBarViewModel: SearchBarViewModel,
     onTakeoffSelected: (Takeoff) -> Unit
 ) {
     var searchInput by remember { mutableStateOf("") }
     val hideKeyboard = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
-    var isTakeoffSelected by remember { mutableStateOf(false) }
     val uiState = mapViewModel.takeoffsUiState.collectAsState()
 
     Column{
@@ -110,7 +112,6 @@ fun SearchBar(
                     unfocusedTrailingIconColor = Color.White,
                     focusedTrailingIconColor = Color.Black
                 ),
-                //Kan endre denne
                 textStyle = MaterialTheme.typography.bodySmall,
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Search,
@@ -143,7 +144,7 @@ fun SearchBar(
                                         searchInput = ""
                                         hideKeyboard.clearFocus()
                                         onTakeoffSelected(takeoff)
-                                        isTakeoffSelected = true
+                                        searchBarViewModel.onAction(UserAction.CloseActionClicked)
                                     },
                                     style = TextStyle(fontSize = 20.sp, color = DarkBlue, fontFamily = montserrat, fontWeight = FontWeight.SemiBold),
                                     modifier = Modifier.padding(start = 3.dp)
@@ -154,11 +155,5 @@ fun SearchBar(
                 }
             }
         }
-    }
-    if (isTakeoffSelected) {
-        TopBar(
-            onSearchIconClick = { /* handle search icon click */ },
-            onNavigate = { /* handle navigate action */ }
-        )
     }
 }
