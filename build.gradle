@@ -24,11 +24,3 @@ plugins {
     id("com.google.dagger.hilt.android") version "2.44" apply false
 
 }
-
-//Den her ser mad sketchy ut?
-/*
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
-
- */
