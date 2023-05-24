@@ -46,7 +46,6 @@ import com.example.thrillcast.ui.viewmodels.weather.WeatherViewModel
 fun FavoritesScreen(
     favoriteViewModel: FavoriteViewModel,
     weatherViewModel: WeatherViewModel,
-    mapViewModel: MapViewModel,
     navigateBack: () -> Unit,
     bottomSheetViewModel: BottomSheetViewModel,
     context: Context

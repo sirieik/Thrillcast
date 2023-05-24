@@ -50,7 +50,7 @@ class HolfuyDataSource @Inject constructor(){
     /**
      * Henter en liste over alle Holfuy-stasjoner med tilhørende informasjon.
      *
-     * @return Liste over com.example.thrillcast.data.datamodels.HolfuyStations som inneholder informasjon om hver stasjon,
+     * @return Liste over HolfuyStations som inneholder informasjon om hver stasjon,
      *         eller null hvis feil oppstår.
      */
     suspend fun fetchHolfuyStations(): List<HolfuyStations>? {

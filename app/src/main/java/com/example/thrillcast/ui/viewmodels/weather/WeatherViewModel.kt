@@ -7,7 +7,7 @@ import com.example.thrillcast.data.datamodels.Wind
 import com.example.thrillcast.data.repositories.HolfuyRepository
 import com.example.thrillcast.data.repositories.MetRepository
 import com.example.thrillcast.data.repositories.WindyRepository
-import com.example.thrillcast.data.repositories.WindyWinds
+import com.example.thrillcast.ui.common.WindyWinds
 import com.example.thrillcast.ui.common.Takeoff
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -87,7 +87,6 @@ fun NavigationGraph(navController: NavHostController, context: Context) {
             FavoritesScreen(
                 weatherViewModel = weatherViewModel,
                 favoriteViewModel = favoriteViewModel,
-                mapViewModel = mapViewModel,
                 navigateBack = {
                     navController.navigateUp()
                 },

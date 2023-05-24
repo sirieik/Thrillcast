@@ -1,6 +1,7 @@
 package com.example.thrillcast.data.repositories
 
 import com.example.thrillcast.data.datasources.WindyDataSource
+import com.example.thrillcast.ui.common.WindyWinds
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.PI
