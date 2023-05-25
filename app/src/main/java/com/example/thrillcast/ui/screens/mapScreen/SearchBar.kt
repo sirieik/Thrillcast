@@ -6,7 +6,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -31,12 +30,32 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thrillcast.R
 import com.example.thrillcast.ui.common.Takeoff
-import com.example.thrillcast.ui.theme.Silver
 import com.example.thrillcast.ui.theme.DarkBlue
+import com.example.thrillcast.ui.theme.Silver
 import com.example.thrillcast.ui.theme.montserrat
 import com.example.thrillcast.ui.viewmodels.map.MapViewModel
 import com.example.thrillcast.ui.viewmodels.map.SearchBarViewModel
 import com.example.thrillcast.ui.viewmodels.map.UserAction
+
+/**
+ * @Composable funksjon som representerer et søkefelt som tillater søk etter takeoff-lokasjoner.
+ *
+ * @OptIn(ExperimentalMaterial3Api::class) - Funksjonen bruker den eksperimentelle Material 3 API.
+ *
+ * @param onCloseIconClick En lambda-funksjon som utføres når lukkeikonet blir klikket.
+ * @param mapViewModel En ViewModel assosiert med kartskjermen.
+ * @param searchBarViewModel En ViewModel assosiert med SearchBar-skjermen.
+ * @param onTakeoffSelected En lambda-funksjon som utføres når en 'Takeoff' vare er valgt fra søkeresultatene.
+ *
+ * Composable-en er strukturert som følger:
+ * - Et tekstfelt for å skrive inn søkeinndata.
+ * - Et søkeikon.
+ * - Et etterfølgende lukkeikon. Når det blir klikket, hvis søkeinndata ikke er tom, tømmer det
+ *   inndata. Ellers utløses onCloseIconClick-funksjonen, som lukker SearchBar-en.
+ * - En lazyColumn som viser 'Takeoff' søkresultatene. Resultatene filtreres i henhold til den angitte søkeinndata.
+ *   Når et Takeoff-objekt blir klikket, tømmes søkeinndata, tastaturet skjules, den valgte 'Takeoff'
+ *   blir sendt til onTakeoffSelected-funksjonen, og SearchBarViewModel blir oppdatert.
+ */
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

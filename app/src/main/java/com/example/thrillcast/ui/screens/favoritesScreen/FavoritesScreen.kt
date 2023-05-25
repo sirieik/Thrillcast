@@ -1,5 +1,4 @@
 package com.example.thrillcast.ui.screens.favoritesScreen
-import com.example.thrillcast.ui.viewmodels.BottomSheetViewModel
 import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -19,8 +18,8 @@ import androidx.compose.ui.unit.sp
 import com.example.thrillcast.ui.common.NowWeatherCard
 import com.example.thrillcast.ui.theme.DarkBlue
 import com.example.thrillcast.ui.theme.Silver
+import com.example.thrillcast.ui.viewmodels.BottomSheetViewModel
 import com.example.thrillcast.ui.viewmodels.favorites.FavoriteViewModel
-import com.example.thrillcast.ui.viewmodels.map.MapViewModel
 import com.example.thrillcast.ui.viewmodels.weather.WeatherViewModel
 
 /**
@@ -33,7 +32,6 @@ import com.example.thrillcast.ui.viewmodels.weather.WeatherViewModel
  *
  * @param favoriteViewModel ViewModel for å håndtere brukergrensesnittet relatert til brukerens favorittsteder.
  * @param weatherViewModel ViewModel for å håndtere brukergrensesnittet relatert til værinformasjon.
- * @param mapViewModel ViewModel for å håndtere brukergrensesnittet relatert til kartvisningen.
  * @param navigateBack Funksjon for å håndtere navigasjon tilbake til forrige skjerm.
  * @param bottomSheetViewModel ViewModel for å utvide bottomSheet-et i kartskjermen når man trykker på et NowWeatherCard.
  * @param context Konteksten der denne funksjonen blir kalt og satt sammen.

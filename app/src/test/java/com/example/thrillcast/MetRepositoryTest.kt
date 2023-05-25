@@ -1,5 +1,6 @@
 package com.example.thrillcast
 
+import com.example.thrillcast.data.datasources.MetDataSource
 import com.example.thrillcast.data.repositories.MetRepository
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
@@ -7,6 +8,14 @@ import org.junit.Test
 import java.time.LocalDate
 
 class MetRepositoryTest {
+
+    /**
+     * Denne testfunksjonen bekrefter `fetchLocationForecast` metoden i `MetRepository`.
+     *
+     * Metoden forventes å returnere en ikke-tom liste over værprognosedata for den angitte bredde- og lengdegraden for neste dag.
+     *
+     */
+
     @Test
     fun fetchMetWeatherForecastTomorrow(){
         //Arrange
@@ -16,18 +25,19 @@ class MetRepositoryTest {
 
         //Act
         val result = runBlocking {
-            MetRepository().fetchLocationForecast(lat,lon)
+            MetRepository(MetDataSource()).fetchLocationForecast(lat,lon)
         }
         val tomorrow = result?.filter { it.time?.toLocalDate() == tomorrowDate }
 
         //Assert
         Assert.assertTrue(!tomorrow.isNullOrEmpty())
     }
-    /*
-    data class com.example.thrillcast.data.datamodels.Details (
-    var air_temperature : Double?,
-    var wind_speed : Double?
-        )
+
+    /**
+     * Denne testfunksjonen bekrefter `fetchLocationForecast` metoden i `MetRepository`.
+     *
+     * Metoden forventes å returnere værprognosedata for den angitte bredde- og lengdegraden, der
+     * visse elementer (lufttemperatur, vindhastighet og symbolkode for neste time) ikke er null.
      */
     @Test
     fun weatherForecastDataIsNotNull(){
@@ -37,7 +47,7 @@ class MetRepositoryTest {
 
         //Act
         val result = runBlocking {
-            MetRepository().fetchLocationForecast(lat,lon)
+            MetRepository(MetDataSource()).fetchLocationForecast(lat,lon)
         }
 
         //Assert
@@ -47,6 +57,13 @@ class MetRepositoryTest {
         Assert.assertNotNull(forecast?.data?.next_1_hours?.summary?.symbol_code)
     }
 
+    /**
+     * Denne testfunksjonen bekrefter `fetchLocationForecast` metoden i `MetRepository`.
+     *
+     * Metoden forventes å returnere værprognosedata for den angitte bredde- og lengdegraden,
+     * hvor hver prognoses lufttemperatur er mellom -100 og 100, og vindhastigheten er mellom 0 og 200.
+     *
+     */
     @Test
     fun weatherForecastDataIsExpected() {
         // Arrange
@@ -55,7 +72,7 @@ class MetRepositoryTest {
 
         //Act
         val result = runBlocking {
-            MetRepository().fetchLocationForecast(lat, lon)
+            MetRepository(MetDataSource()).fetchLocationForecast(lat, lon)
         }
 
         //Assert

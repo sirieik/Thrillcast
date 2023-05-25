@@ -1,9 +1,9 @@
 package com.example.thrillcast.ui.screens.mapScreen
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -36,6 +36,7 @@ import com.example.thrillcast.ui.common.calculations.checkWindConditions
  * @param windSpeed Vindhastigheten.
  */
 
+@SuppressLint("DiscouragedApi")
 @Composable
 fun TimeWeatherCard(
     context: Context,

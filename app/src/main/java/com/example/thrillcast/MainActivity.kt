@@ -21,7 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
  * fra dependency injection systemet Hilt. Derfor kan avhengigheter injiseres direkte i denne
  * aktiviteten fra et Hilt DI-komponent.
  *
- * @property savedInstanceState Hvis aktiviteten blir re-initialisert etter å ha blitt lukket tidligere, inneholder denne
+ * Hvis aktiviteten blir re-initialisert etter å ha blitt lukket tidligere, inneholder savedInstanceState
  * Bundle dataene den sist leverte i [onSaveInstanceState], ellers er den null.
  */
 @AndroidEntryPoint

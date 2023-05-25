@@ -1,8 +1,5 @@
 package com.example.thrillcast.ui.screens.mapScreen
-import com.example.thrillcast.ui.viewmodels.BottomSheetViewModel
-import com.example.thrillcast.ui.screens.mapScreen.bottomsheetpages.InfoPage
 import android.content.Context
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -20,9 +17,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.thrillcast.ui.screens.mapScreen.bottomsheetpages.FuturePage
+import com.example.thrillcast.ui.screens.mapScreen.bottomsheetpages.InfoPage
 import com.example.thrillcast.ui.screens.mapScreen.bottomsheetpages.TodayPage
 import com.example.thrillcast.ui.theme.Red
 import com.example.thrillcast.ui.theme.Silver
+import com.example.thrillcast.ui.viewmodels.BottomSheetViewModel
 import com.example.thrillcast.ui.viewmodels.favorites.FavoriteViewModel
 import com.example.thrillcast.ui.viewmodels.map.MapViewModel
 import com.example.thrillcast.ui.viewmodels.map.SearchBarViewModel

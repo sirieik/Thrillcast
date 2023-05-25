@@ -1,5 +1,6 @@
 package com.example.thrillcast.ui.common
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -33,6 +34,7 @@ import com.example.thrillcast.R
  * @param context Context som brukes til å hente ressurser.
  */
 
+@SuppressLint("DiscouragedApi")
 @Composable
 fun NowWeatherCard(
     windDirection: Int,

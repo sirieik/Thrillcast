@@ -7,25 +7,6 @@ import org.junit.Assert.*
 
 class MapScreenContentTest {
 
-    /*test1
-fun MarkerIcon(wind: Wind, takeoff: Takeoff): BitmapDescriptor {
-    return if (com.example.thrillcast.ui.common.calculations.isDegreeBetween((wind.direction?: 0.0).toDouble(), takeoff.greenStart, takeoff.greenStop)) {
-        BitmapDescriptorFactory.fromResource(R.drawable.greendot)
-    } else {
-        BitmapDescriptorFactory.fromResource(R.drawable.red_dot)
-    }
-}
-//ny test
-fun com.example.thrillcast.ui.common.calculations.checkWindConditions(windDirection: Double?, windSpeed: Double?, greenStart: Int, greenStop: Int): WindCondition {
-    return if (com.example.thrillcast.ui.common.calculations.isDegreeBetween(windDirection ?: 0.0, greenStart, greenStop) && (windSpeed ?: 0.0) in 3.0..5.0) {
-        WindCondition.GOOD
-    } else if (com.example.thrillcast.ui.common.calculations.isDegreeBetween(windDirection ?: 0.0, greenStart, greenStop) && (windSpeed ?: 0.0) in 2.0..6.0) {
-        WindCondition.OKAY
-    } else {
-        WindCondition.BAD
-    }
-}
- */
     //for å sjekke at funskjon finner riktig farge av marker
     @Test
     fun testCheckWindConditions() {
@@ -47,33 +28,3 @@ fun com.example.thrillcast.ui.common.calculations.checkWindConditions(windDirect
 
     }
 }
-
-    /*
-
-    @Test
-    fun testMarkerIconFarge() {
-    //Arrange
-    val takeoff = Takeoff(
-        0,
-        LatLng(
-            59.76,
-            10.04
-        ),
-        "Navn",
-        greenStart = 30,
-        greenStop = 90,
-        1200
-    )
-    val greenWind = Wind(50, 5.0, 20.0, 60.0, " m/s ")
-    val redWind = Wind(200, 50.0, 50.0, 100.0,"m/s")
-
-    //Act
-    val greenResult = MarkerIconResource(greenWind, takeoff)
-    val redResult = MarkerIconResource(redWind, takeoff)
-
-    //Assert
-    assertEquals(R.drawable.greendot, greenResult)
-    assertEquals(R.drawable.red_dot, redResult)
-    }
-}
-*/

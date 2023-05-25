@@ -17,8 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.thrillcast.ui.common.calculations.checkWindConditions
-import com.example.thrillcast.ui.theme.*
+import com.example.thrillcast.ui.theme.montserrat
 import com.example.thrillcast.ui.viewmodels.weather.WeatherViewModel
 
 /**

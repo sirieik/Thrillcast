@@ -26,7 +26,8 @@ import com.example.thrillcast.R
 import com.example.thrillcast.ui.common.WindyWinds
 import com.example.thrillcast.ui.theme.DarkerYellow
 import com.example.thrillcast.ui.theme.Yellow
-import java.util.*
+import java.time.Instant
+import java.time.ZoneId
 import kotlin.math.roundToInt
 
 /**
@@ -86,6 +87,7 @@ fun HeightWindCard(heightList: List<String>, windyWindsList: List<WindyWinds>) {
             ) {
                 itemsIndexed(windyWindsList){ index, it ->
                     val isSelected = index == selectedButtonIndex
+                    val hours = Instant.ofEpochMilli(it.time).atZone(ZoneId.systemDefault()).toLocalDateTime().hour
                     ElevatedButton(
                         modifier = Modifier.padding(6.dp),
                         onClick = {
@@ -95,7 +97,7 @@ fun HeightWindCard(heightList: List<String>, windyWindsList: List<WindyWinds>) {
                         shape = RoundedCornerShape(8.dp),
                     ) {
                         Text(
-                            text = "${Date(it.time).hours}:00",
+                            text = "${hours}:00",
                             style = androidx.compose.material3.MaterialTheme.typography.bodySmall.copy(
                                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.SemiBold,
                                 fontSize = 15.sp

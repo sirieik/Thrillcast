@@ -35,6 +35,26 @@ import com.google.maps.android.compose.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+/**
+ * @Composable funksjon som representerer innholdet på kartskjermen.
+ * Den viser et kart, en topBar og et søkefelt basert på tilstanden, og håndterer
+ * navigasjon og interaksjon med markører.
+ *
+ * @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class) - Funksjonen bruker den eksperimentelle Material 3 API og Material API.
+ *
+ * @param coroutineScope CoroutineScope hvor coroutinene skal lanseres.
+ * @param modalSheetState Tilstanden til modalBottomSheet.
+ * @param mapViewModel En ViewModel assosiert med kartskjermen.
+ * @param weatherViewModel En ViewModel assosiert med værdata.
+ * @param searchBarViewModel En ViewModel assosiert med søkefelt-skjermen.
+ * @param onNavigate En lambda-funksjon som utføres for å håndtere navigasjon.
+ *
+ * Denne funksjonen initialiserer kartet med "kameraet" fokusert på Norge, og setter markører på kartet for Takeoff-lokasjoner.
+ * Når en markør eller et søkeresultat blir klikket, fokuserer kartets kamera på den valgte plasseringen og
+ * et modalBottomSheet med informasjon popper opp.
+ * Innholdet hentes ved hjelp av handleTakeoffSelection-metoden.
+ * TopBaren kan veksle mellom å vise et søkefelt eller en vanlig topBar basert på tilstanden til searchBarViewModel.
+ */
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 fun MapScreenContent(
@@ -154,6 +174,19 @@ fun MapScreenContent(
         }
     )
 }
+
+/**
+ * @Composable funksjon som representerer en TopBar med favoritt- og søkeikon, og tittelen "Paragliding".
+ *
+ * @param onSearchIconClick En lambda-funksjon som utføres når søkeikonet blir klikket.
+ * @param onNavigate En lambda-funksjon som utføres når favorittikonet blir klikket.
+ *
+ * TopBar-en er strukturert som følger:
+ * - En rad med en mørkeblå bakgrunn og sølvfarget kant, som fyller hele skjermens bredde.
+ * - Et favorittikon på venstre side, som utløser onNavigate-funksjonen når det blir klikket.
+ * - En tittel "Paragliding" i midten.
+ * - Et søkeikon på høyre side, som utløser onSearchIconClick-funksjonen når det blir klikket.
+ */
 @Composable
 fun TopBar(
     onSearchIconClick: () -> Unit,

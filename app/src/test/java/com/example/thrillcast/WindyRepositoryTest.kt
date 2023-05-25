@@ -1,5 +1,6 @@
 package com.example.thrillcast
 
+import com.example.thrillcast.data.datasources.WindyDataSource
 import com.example.thrillcast.data.repositories.WindyRepository
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
@@ -8,7 +9,15 @@ import java.time.LocalDate
 import java.time.ZoneId
 
 class WindyRepositoryTest {
-    @Test
+
+/**
+ * Denne testfunksjonen verifiserer funksjonaliteten til `fetchWindyWindsList` metoden i `WindyRepository`.
+ *
+ * Metoden forventes å hente en liste med vinddataobjekter fra en spesifikk bredde- og lengdegrad,
+ * der hvert objekts tidspunkt ikke er tidligere enn starten av den nåværende dagen, og hver objekts vindhastighet/retning data
+ * (på både 800h og 900h høyder) faller innenfor området -200 og 200.
+ */
+@Test
     fun testfetchWindyWindList(){
         //Arrange
         val lat = 59.76
@@ -17,7 +26,7 @@ class WindyRepositoryTest {
 
         //Act
         val result = runBlocking {
-            WindyRepository().fetchWindyWindsList(lat, lng)
+            WindyRepository(WindyDataSource()).fetchWindyWindsList(lat, lng)
         }
         //Assert
         result.forEach {
@@ -29,6 +38,9 @@ class WindyRepositoryTest {
         }
     }
 
+    /**
+     * Sjekker at calculateWindSpeedAndDirection-funksjonen gir riktige resultater
+     */
     @Test
     fun testCalculateWindSpeedNDirection() {
         //Arrange
@@ -37,7 +49,7 @@ class WindyRepositoryTest {
 
         //Act
         val result = runBlocking {
-            WindyRepository().calculateWindSpeedAndDirection(u,v)
+            WindyRepository(WindyDataSource()).calculateWindSpeedAndDirection(u,v)
         }
 
         //Assert
@@ -45,6 +57,9 @@ class WindyRepositoryTest {
         Assert.assertEquals(45.0, result.second, 0.01)
     }
 
+    /**
+     * Sjekker at fetchWindyWindsList klarer å hente objekter
+     */
     @Test
     fun testfetchWindyWindListIsNotEmpty(){
         //Arrange
@@ -53,7 +68,7 @@ class WindyRepositoryTest {
 
         //Act
         val result = runBlocking {
-            WindyRepository().fetchWindyWindsList(lat, lng)
+            WindyRepository(WindyDataSource()).fetchWindyWindsList(lat, lng)
         }
 
         //Assert
