@@ -42,7 +42,7 @@ import com.example.thrillcast.ui.viewmodels.weather.WeatherViewModel
 
 @Composable
 fun InfoPage(weatherViewModel: WeatherViewModel) {
-    val minCertificate = "PP2/SP2"
+    val minCertificate = "PP2"
     val takeoffUiState = weatherViewModel.takeoffUiState.collectAsState()
 
     Card(
