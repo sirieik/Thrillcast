@@ -1,6 +1,9 @@
 # ThrillCast
 Dette er vårt IN2000-prosjekt våren 2023, ThrillCast, en Android-app basert på Jetpack Compose som er designet for å hjelpe paraglidere ved å gi sanntids- og fremtidig værvarsel for ulike takeoff-lokasjoner i hele Norge.
 
+En videodemo av appen kan du se her:
+https://clipchamp.com/watch/loq9SNwCnlU?fbclid=IwAR17JshrOo5uFng35e_b0zO6hwQCBO-E4q2biFw8mzwm6G39gapBfksv3W8
+
 ### Funksjoner:
 * Kart med oversikt over takeoff-lokasjoner i Norge
 * Fremstilling av Holfuys vindhjul med vindretning i sanntid
